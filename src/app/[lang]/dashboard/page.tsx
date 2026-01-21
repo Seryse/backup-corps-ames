@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { getDictionary, Dictionary } from '@/lib/dictionaries';
@@ -16,7 +16,8 @@ import type { NewsArticle } from '@/components/admin/news-manager';
 import type { Formation } from '@/components/providers/cart-provider';
 import type { SessionType } from '@/components/admin/session-type-manager';
 
-export default function HomePage({ params: { lang } }: { params: { lang: Locale } }) {
+export default function HomePage({ params }: { params: Promise<{ lang: Locale }> }) {
+  const { lang } = use(params);
   const [dict, setDict] = useState<Dictionary | null>(null);
   const { user, isUserLoading } = useUser();
   const firestore = useFirestore();

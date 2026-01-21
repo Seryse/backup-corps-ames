@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, use } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getDictionary, Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
@@ -39,7 +39,8 @@ type DailyCall = any;
 
 const adminUids = ['HvsOFzrOwFTHWTBVBextpZtV5I53'];
 
-export default function LiveSessionPage({ params: { lang, bookingId } }: { params: { lang: Locale, bookingId: string } }) {
+export default function LiveSessionPage({ params }: { params: Promise<{ lang: Locale, bookingId: string }> }) {
+  const { lang, bookingId } = use(params);
   const [dict, setDict] = useState<Dictionary['session'] | null>(null);
   const { user, isUserLoading } = useUser();
   const firestore = useFirestore();

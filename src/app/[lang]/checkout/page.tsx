@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -14,7 +14,8 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Trash2, ShoppingCart } from 'lucide-react';
 
-export default function CheckoutPage({ params: { lang } }: { params: { lang: Locale } }) {
+export default function CheckoutPage({ params }: { params: Promise<{ lang: Locale }> }) {
+  const { lang } = use(params);
   const [dict, setDict] = useState<Dictionary['checkout'] | null>(null);
   const { items, removeFromCart, clearCart, itemCount, totalPrice } = useCart();
   const { user, isUserLoading } = useUser();

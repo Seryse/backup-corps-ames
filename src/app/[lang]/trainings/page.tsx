@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, use } from 'react';
 import { getDictionary, Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
 import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
@@ -22,7 +22,8 @@ type UserFormation = {
     enrollmentDate: any; // Firestore Timestamp
 };
 
-export default function TrainingsPage({ params: { lang } }: { params: { lang: Locale } }) {
+export default function TrainingsPage({ params }: { params: Promise<{ lang: Locale }> }) {
+  const { lang } = use(params);
   const [dict, setDict] = useState<Dictionary | null>(null);
   const { user, isUserLoading } = useUser();
   const firestore = useFirestore();

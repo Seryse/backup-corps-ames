@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import { getDictionary, Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
 import { ShoppingBag, Loader2 } from 'lucide-react';
@@ -9,7 +9,8 @@ import { FormationCard } from '@/components/shop/formation-card';
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { collection, Query } from 'firebase/firestore';
 
-export default function ShopPage({ params: { lang } }: { params: { lang: Locale } }) {
+export default function ShopPage({ params }: { params: Promise<{ lang: Locale }> }) {
+  const { lang } = use(params);
   const [dict, setDict] = useState<Dictionary['shop'] | null>(null);
   const firestore = useFirestore();
 

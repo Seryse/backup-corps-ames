@@ -1,12 +1,13 @@
 'use client'
 
-import { useEffect } from 'react';
+import { useEffect, use } from 'react';
 import { useUser } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import { Locale } from '@/i18n-config';
 
-export default function HomeRedirectPage({ params: { lang } }: { params: { lang: Locale } }) {
+export default function HomeRedirectPage({ params }: { params: Promise<{ lang: Locale }> }) {
+  const { lang } = use(params);
   const { user, isUserLoading } = useUser();
   const router = useRouter();
 

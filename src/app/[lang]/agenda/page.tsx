@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { getDictionary, Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
@@ -29,7 +29,8 @@ type TimeSlot = {
     bookedParticipantsCount: number;
 };
 
-export default function AgendaPage({ params: { lang } }: { params: { lang: Locale } }) {
+export default function AgendaPage({ params }: { params: Promise<{ lang: Locale }> }) {
+  const { lang } = use(params);
   const [dict, setDict] = useState<Dictionary['agenda'] | null>(null);
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [activeDate, setActiveDate] = useState(new Date()); // For controlling calendar view

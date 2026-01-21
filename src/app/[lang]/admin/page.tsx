@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/firebase';
 import { getDictionary, Dictionary } from '@/lib/dictionaries';
@@ -17,7 +17,8 @@ import UpcomingSessions from '@/components/admin/upcoming-sessions';
 const adminEmails = ['seryse@live.be', 'jael@live.fr', 'selvura@gmail.com'];
 const adminUids = ['HvsOFzrOwFTHWTBVBextpZtV5I53'];
 
-export default function AdminPage({ params: { lang } }: { params: { lang: Locale } }) {
+export default function AdminPage({ params }: { params: Promise<{ lang: Locale }> }) {
+  const { lang } = use(params);
   const router = useRouter();
   const { user, isUserLoading } = useUser();
   const [dict, setDict] = useState<Dictionary | null>(null);
