@@ -37,8 +37,8 @@ export default function ShopPage({ params: { lang } }: { params: { lang: Locale 
     if (!formationsData) return null;
     return formationsData.map(doc => ({
       ...doc,
-      name: doc.name[lang] || doc.name['fr'] || doc.id, // Fallback logic: current lang -> french -> doc id
-      description: doc.description[lang] || doc.description['fr'] || '', // Fallback logic
+      name: (doc.name && doc.name[lang]) || (doc.name && doc.name['fr']) || doc.id, // Fallback logic
+      description: (doc.description && doc.description[lang]) || (doc.description && doc.description['fr']) || '', // Fallback logic
     }));
   }, [formationsData, lang]);
   
