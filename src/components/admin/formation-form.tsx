@@ -14,8 +14,6 @@ import type { Formation } from '@/components/providers/cart-provider';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Languages } from 'lucide-react';
 import { useState } from 'react';
-import { errorEmitter } from '@/firebase/error-emitter';
-import { FirestorePermissionError } from '@/firebase/errors';
 import { Progress } from '../ui/progress';
 import { translateTextAction } from '@/app/actions';
 
@@ -99,89 +97,67 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
   };
 
 
-  const onSubmit = async (data: FormationFormData) => {
+  const onSubmit = (data: FormationFormData) => {
     if (!firestore || !storage) return;
     setIsLoading(true);
     setUploadProgress(null);
 
-    try {
-        let finalImageUrl = formationToEdit?.imageUrl || '';
-
-        // If a new file is uploaded
+    const getImageUrl = new Promise<string>((resolve, reject) => {
         if (data.imageFile && data.imageFile.length > 0) {
             const file = data.imageFile[0];
             const uniqueFileName = `${Date.now()}-${file.name}`;
             const fileRef = storageRef(storage, `formations/${uniqueFileName}`);
             const uploadTask = uploadBytesResumable(fileRef, file);
 
-            await new Promise<void>((resolve, reject) => {
-                uploadTask.on('state_changed',
-                    (snapshot) => {
-                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        setUploadProgress(progress);
-                    },
-                    (error) => {
-                        console.error("Upload failed:", error);
-                        reject(error);
-                    },
-                    async () => {
-                        finalImageUrl = await getDownloadURL(uploadTask.snapshot.ref);
-                        resolve();
-                    }
-                );
-            });
+            uploadTask.on('state_changed',
+                (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    setUploadProgress(progress);
+                },
+                (error) => reject(error),
+                async () => {
+                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                    resolve(downloadURL);
+                }
+            );
+        } else if (formationToEdit?.imageUrl) {
+            resolve(formationToEdit.imageUrl);
+        } else {
+            reject(new Error("Image is required."));
         }
+    });
 
-        if (!finalImageUrl) {
-            toast({ variant: "destructive", title: dictionary.error.generic, description: "Image is required." });
-            setIsLoading(false);
-            return;
-        }
-
+    getImageUrl.then(imageUrl => {
         const formationData = {
           name: data.name,
           description: data.description,
-          price: Math.round(data.price * 100), // Convert to cents for storage
+          price: Math.round(data.price * 100),
           currency: data.currency,
           tokenProductId: data.tokenProductId,
-          imageUrl: finalImageUrl,
+          imageUrl: imageUrl,
         };
 
-        if (formationToEdit?.id) {
-            const docRef = doc(firestore, 'formations', formationToEdit.id);
-            await setDoc(docRef, formationData);
-            toast({ title: dictionary.success.formationUpdated });
-        } else {
-            const collectionRef = collection(firestore, 'formations');
-            await addDoc(collectionRef, formationData);
-            toast({ title: dictionary.success.formationAdded });
-        }
-        onClose();
-
-    } catch (e: any) {
-        const operation = formationToEdit?.id ? 'update' : 'create';
-        const path = formationToEdit?.id ? `formations/${formationToEdit.id}` : 'formations';
-        errorEmitter.emit('permission-error', new FirestorePermissionError({
-            path,
-            operation,
-            requestResourceData: {
-                name: data.name,
-                description: data.description,
-                price: Math.round(data.price * 100),
-                currency: data.currency,
-                tokenProductId: data.tokenProductId,
-            }
-        }));
+        const firestorePromise = formationToEdit?.id
+            ? setDoc(doc(firestore, 'formations', formationToEdit.id), formationData)
+            : addDoc(collection(firestore, 'formations'), formationData);
         
+        return firestorePromise.then(() => {
+            toast({ title: formationToEdit ? dictionary.success.formationUpdated : dictionary.success.formationAdded });
+            onClose();
+        });
+    })
+    .catch(e => {
+        console.error("Form submission error:", e);
         toast({
             variant: "destructive",
             title: dictionary.error.generic,
-            description: e.message || "An unexpected error occurred during the process.",
+            description: e.message || "An unexpected error occurred.",
         });
-    } finally {
+    })
+    .finally(() => {
         setIsLoading(false);
         setUploadProgress(null);
-    }
+    });
   };
 
   return (

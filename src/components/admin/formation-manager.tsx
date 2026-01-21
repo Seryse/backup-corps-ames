@@ -8,7 +8,7 @@ import type { Formation } from '@/components/providers/cart-provider';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -160,6 +160,9 @@ export default function FormationManager({ dictionary, lang }: FormationManagerP
             <DialogTitle>
               {formationToEdit ? dictionary.editFormation : dictionary.addFormation}
             </DialogTitle>
+            <DialogDescription className="sr-only">
+              {formationToEdit ? 'Edit the details of your formation.' : 'Create a new formation by filling out the form.'}
+            </DialogDescription>
           </DialogHeader>
           <div className="py-4">
             <FormationForm

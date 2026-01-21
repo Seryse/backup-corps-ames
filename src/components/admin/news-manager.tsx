@@ -7,7 +7,7 @@ import { collection, doc, deleteDoc, query, orderBy, Query } from 'firebase/fire
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -173,6 +173,9 @@ export default function NewsManager({ dictionary, lang }: NewsManagerProps) {
             <DialogTitle>
               {articleToEdit ? dictionary.editArticle : dictionary.addArticle}
             </DialogTitle>
+            <DialogDescription className="sr-only">
+              {articleToEdit ? 'Edit the details of this article.' : 'Create a new article by filling out the form.'}
+            </DialogDescription>
           </DialogHeader>
           <div className="py-4">
             <NewsForm

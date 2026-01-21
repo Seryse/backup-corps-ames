@@ -13,8 +13,6 @@ import type { SessionType } from './session-type-manager';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Languages } from 'lucide-react';
 import { useState } from 'react';
-import { errorEmitter } from '@/firebase/error-emitter';
-import { FirestorePermissionError } from '@/firebase/errors';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { translateTextAction } from '@/app/actions';
 
@@ -108,44 +106,32 @@ export default function SessionTypeForm({ sessionTypeToEdit, onClose, dictionary
     }
   };
   
-  const onSubmit = async (data: SessionTypeFormData) => {
+  const onSubmit = (data: SessionTypeFormData) => {
     if (!firestore) return;
     setIsLoading(true);
 
-    try {
-        const sessionTypeData = {
-          ...data,
-          price: Math.round(data.price * 100), // Convert to cents
-        };
+    const sessionTypeData = {
+      ...data,
+      price: Math.round(data.price * 100), // Convert to cents
+    };
 
-        if (sessionTypeToEdit?.id) {
-            const docRef = doc(firestore, 'sessionTypes', sessionTypeToEdit.id);
-            await setDoc(docRef, sessionTypeData);
-            toast({ title: dictionary.success.sessionTypeUpdated });
-        } else {
-            const collectionRef = collection(firestore, 'sessionTypes');
-            await addDoc(collectionRef, sessionTypeData);
-            toast({ title: dictionary.success.sessionTypeAdded });
-        }
+    const firestorePromise = sessionTypeToEdit?.id
+        ? setDoc(doc(firestore, 'sessionTypes', sessionTypeToEdit.id), sessionTypeData)
+        : addDoc(collection(firestore, 'sessionTypes'), sessionTypeData);
+
+    firestorePromise.then(() => {
+        toast({ title: sessionTypeToEdit ? dictionary.success.sessionTypeUpdated : dictionary.success.sessionTypeAdded });
         onClose();
-
-    } catch (e: any) {
-        const operation = sessionTypeToEdit?.id ? 'update' : 'create';
-        const path = sessionTypeToEdit?.id ? `sessionTypes/${sessionTypeToEdit.id}` : 'sessionTypes';
-        errorEmitter.emit('permission-error', new FirestorePermissionError({
-            path,
-            operation,
-            requestResourceData: data
-        }));
-
+    }).catch(e => {
+        console.error("Form submission error:", e);
         toast({
             variant: "destructive",
             title: dictionary.error.generic,
             description: e.message || "An unexpected error occurred.",
         });
-    } finally {
+    }).finally(() => {
         setIsLoading(false);
-    }
+    });
   };
 
   return (

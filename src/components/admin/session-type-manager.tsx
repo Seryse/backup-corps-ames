@@ -6,7 +6,7 @@ import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, doc, deleteDoc, Query } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -170,6 +170,9 @@ export default function SessionTypeManager({ dictionary, lang }: SessionTypeMana
             <DialogTitle>
               {sessionTypeToEdit ? dictionary.editSessionType : dictionary.addSessionType}
             </DialogTitle>
+            <DialogDescription className="sr-only">
+                {sessionTypeToEdit ? 'Edit the details of this session type.' : 'Create a new session type by filling out the form.'}
+            </DialogDescription>
           </DialogHeader>
           <div className="py-4">
             <SessionTypeForm

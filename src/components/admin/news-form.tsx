@@ -13,8 +13,6 @@ import { getDownloadURL, ref as storageRef, uploadBytesResumable } from 'firebas
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Languages } from 'lucide-react';
 import { useState } from 'react';
-import { errorEmitter } from '@/firebase/error-emitter';
-import { FirestorePermissionError } from '@/firebase/errors';
 import { Progress } from '../ui/progress';
 import type { NewsArticle } from './news-manager';
 import { translateTextAction } from '@/app/actions';
@@ -91,83 +89,65 @@ export default function NewsForm({ articleToEdit, onClose, dictionary }: NewsFor
     }
   };
 
-  const onSubmit = async (data: NewsFormData) => {
+  const onSubmit = (data: NewsFormData) => {
     if (!firestore || !storage) return;
     setIsLoading(true);
     setUploadProgress(null);
 
-    try {
-        let finalImageUrl = articleToEdit?.imageUrl || '';
-
+    const getImageUrl = new Promise<string>((resolve, reject) => {
         if (data.imageFile && data.imageFile.length > 0) {
             const file = data.imageFile[0];
             const uniqueFileName = `${Date.now()}-${file.name}`;
             const fileRef = storageRef(storage, `news/${uniqueFileName}`);
             const uploadTask = uploadBytesResumable(fileRef, file);
 
-            await new Promise<void>((resolve, reject) => {
-                uploadTask.on('state_changed',
-                    (snapshot) => {
-                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        setUploadProgress(progress);
-                    },
-                    (error) => {
-                        console.error("Upload failed:", error);
-                        reject(error);
-                    },
-                    async () => {
-                        finalImageUrl = await getDownloadURL(uploadTask.snapshot.ref);
-                        resolve();
-                    }
-                );
-            });
+            uploadTask.on('state_changed',
+                (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    setUploadProgress(progress);
+                },
+                (error) => reject(error),
+                async () => {
+                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                    resolve(downloadURL);
+                }
+            );
+        } else if (articleToEdit?.imageUrl) {
+            resolve(articleToEdit.imageUrl);
+        } else {
+            reject(new Error("Image is required."));
         }
+    });
 
-        if (!finalImageUrl) {
-            toast({ variant: "destructive", title: dictionary.error.generic, description: "Image is required." });
-            setIsLoading(false);
-            return;
-        }
-
+    getImageUrl.then(imageUrl => {
         const articleData = {
-          title: data.title,
-          content: data.content,
-          imageUrl: finalImageUrl,
-          createdAt: articleToEdit?.createdAt || serverTimestamp(),
+            title: data.title,
+            content: data.content,
+            imageUrl: imageUrl,
+            createdAt: articleToEdit?.createdAt || serverTimestamp(),
         };
 
-        if (articleToEdit?.id) {
-            const docRef = doc(firestore, 'news', articleToEdit.id);
-            await setDoc(docRef, articleData, { merge: true });
-            toast({ title: dictionary.success.articleUpdated });
-        } else {
-            const collectionRef = collection(firestore, 'news');
-            await addDoc(collectionRef, articleData);
-            toast({ title: dictionary.success.articleAdded });
-        }
-        onClose();
+        const firestorePromise = articleToEdit?.id
+            ? setDoc(doc(firestore, 'news', articleToEdit.id), articleData, { merge: true })
+            : addDoc(collection(firestore, 'news'), articleData);
 
-    } catch (e: any) {
-        const operation = articleToEdit?.id ? 'update' : 'create';
-        const path = articleToEdit?.id ? `news/${articleToEdit.id}` : 'news';
-        errorEmitter.emit('permission-error', new FirestorePermissionError({
-            path,
-            operation,
-            requestResourceData: {
-                title: data.title,
-                content: data.content,
-            }
-        }));
-
+        return firestorePromise.then(() => {
+            toast({ title: articleToEdit ? dictionary.success.articleUpdated : dictionary.success.articleAdded });
+            onClose();
+        });
+    })
+    .catch(e => {
+        console.error("Form submission error:", e);
         toast({
             variant: "destructive",
             title: dictionary.error.generic,
-            description: e.message || "An unexpected error occurred during the process.",
+            description: e.message || "An unexpected error occurred.",
         });
-    } finally {
+    })
+    .finally(() => {
         setIsLoading(false);
         setUploadProgress(null);
-    }
+    });
   };
 
   return (
