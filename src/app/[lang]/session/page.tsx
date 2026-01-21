@@ -44,13 +44,14 @@ export default function SessionPage({ params }: { params: Promise<{ lang: Locale
   const [dict, setDict] = useState<Dictionary['session'] | null>(null);
   const { user, isUserLoading } = useUser();
   const firestore = useFirestore();
-  const [now, setNow] = useState(new Date());
+  const [now, setNow] = useState<Date | null>(null);
 
   const localesDateFns: { [key: string]: any } = { en: enUS, fr, es };
   const dateFnsLocale = localesDateFns[lang] || enUS;
 
   // Force re-render every minute to update countdowns
   useEffect(() => {
+    setNow(new Date());
     const timer = setInterval(() => {
       setNow(new Date());
     }, 60000); // every 60 seconds
@@ -81,7 +82,7 @@ export default function SessionPage({ params }: { params: Promise<{ lang: Locale
   }, [lang]);
 
   const upcomingBookings: MergedBooking[] = useMemo(() => {
-    if (!bookings || !sessionTypes || !timeSlots) return [];
+    if (!bookings || !sessionTypes || !timeSlots || !now) return [];
 
     const sessionTypeMap = new Map(sessionTypes.map(st => [st.id, st]));
     const timeSlotMap = new Map(timeSlots.map(ts => [ts.id, ts]));
@@ -97,7 +98,7 @@ export default function SessionPage({ params }: { params: Promise<{ lang: Locale
       .sort((a, b) => a.timeSlot.startTime.toMillis() - b.timeSlot.startTime.toMillis());
   }, [bookings, sessionTypes, timeSlots, now]);
 
-  const isLoading = isUserLoading || isLoadingBookings || isLoadingSessionTypes || isLoadingTimeSlots || !dict;
+  const isLoading = isUserLoading || isLoadingBookings || isLoadingSessionTypes || isLoadingTimeSlots || !dict || !now;
 
   if (isLoading) {
     return (
@@ -108,7 +109,7 @@ export default function SessionPage({ params }: { params: Promise<{ lang: Locale
   }
 
   const renderCountdown = (startTime: Date) => {
-    if (!dict) return '';
+    if (!dict || !now) return '';
     const tenMinutesBefore = addMinutes(startTime, -10);
     if (isBefore(now, tenMinutesBefore)) {
       const distance = formatDistanceToNow(startTime, { locale: dateFnsLocale, addSuffix: true });
@@ -135,7 +136,7 @@ export default function SessionPage({ params }: { params: Promise<{ lang: Locale
               const { sessionType, timeSlot } = booking;
               const localizedName = sessionType.name?.[lang] || sessionType.name?.en;
               const startTime = timeSlot.startTime.toDate();
-              const isConnectable = isBefore(addMinutes(startTime, -10), now);
+              const isConnectable = now ? isBefore(addMinutes(startTime, -10), now) : false;
 
               return (
                 <Card key={booking.id} className="flex flex-col">

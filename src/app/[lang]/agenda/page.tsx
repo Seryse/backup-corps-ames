@@ -32,8 +32,8 @@ type TimeSlot = {
 export default function AgendaPage({ params }: { params: Promise<{ lang: Locale }> }) {
   const { lang } = use(params);
   const [dict, setDict] = useState<Dictionary['agenda'] | null>(null);
-  const [date, setDate] = useState<Date | undefined>(new Date());
-  const [activeDate, setActiveDate] = useState(new Date()); // For controlling calendar view
+  const [date, setDate] = useState<Date | undefined>(undefined);
+  const [activeDate, setActiveDate] = useState<Date | undefined>(undefined);
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
   const [isBooking, setIsBooking] = useState(false);
   
@@ -89,6 +89,12 @@ export default function AgendaPage({ params }: { params: Promise<{ lang: Locale 
   useEffect(() => {
     getDictionary(lang).then(d => setDict(d.agenda));
   }, [lang]);
+
+  useEffect(() => {
+    const today = new Date();
+    setDate(today);
+    setActiveDate(today);
+  }, []);
 
   const DayContent = ({ date, view }: { date: Date; view: string }) => {
     if (view === 'month') {
@@ -160,7 +166,7 @@ export default function AgendaPage({ params }: { params: Promise<{ lang: Locale 
   const localesDateFns: { [key: string]: any } = { en: enUS, fr, es };
   const dateFnsLocale = localesDateFns[lang];
 
-  if (isLoadingTimeSlots || isLoadingSessionTypes || !dict) {
+  if (isLoadingTimeSlots || isLoadingSessionTypes || !dict || !date || !activeDate) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Loader2 className="h-12 w-12 animate-spin text-accent" />

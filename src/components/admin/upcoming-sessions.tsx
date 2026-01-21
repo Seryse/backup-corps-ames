@@ -39,12 +39,13 @@ type MergedBooking = Booking & {
 
 export default function UpcomingSessions({ lang, dictionary }: { lang: Locale, dictionary: any }) {
   const firestore = useFirestore();
-  const [now, setNow] = useState(new Date());
+  const [now, setNow] = useState<Date | null>(null);
 
   const localesDateFns: { [key: string]: any } = { en: enUS, fr, es };
   const dateFnsLocale = localesDateFns[lang] || enUS;
 
   useEffect(() => {
+    setNow(new Date());
     const timer = setInterval(() => {
       setNow(new Date());
     }, 60000); // every 60 seconds
@@ -71,7 +72,7 @@ export default function UpcomingSessions({ lang, dictionary }: { lang: Locale, d
   const { data: timeSlots, isLoading: isLoadingTimeSlots } = useCollection<TimeSlot>(timeSlotsQuery);
 
   const todaysBookings: MergedBooking[] = useMemo(() => {
-    if (!bookings || !sessionTypes || !timeSlots) return [];
+    if (!bookings || !sessionTypes || !timeSlots || !now) return [];
 
     const sessionTypeMap = new Map(sessionTypes.map(st => [st.id, st]));
     const timeSlotMap = new Map(timeSlots.map(ts => [ts.id, ts]));
@@ -92,10 +93,10 @@ export default function UpcomingSessions({ lang, dictionary }: { lang: Locale, d
       .sort((a, b) => a.timeSlot.startTime.toMillis() - b.timeSlot.startTime.toMillis());
   }, [bookings, sessionTypes, timeSlots, now]);
 
-  const isLoading = isLoadingBookings || isLoadingSessionTypes || isLoadingTimeSlots;
+  const isLoading = isLoadingBookings || isLoadingSessionTypes || isLoadingTimeSlots || !now;
 
   const renderCountdown = (startTime: Date) => {
-    if (!dictionary) return '';
+    if (!dictionary || !now) return '';
     const tenMinutesBefore = addMinutes(startTime, -10);
     if (isBefore(now, tenMinutesBefore)) {
       const distance = formatDistanceToNow(startTime, { locale: dateFnsLocale, addSuffix: true });
@@ -129,7 +130,7 @@ export default function UpcomingSessions({ lang, dictionary }: { lang: Locale, d
               const { sessionType, timeSlot } = booking;
               const localizedName = sessionType.name?.[lang] || sessionType.name?.en;
               const startTime = timeSlot.startTime.toDate();
-              const isConnectable = isBefore(addMinutes(startTime, -10), now);
+              const isConnectable = now ? isBefore(addMinutes(startTime, -10), now) : false;
 
               return (
                 <Card key={booking.id} className="flex flex-col">
