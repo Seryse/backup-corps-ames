@@ -140,7 +140,7 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
     const status = dayData[dateKey]?.status;
     return (
         <div className="relative flex h-full w-full items-center justify-center">
-            {props.date.getDate()}
+            <span>{props.date.getDate()}</span>
             {status && (
             <div
                 className={cn('absolute bottom-1 h-1.5 w-1.5 rounded-full', {
@@ -162,12 +162,12 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
                 <Card>
-                    <CardContent className="p-0 sm:p-4 text-center">
+                    <CardContent className="p-0 sm:p-4">
                         <Calendar
                             mode="single"
                             selected={date}
                             onSelect={handleDateSelect}
-                            className="rounded-md inline-block"
+                            className="rounded-md"
                             disabled={(d) => d < new Date(new Date().setHours(0,0,0,0))}
                             locale={dateFnsLocale}
                             components={{ DayContent }}
