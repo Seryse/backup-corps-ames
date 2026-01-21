@@ -1,63 +1,14 @@
-import { getDictionary, Dictionary } from '@/lib/dictionaries';
+import { getDictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
-import { ShoppingBag, PlusCircle } from 'lucide-react';
-import Image from 'next/image';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { Button } from '@/components/ui/button';
-
-type Product = {
-  id: string;
-  nameKey: keyof Dictionary['shop']['products'];
-  descriptionKey: keyof Dictionary['shop']['products'];
-  price: number;
-  currency: string;
-  imageId: string;
-};
+import { ShoppingBag } from 'lucide-react';
+import type { Product } from '@/components/providers/cart-provider';
+import { ProductCard } from '@/components/shop/product-card';
 
 const products: Product[] = [
     { id: '1', nameKey: 'meditationStoneName', descriptionKey: 'meditationStoneDescription', price: 25, currency: 'EUR', imageId: 'product-meditation-stone'},
     { id: '2', nameKey: 'essentialOilName', descriptionKey: 'essentialOilDescription', price: 15, currency: 'EUR', imageId: 'product-essential-oil' },
     { id: '3', nameKey: 'yogaMatName', descriptionKey: 'yogaMatDescription', price: 40, currency: 'EUR', imageId: 'product-yoga-mat' },
 ];
-
-function ProductCard({ product, dict, lang }: { product: Product, dict: Dictionary['shop'], lang: Locale }) {
-    const productImage = PlaceHolderImages.find(p => p.id === product.imageId);
-    
-    return (
-        <Card className="flex flex-col overflow-hidden transition-shadow duration-300 hover:shadow-xl">
-            <CardHeader className="p-0">
-                {productImage && (
-                    <div className="relative aspect-[4/3]">
-                        <Image
-                            src={productImage.imageUrl}
-                            alt={productImage.description}
-                            fill
-                            className="object-cover"
-                            data-ai-hint={productImage.imageHint}
-                        />
-                    </div>
-                )}
-            </CardHeader>
-            <CardContent className="flex-1 p-4">
-                <h3 className="text-xl font-headline font-semibold tracking-tight">{dict.products[product.nameKey]}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">
-                    {dict.products[product.descriptionKey]}
-                </p>
-            </CardContent>
-            <CardFooter className="p-4 flex justify-between items-center bg-muted/50">
-                <p className="text-lg font-semibold text-accent-foreground">
-                    {new Intl.NumberFormat(lang, { style: 'currency', currency: product.currency }).format(product.price)}
-                </p>
-                <Button size="sm">
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    {dict.addToCart}
-                </Button>
-            </CardFooter>
-        </Card>
-    );
-}
-
 
 export default async function ShopPage({ params: { lang } }: { params: { lang: Locale } }) {
   const dict = await getDictionary(lang);

@@ -6,6 +6,7 @@ import { Locale } from '@/i18n-config';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Menu, ShoppingBag, CalendarDays, GraduationCap, PanelsTopLeft, Tv, Shield } from 'lucide-react';
+import { CartNav } from './cart-nav';
 
 const LotusIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg
@@ -64,8 +65,8 @@ export default function Header({ dictionary, lang }: { dictionary: Dictionary['h
                         <span className="sr-only">Open menu</span>
                     </Button>
                 </SheetTrigger>
-                <SheetContent side="left" className="pt-12">
-                    <nav className="grid gap-4">
+                <SheetContent side="left" className="pt-12 flex flex-col">
+                    <nav className="grid gap-4 flex-1">
                         {navLinks.map(({href, label, icon: Icon}) => (
                             <Link key={href} href={href} className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
                                 <Icon className="h-5 w-5" />
@@ -73,9 +74,12 @@ export default function Header({ dictionary, lang }: { dictionary: Dictionary['h
                             </Link>
                         ))}
                     </nav>
-                     <div className="absolute bottom-4 left-4 right-4 flex flex-col gap-2">
+                     <div className="flex flex-col gap-2">
                         <LanguageSwitcher lang={lang} />
-                        <UserNav dictionary={dictionary} lang={lang} />
+                        <div className="flex items-center gap-2">
+                            <UserNav dictionary={dictionary} lang={lang} />
+                            <CartNav />
+                        </div>
                     </div>
                 </SheetContent>
             </Sheet>
@@ -83,6 +87,7 @@ export default function Header({ dictionary, lang }: { dictionary: Dictionary['h
             {/* Desktop items */}
             <div className="hidden md:flex items-center space-x-2">
                 <LanguageSwitcher lang={lang} />
+                <CartNav />
                 <UserNav dictionary={dictionary} lang={lang} />
             </div>
         </div>

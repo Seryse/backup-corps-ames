@@ -61,6 +61,8 @@
         "title": "Shop",
         "description": "Discover our products",
         "addToCart": "Add to Cart",
+        "productAdded": "Product Added",
+        "addedToCart": "has been added to your cart.",
         "products": {
             "meditationStoneName": "Meditation Stones",
             "meditationStoneDescription": "Set of 7 chakra balancing stones.",

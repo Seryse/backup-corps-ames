@@ -61,6 +61,8 @@
         "title": "Tienda",
         "description": "Descubre nuestros productos",
         "addToCart": "Añadir al carrito",
+        "productAdded": "Producto Añadido",
+        "addedToCart": "ha sido añadido a tu cesta.",
         "products": {
             "meditationStoneName": "Piedras de Meditación",
             "meditationStoneDescription": "Set de 7 piedras para equilibrar los chakras.",
