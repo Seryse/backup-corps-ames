@@ -71,7 +71,7 @@
             "descriptionEs": "Description (ES)",
             "price": "Price",
             "currency": "Currency (e.g., eur, usd)",
-            "imageId": "Image ID",
+            "image": "Image",
             "tokenProductId": "Token Product ID",
             "cancel": "Cancel",
             "save": "Save"

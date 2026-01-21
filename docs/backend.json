@@ -37,9 +37,10 @@
           "type": "string",
           "description": "Currency for the price (e.g., eur, usd)."
         },
-        "imageId": {
+        "imageUrl": {
           "type": "string",
-          "description": "ID for the placeholder image of the formation."
+          "description": "URL of the formation's image, hosted on Firebase Storage.",
+          "format": "uri"
         }
       },
       "required": [
@@ -48,7 +49,7 @@
         "tokenProductId",
         "price",
         "currency",
-        "imageId"
+        "imageUrl"
       ]
     },
     "UserFormation": {

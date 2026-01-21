@@ -20,8 +20,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import FormationForm from './formation-form';
-import { BookOpenCheck, Loader2, PlusCircle, Trash2, Edit } from 'lucide-react';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { BookOpenCheck, Loader2, PlusCircle, Trash2, Edit, ImageOff } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
@@ -97,22 +96,22 @@ export default function FormationManager({ dictionary, lang }: FormationManagerP
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {formations?.map((formation) => {
-            const formationImage = PlaceHolderImages.find((p) => p.id === formation.imageId);
             const localizedName = formation.name[lang] || formation.name.en;
             return (
               <Card key={formation.id} className="flex flex-col">
                 <CardHeader>
-                    {formationImage && (
-                        <div className="relative aspect-video">
+                    <div className="relative aspect-video bg-muted rounded-t-lg flex items-center justify-center">
+                        {formation.imageUrl ? (
                             <Image
-                                src={formationImage.imageUrl}
-                                alt={formationImage.description}
+                                src={formation.imageUrl}
+                                alt={localizedName}
                                 fill
                                 className="object-cover rounded-t-lg"
-                                data-ai-hint={formationImage.imageHint}
                             />
-                        </div>
-                    )}
+                        ) : (
+                            <ImageOff className="h-12 w-12 text-muted-foreground" />
+                        )}
+                    </div>
                   <CardTitle className="pt-4">{localizedName}</CardTitle>
                 </CardHeader>
                 <CardContent className="flex-grow">

@@ -1,20 +1,22 @@
 'use client';
 
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { useFirestore } from '@/firebase';
+import { useFirestore, useStorage } from '@/firebase';
 import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
-import type { Formation, LocalizedString } from '@/components/providers/cart-provider';
+import { getDownloadURL, ref as storageRef, uploadBytesResumable } from 'firebase/storage';
+import type { Formation } from '@/components/providers/cart-provider';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
+import { Progress } from '../ui/progress';
 
 interface FormationFormProps {
   formationToEdit?: Formation;
@@ -33,20 +35,23 @@ const formationSchema = z.object({
   description: localizedStringSchema,
   price: z.coerce.number().min(0, 'Price must be non-negative'),
   currency: z.string().min(2, 'Currency is required'),
-  imageId: z.string().min(1, 'Image ID is required'),
   tokenProductId: z.string().min(1, 'Token Product ID is required'),
+  imageUrl: z.string().url().optional(),
+  imageFile: z.any().optional(),
 });
 
 type FormationFormData = z.infer<typeof formationSchema>;
 
 export default function FormationForm({ formationToEdit, onClose, dictionary }: FormationFormProps) {
   const firestore = useFirestore();
+  const storage = useStorage();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
+
   const {
     register,
     handleSubmit,
-    control,
     formState: { errors },
   } = useForm<FormationFormData>({
     resolver: zodResolver(formationSchema),
@@ -60,50 +65,84 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
           description: { en: '', fr: '', es: '' },
           price: 0,
           currency: 'eur',
-          imageId: '',
           tokenProductId: '',
+          imageUrl: '',
         },
   });
 
   const onSubmit = async (data: FormationFormData) => {
-    if (!firestore) return;
+    if (!firestore || !storage) return;
     setIsLoading(true);
-
-    const formationData = {
-      ...data,
-      price: Math.round(data.price * 100), // Convert to cents for storage
-    };
+    setUploadProgress(null);
 
     try {
-      if (formationToEdit?.id) {
-        const docRef = doc(firestore, 'formations', formationToEdit.id);
-        await setDoc(docRef, formationData);
-        toast({ title: dictionary.success.formationUpdated });
-      } else {
-        const collectionRef = collection(firestore, 'formations');
-        await addDoc(collectionRef, formationData);
-        toast({ title: dictionary.success.formationAdded });
-      }
-      onClose();
+        let finalImageUrl = formationToEdit?.imageUrl || '';
+
+        // If a new file is uploaded
+        if (data.imageFile && data.imageFile.length > 0) {
+            const file = data.imageFile[0];
+            const uniqueFileName = `${Date.now()}-${file.name}`;
+            const fileRef = storageRef(storage, `formations/${uniqueFileName}`);
+            const uploadTask = uploadBytesResumable(fileRef, file);
+
+            await new Promise<void>((resolve, reject) => {
+                uploadTask.on('state_changed',
+                    (snapshot) => {
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        setUploadProgress(progress);
+                    },
+                    (error) => {
+                        console.error("Upload failed:", error);
+                        toast({ variant: "destructive", title: "Upload Failed", description: error.message });
+                        reject(error);
+                    },
+                    async () => {
+                        finalImageUrl = await getDownloadURL(uploadTask.snapshot.ref);
+                        resolve();
+                    }
+                );
+            });
+        }
+
+        if (!finalImageUrl) {
+            toast({ variant: "destructive", title: dictionary.error.generic, description: "Image is required." });
+            setIsLoading(false);
+            return;
+        }
+
+        const formationData = {
+          name: data.name,
+          description: data.description,
+          price: Math.round(data.price * 100), // Convert to cents for storage
+          currency: data.currency,
+          tokenProductId: data.tokenProductId,
+          imageUrl: finalImageUrl,
+        };
+
+        if (formationToEdit?.id) {
+            const docRef = doc(firestore, 'formations', formationToEdit.id);
+            setDoc(docRef, formationData).catch(e => {
+                 errorEmitter.emit('permission-error', new FirestorePermissionError({ path: `formations/${formationToEdit.id}`, operation: 'update', requestResourceData: formationData }));
+            });
+            toast({ title: dictionary.success.formationUpdated });
+        } else {
+            const collectionRef = collection(firestore, 'formations');
+            addDoc(collectionRef, formationData).catch(e => {
+                errorEmitter.emit('permission-error', new FirestorePermissionError({ path: 'formations', operation: 'create', requestResourceData: formationData }));
+            });
+            toast({ title: dictionary.success.formationAdded });
+        }
+        onClose();
+
     } catch (e: any) {
-        const operation = formationToEdit?.id ? 'update' : 'create';
-        const path = formationToEdit?.id ? `formations/${formationToEdit.id}` : 'formations';
-        
-        errorEmitter.emit(
-            'permission-error',
-            new FirestorePermissionError({
-                path: path,
-                operation: operation,
-                requestResourceData: formationData,
-            })
-        );
         toast({
             variant: "destructive",
             title: dictionary.error.generic,
-            description: e.message,
+            description: e.message || "An unexpected error occurred during the process.",
         });
     } finally {
         setIsLoading(false);
+        setUploadProgress(null);
     }
   };
 
@@ -155,18 +194,23 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
           {errors.currency && <p className="text-sm text-destructive">{errors.currency.message}</p>}
         </div>
       </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="imageId">{dictionary.form.imageId}</Label>
-          <Input id="imageId" {...register('imageId')} />
-          {errors.imageId && <p className="text-sm text-destructive">{errors.imageId.message}</p>}
-        </div>
-        <div>
-          <Label htmlFor="tokenProductId">{dictionary.form.tokenProductId}</Label>
-          <Input id="tokenProductId" {...register('tokenProductId')} />
-          {errors.tokenProductId && <p className="text-sm text-destructive">{errors.tokenProductId.message}</p>}
-        </div>
+      
+      <div>
+        <Label htmlFor="tokenProductId">{dictionary.form.tokenProductId}</Label>
+        <Input id="tokenProductId" {...register('tokenProductId')} />
+        {errors.tokenProductId && <p className="text-sm text-destructive">{errors.tokenProductId.message}</p>}
+      </div>
+      
+      <div>
+          <Label htmlFor="imageFile">{dictionary.form.image}</Label>
+          <Input id="imageFile" type="file" accept="image/*" {...register('imageFile')} />
+          {uploadProgress !== null && <Progress value={uploadProgress} className="w-full mt-2" />}
+          {formationToEdit?.imageUrl && (
+            <div className="mt-4">
+                <p className="text-sm font-medium">Current Image:</p>
+                <img src={formationToEdit.imageUrl} alt="Current formation" className="mt-2 h-20 w-20 object-cover rounded-md" />
+            </div>
+          )}
       </div>
 
       <div className="flex justify-end gap-2">

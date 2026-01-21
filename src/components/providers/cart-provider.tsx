@@ -16,7 +16,7 @@ export type Formation = {
   description: LocalizedString;
   price: number;
   currency: string;
-  imageId: string;
+  imageUrl: string;
   tokenProductId?: string; // Add this for token generation later
 };
 
