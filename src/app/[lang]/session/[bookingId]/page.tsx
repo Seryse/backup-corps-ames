@@ -78,6 +78,8 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
 
   const bookingExists = !!booking;
   const bookingUserId = booking?.userId;
+  const visioToken = booking?.visioToken;
+
 
   const sessionRef = useMemoFirebase(() => {
     if (!firestore) return null;
@@ -149,7 +151,6 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
                 border: '0',
             },
             videoSource: true,
-            // Admin sends audio, client does not. Client receives audio from the call regardless.
             audioSource: isAdminView,
         };
 
@@ -171,8 +172,7 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
         });
 
         try {
-            // Only attempt to join AFTER event listeners are set up
-            await callObject.join();
+            await callObject.join({ token: visioToken });
             hasJoinedRef.current = true; // Lock to prevent re-joining AFTER successful join
         } catch (error) {
             console.error("Failed to join Daily.co call:", error);
@@ -195,7 +195,7 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
         }
         hasJoinedRef.current = false;
     }
-  }, [authStatus, isAdminView, lang, router]);
+  }, [authStatus, isAdminView, lang, router, visioToken]);
 
   const handleTriggerIntro = () => updateSessionState(bookingId, { triggerIntro: true, activePlaylistUrl: '' });
   const handlePlaylistSelect = (url: string) => updateSessionState(bookingId, { activePlaylistUrl: url, triggerIntro: false });
@@ -228,11 +228,11 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
     
     return (
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {!isAdminView && <AudioEngine 
+        <AudioEngine 
             introUrl={`https://firebasestorage.googleapis.com/v0/b/corps-et-ames-adc60.appspot.com/o/intros%2Fintro_${lang}.mp3?alt=media`}
             triggerIntro={sessionState?.triggerIntro}
             playlistUrl={sessionState?.activePlaylistUrl}
-        />}
+        />
 
         <div className="lg:col-span-2">
             <Card className="h-full">
