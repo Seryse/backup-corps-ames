@@ -128,11 +128,14 @@ export default function LiveSessionPage({ params: { lang, bookingId } }: { param
     if (authStatus !== 'authorized' || !callFrameRef.current || dailyRef.current || !booking) return;
 
     const setupCall = async () => {
+        // =================================================================
+        // IMPORTANT: Replace this with your actual Daily.co room URL
+        // You can create one for free at https://www.daily.co/
+        const roomUrl = "https://your-domain.daily.co/your-room";
+        // =================================================================
+        
         const DailyIframe = (await import('@daily-co/daily-js')).default;
         
-        // This URL must be replaced with your actual Daily.co room URL
-        const roomUrl = "https://your-domain.daily.co/your-room";
-
         const callObject = DailyIframe.createFrame(callFrameRef.current!, {
             showLeaveButton: true,
             iframeStyle: {
