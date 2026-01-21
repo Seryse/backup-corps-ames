@@ -113,7 +113,6 @@ export default function NewsForm({ articleToEdit, onClose, dictionary }: NewsFor
                     },
                     (error) => {
                         console.error("Upload failed:", error);
-                        toast({ variant: "destructive", title: "Upload Failed", description: error.message });
                         reject(error);
                     },
                     async () => {
@@ -139,20 +138,27 @@ export default function NewsForm({ articleToEdit, onClose, dictionary }: NewsFor
 
         if (articleToEdit?.id) {
             const docRef = doc(firestore, 'news', articleToEdit.id);
-            setDoc(docRef, articleData, { merge: true }).catch(e => {
-                 errorEmitter.emit('permission-error', new FirestorePermissionError({ path: `news/${articleToEdit.id}`, operation: 'update', requestResourceData: articleData }));
-            });
+            await setDoc(docRef, articleData, { merge: true });
             toast({ title: dictionary.success.articleUpdated });
         } else {
             const collectionRef = collection(firestore, 'news');
-            addDoc(collectionRef, articleData).catch(e => {
-                errorEmitter.emit('permission-error', new FirestorePermissionError({ path: 'news', operation: 'create', requestResourceData: articleData }));
-            });
+            await addDoc(collectionRef, articleData);
             toast({ title: dictionary.success.articleAdded });
         }
         onClose();
 
     } catch (e: any) {
+        const operation = articleToEdit?.id ? 'update' : 'create';
+        const path = articleToEdit?.id ? `news/${articleToEdit.id}` : 'news';
+        errorEmitter.emit('permission-error', new FirestorePermissionError({
+            path,
+            operation,
+            requestResourceData: {
+                title: data.title,
+                content: data.content,
+            }
+        }));
+
         toast({
             variant: "destructive",
             title: dictionary.error.generic,

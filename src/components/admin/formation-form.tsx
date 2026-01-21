@@ -122,7 +122,6 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
                     },
                     (error) => {
                         console.error("Upload failed:", error);
-                        toast({ variant: "destructive", title: "Upload Failed", description: error.message });
                         reject(error);
                     },
                     async () => {
@@ -150,20 +149,30 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
 
         if (formationToEdit?.id) {
             const docRef = doc(firestore, 'formations', formationToEdit.id);
-            setDoc(docRef, formationData).catch(e => {
-                 errorEmitter.emit('permission-error', new FirestorePermissionError({ path: `formations/${formationToEdit.id}`, operation: 'update', requestResourceData: formationData }));
-            });
+            await setDoc(docRef, formationData);
             toast({ title: dictionary.success.formationUpdated });
         } else {
             const collectionRef = collection(firestore, 'formations');
-            addDoc(collectionRef, formationData).catch(e => {
-                errorEmitter.emit('permission-error', new FirestorePermissionError({ path: 'formations', operation: 'create', requestResourceData: formationData }));
-            });
+            await addDoc(collectionRef, formationData);
             toast({ title: dictionary.success.formationAdded });
         }
         onClose();
 
     } catch (e: any) {
+        const operation = formationToEdit?.id ? 'update' : 'create';
+        const path = formationToEdit?.id ? `formations/${formationToEdit.id}` : 'formations';
+        errorEmitter.emit('permission-error', new FirestorePermissionError({
+            path,
+            operation,
+            requestResourceData: {
+                name: data.name,
+                description: data.description,
+                price: Math.round(data.price * 100),
+                currency: data.currency,
+                tokenProductId: data.tokenProductId,
+            }
+        }));
+        
         toast({
             variant: "destructive",
             title: dictionary.error.generic,

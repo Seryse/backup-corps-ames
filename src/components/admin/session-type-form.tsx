@@ -120,20 +120,24 @@ export default function SessionTypeForm({ sessionTypeToEdit, onClose, dictionary
 
         if (sessionTypeToEdit?.id) {
             const docRef = doc(firestore, 'sessionTypes', sessionTypeToEdit.id);
-            setDoc(docRef, sessionTypeData).catch(e => {
-                 errorEmitter.emit('permission-error', new FirestorePermissionError({ path: `sessionTypes/${sessionTypeToEdit.id}`, operation: 'update', requestResourceData: sessionTypeData }));
-            });
+            await setDoc(docRef, sessionTypeData);
             toast({ title: dictionary.success.sessionTypeUpdated });
         } else {
             const collectionRef = collection(firestore, 'sessionTypes');
-            addDoc(collectionRef, sessionTypeData).catch(e => {
-                errorEmitter.emit('permission-error', new FirestorePermissionError({ path: 'sessionTypes', operation: 'create', requestResourceData: sessionTypeData }));
-            });
+            await addDoc(collectionRef, sessionTypeData);
             toast({ title: dictionary.success.sessionTypeAdded });
         }
         onClose();
 
     } catch (e: any) {
+        const operation = sessionTypeToEdit?.id ? 'update' : 'create';
+        const path = sessionTypeToEdit?.id ? `sessionTypes/${sessionTypeToEdit.id}` : 'sessionTypes';
+        errorEmitter.emit('permission-error', new FirestorePermissionError({
+            path,
+            operation,
+            requestResourceData: data
+        }));
+
         toast({
             variant: "destructive",
             title: dictionary.error.generic,
