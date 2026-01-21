@@ -43,7 +43,8 @@ service cloud.firestore {
 
     match /users/{userId}/bookings/{bookingId} {
       allow write: if isOwner(userId);
-      allow read: if isOwner(userId) || isAdmin();
+      allow get: if isOwner(userId) || isAdmin();
+      allow list: if isOwner(userId) || isAdmin();
     }
 
     match /sessions/{sessionId} {
