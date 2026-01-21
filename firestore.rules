@@ -8,8 +8,8 @@ service cloud.firestore {
     }
 
     function isAdmin() {
-      // In a real app, this would check for a custom claim.
-      return request.auth != null && request.auth.uid in ['HvsOFzrOwFTHWTBVBextpZtV5I53'];
+      // Check admin status by email for consistency across projects.
+      return request.auth != null && request.auth.token.email in ['seryse@live.be', 'jael@live.fr', 'selvura@gmail.com'];
     }
 
     function isBookingIncrement(before, after) {

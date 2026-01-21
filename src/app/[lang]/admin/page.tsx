@@ -15,7 +15,6 @@ import { Loader2 } from 'lucide-react';
 import UpcomingSessions from '@/components/admin/upcoming-sessions';
 
 const adminEmails = ['seryse@live.be', 'jael@live.fr', 'selvura@gmail.com'];
-const adminUids = ['HvsOFzrOwFTHWTBVBextpZtV5I53'];
 
 export default function AdminPage({ params }: { params: Promise<{ lang: Locale }> }) {
   const { lang } = use(params);
@@ -33,9 +32,8 @@ export default function AdminPage({ params }: { params: Promise<{ lang: Locale }
   useEffect(() => {
     if (!isUserLoading) {
       const isEmailAuthorized = user && user.email && adminEmails.includes(user.email);
-      const isUidAuthorized = user && adminUids.includes(user.uid);
       
-      if (user && (isEmailAuthorized || isUidAuthorized)) {
+      if (user && isEmailAuthorized) {
         setIsAuthorized(true);
       } else {
         router.replace(`/${lang}/dashboard`);
