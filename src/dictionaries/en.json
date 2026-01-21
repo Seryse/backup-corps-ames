@@ -137,7 +137,9 @@
             "translationSuccess": "Translation complete!"
         },
         "error": {
-            "generic": "An error occurred. Please try again."
+            "generic": "An error occurred. Please try again.",
+            "storageUnauthorizedTitle": "Storage Permission Error",
+            "storageUnauthorized": "You do not have permission to upload files. Please check your Firebase Storage security rules."
         }
     },
     "shop": {

@@ -7,8 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { useFirestore } from '@/firebase';
+import { useFirestore, useStorage } from '@/firebase';
 import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import type { Formation } from '@/components/providers/cart-provider';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Languages } from 'lucide-react';
@@ -33,13 +34,14 @@ const formationSchema = z.object({
   price: z.coerce.number().min(0, 'Price must be non-negative'),
   currency: z.string().min(2, 'Currency is required'),
   tokenProductId: z.string().min(1, 'Token Product ID is required'),
-  imageUrl: z.string().url().optional(),
+  imageFile: z.any().optional(),
 });
 
 type FormationFormData = z.infer<typeof formationSchema>;
 
 export default function FormationForm({ formationToEdit, onClose, dictionary }: FormationFormProps) {
   const firestore = useFirestore();
+  const storage = useStorage();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [isTranslating, setIsTranslating] = useState<null | 'name' | 'description'>(null);
@@ -92,33 +94,54 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
 
 
   const onSubmit = (data: FormationFormData) => {
-    if (!firestore) return;
+    if (!firestore || !storage) return;
     setIsLoading(true);
 
-    const formationData = {
-      name: data.name,
-      description: data.description,
-      price: Math.round(data.price * 100),
-      currency: data.currency,
-      tokenProductId: data.tokenProductId,
-      imageUrl: data.imageUrl || 'https://placehold.co/600x400/E6E6FA/333333?text=Image',
+    const processAndSubmit = async () => {
+        let imageUrl = formationToEdit?.imageUrl; // Keep old image by default if editing
+        const file = data.imageFile?.[0];
+
+        if (file) {
+            const storageRef = ref(storage, `formations/${Date.now()}_${file.name}`);
+            const uploadTask = await uploadBytes(storageRef, file);
+            imageUrl = await getDownloadURL(uploadTask.ref);
+        }
+
+        const formationData = {
+          name: data.name,
+          description: data.description,
+          price: Math.round(data.price * 100),
+          currency: data.currency,
+          tokenProductId: data.tokenProductId,
+          imageUrl: imageUrl || 'https://placehold.co/600x400/E6E6FA/333333?text=Image',
+        };
+
+        if (formationToEdit?.id) {
+            await setDoc(doc(firestore, 'formations', formationToEdit.id), formationData);
+        } else {
+            await addDoc(collection(firestore, 'formations'), formationData);
+        }
     };
 
-    const firestorePromise = formationToEdit?.id
-        ? setDoc(doc(firestore, 'formations', formationToEdit.id), formationData)
-        : addDoc(collection(firestore, 'formations'), formationData);
-    
-    firestorePromise.then(() => {
+    processAndSubmit().then(() => {
         toast({ title: formationToEdit ? dictionary.success.formationUpdated : dictionary.success.formationAdded });
         onClose();
     })
     .catch(e => {
         console.error("Form submission error:", e);
-        toast({
-            variant: "destructive",
-            title: dictionary.error.generic,
-            description: e.message || "An unexpected error occurred.",
-        });
+        if (e.code === 'storage/unauthorized') {
+             toast({
+                variant: "destructive",
+                title: dictionary.error.storageUnauthorizedTitle,
+                description: dictionary.error.storageUnauthorized,
+            });
+        } else {
+            toast({
+                variant: "destructive",
+                title: dictionary.error.generic,
+                description: e.message || "An unexpected error occurred.",
+            });
+        }
     })
     .finally(() => {
         setIsLoading(false);
@@ -193,8 +216,8 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
       </div>
       
       <div>
-          <Label htmlFor="imageFile">{dictionary.form.image} (désactivé)</Label>
-          <Input id="imageFile" type="file" accept="image/*" disabled />
+          <Label htmlFor="imageFile">{dictionary.form.image}</Label>
+          <Input id="imageFile" type="file" accept="image/*" {...register('imageFile')} />
           {formationToEdit?.imageUrl && (
             <div className="mt-4">
                 <p className="text-sm font-medium">Image Actuelle:</p>

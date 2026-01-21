@@ -137,7 +137,9 @@
             "translationSuccess": "Traduction terminée !"
         },
         "error": {
-            "generic": "Une erreur est survenue. Veuillez réessayer."
+            "generic": "Une erreur est survenue. Veuillez réessayer.",
+            "storageUnauthorizedTitle": "Erreur de Permission de Stockage",
+            "storageUnauthorized": "Vous n'avez pas la permission d'envoyer des fichiers. Vérifiez les règles de sécurité de Firebase Storage."
         }
     },
     "shop": {

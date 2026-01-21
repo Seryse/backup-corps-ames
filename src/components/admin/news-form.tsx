@@ -7,8 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { useFirestore } from '@/firebase';
+import { useFirestore, useStorage } from '@/firebase';
 import { addDoc, collection, doc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Languages } from 'lucide-react';
 import { useState } from 'react';
@@ -30,13 +31,14 @@ const localizedStringSchema = z.object({
 const newsSchema = z.object({
   title: localizedStringSchema,
   content: localizedStringSchema,
-  imageUrl: z.string().url().optional(),
+  imageFile: z.any().optional(),
 });
 
 type NewsFormData = z.infer<typeof newsSchema>;
 
 export default function NewsForm({ articleToEdit, onClose, dictionary }: NewsFormProps) {
   const firestore = useFirestore();
+  const storage = useStorage();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [isTranslating, setIsTranslating] = useState<null | 'title' | 'content'>(null);
@@ -51,7 +53,8 @@ export default function NewsForm({ articleToEdit, onClose, dictionary }: NewsFor
     resolver: zodResolver(newsSchema),
     defaultValues: articleToEdit
       ? {
-          ...articleToEdit
+          title: articleToEdit.title,
+          content: articleToEdit.content,
         }
       : {
           title: { en: '', fr: '', es: '' },
@@ -84,30 +87,51 @@ export default function NewsForm({ articleToEdit, onClose, dictionary }: NewsFor
   };
 
   const onSubmit = (data: NewsFormData) => {
-    if (!firestore) return;
+    if (!firestore || !storage) return;
     setIsLoading(true);
 
-    const articleData = {
-        title: data.title,
-        content: data.content,
-        imageUrl: data.imageUrl || 'https://placehold.co/600x400/E6E6FA/333333?text=Image',
-        createdAt: articleToEdit?.createdAt || serverTimestamp(),
+    const processAndSubmit = async () => {
+        let imageUrl = articleToEdit?.imageUrl;
+        const file = data.imageFile?.[0];
+
+        if (file) {
+            const storageRef = ref(storage, `news/${Date.now()}_${file.name}`);
+            const uploadTask = await uploadBytes(storageRef, file);
+            imageUrl = await getDownloadURL(uploadTask.ref);
+        }
+
+        const articleData = {
+            title: data.title,
+            content: data.content,
+            imageUrl: imageUrl || 'https://placehold.co/600x400/E6E6FA/333333?text=Image',
+            createdAt: articleToEdit?.createdAt || serverTimestamp(),
+        };
+
+        if (articleToEdit?.id) {
+            await setDoc(doc(firestore, 'news', articleToEdit.id), articleData, { merge: true });
+        } else {
+            await addDoc(collection(firestore, 'news'), articleData);
+        }
     };
-
-    const firestorePromise = articleToEdit?.id
-        ? setDoc(doc(firestore, 'news', articleToEdit.id), articleData, { merge: true })
-        : addDoc(collection(firestore, 'news'), articleData);
-
-    firestorePromise.then(() => {
+    
+    processAndSubmit().then(() => {
         toast({ title: articleToEdit ? dictionary.success.articleUpdated : dictionary.success.articleAdded });
         onClose();
     }).catch(e => {
         console.error("Form submission error:", e);
-        toast({
-            variant: "destructive",
-            title: dictionary.error.generic,
-            description: e.message || "An unexpected error occurred.",
-        });
+        if (e.code === 'storage/unauthorized') {
+             toast({
+                variant: "destructive",
+                title: dictionary.error.storageUnauthorizedTitle,
+                description: dictionary.error.storageUnauthorized,
+            });
+        } else {
+            toast({
+                variant: "destructive",
+                title: dictionary.error.generic,
+                description: e.message || "An unexpected error occurred.",
+            });
+        }
     }).finally(() => {
         setIsLoading(false);
     });
@@ -162,8 +186,8 @@ export default function NewsForm({ articleToEdit, onClose, dictionary }: NewsFor
       </div>
       
       <div>
-          <Label htmlFor="imageFile">{dictionary.form.image} (désactivé)</Label>
-          <Input id="imageFile" type="file" accept="image/*" disabled />
+          <Label htmlFor="imageFile">{dictionary.form.image}</Label>
+          <Input id="imageFile" type="file" accept="image/*" {...register('imageFile')} />
           {articleToEdit?.imageUrl && (
             <div className="mt-4">
                 <p className="text-sm font-medium">Image Actuelle:</p>
