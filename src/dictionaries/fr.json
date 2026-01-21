@@ -101,12 +101,22 @@
         "startTime": "Heure de début",
         "endTime": "Heure de fin",
         "addSlotButton": "Ajouter",
+        "addSlotsButton": "Ajouter créneau(x)",
         "existingSlots": "Créneaux existants",
         "existingSlotsFor": "Liste des créneaux programmés pour : {sessionName}",
         "deleteSlotConfirmTitle": "Supprimer ce créneau ?",
         "deleteSlotConfirmDescription": "Cette action est irréversible et supprimera le créneau.",
         "noSlotsForSession": "Aucun créneau programmé pour cette séance.",
         "delete": "Supprimer",
+        "recurrence": "Récurrence",
+        "recurrenceOptions": {
+            "none": "Aucune",
+            "daily": "Chaque jour",
+            "weekly": "Chaque semaine",
+            "biweekly": "Toutes les 2 semaines",
+            "monthly": "Chaque mois"
+        },
+        "repeatCount": "Nombre de répétitions",
         "form": {
             "nameEn": "Nom (EN)",
             "nameFr": "Nom (FR)",
@@ -152,6 +162,7 @@
             "sessionTypeDeleted": "Type de séance supprimé avec succès !",
             "translationSuccess": "Traduction terminée !",
             "slotAdded": "Créneau ajouté avec succès !",
+            "slotsAdded": "Créneaux ajoutés avec succès !",
             "slotDeleted": "Créneau supprimé avec succès !"
         },
         "error": {

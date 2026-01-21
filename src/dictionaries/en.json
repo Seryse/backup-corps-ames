@@ -101,12 +101,22 @@
         "startTime": "Start Time",
         "endTime": "End Time",
         "addSlotButton": "Add",
+        "addSlotsButton": "Add slot(s)",
         "existingSlots": "Existing Slots",
         "existingSlotsFor": "List of scheduled slots for: {sessionName}",
         "deleteSlotConfirmTitle": "Delete this time slot?",
         "deleteSlotConfirmDescription": "This action is irreversible and will delete the time slot.",
         "noSlotsForSession": "No slots scheduled for this session yet.",
         "delete": "Delete",
+        "recurrence": "Recurrence",
+        "recurrenceOptions": {
+            "none": "None",
+            "daily": "Daily",
+            "weekly": "Weekly",
+            "biweekly": "Every 2 weeks",
+            "monthly": "Monthly"
+        },
+        "repeatCount": "Number of repetitions",
         "form": {
             "nameEn": "Name (EN)",
             "nameFr": "Name (FR)",
@@ -152,6 +162,7 @@
             "sessionTypeDeleted": "Session type deleted successfully!",
             "translationSuccess": "Translation complete!",
             "slotAdded": "Time slot added successfully!",
+            "slotsAdded": "Time slots added successfully!",
             "slotDeleted": "Time slot deleted successfully!"
         },
         "error": {

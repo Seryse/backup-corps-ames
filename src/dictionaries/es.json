@@ -101,12 +101,22 @@
         "startTime": "Hora de Inicio",
         "endTime": "Hora de Finalización",
         "addSlotButton": "Añadir",
+        "addSlotsButton": "Añadir horario(s)",
         "existingSlots": "Horarios Existentes",
         "existingSlotsFor": "Lista de horarios programados para: {sessionName}",
         "deleteSlotConfirmTitle": "¿Eliminar este horario?",
         "deleteSlotConfirmDescription": "Esta acción es irreversible y eliminará el horario.",
         "noSlotsForSession": "No hay horarios programados para esta sesión todavía.",
         "delete": "Eliminar",
+        "recurrence": "Recurrencia",
+        "recurrenceOptions": {
+            "none": "Ninguna",
+            "daily": "Diariamente",
+            "weekly": "Semanalmente",
+            "biweekly": "Cada 2 semanas",
+            "monthly": "Mensualmente"
+        },
+        "repeatCount": "Número de repeticiones",
         "form": {
             "nameEn": "Nombre (EN)",
             "nameFr": "Nombre (FR)",
@@ -152,6 +162,7 @@
             "sessionTypeDeleted": "¡Tipo de sesión eliminado con éxito!",
             "translationSuccess": "¡Traducción completa!",
             "slotAdded": "¡Horario añadido con éxito!",
+            "slotsAdded": "¡Horarios añadidos con éxito!",
             "slotDeleted": "¡Horario eliminado con éxito!"
         },
         "error": {
