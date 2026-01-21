@@ -35,8 +35,8 @@ const NewsForm = dynamic(() => import('./news-form'), {
 
 export type NewsArticle = {
     id: string;
-    title: LocalizedString;
-    content: LocalizedString;
+    title: LocalizedString | string;
+    content: LocalizedString | string;
     imageUrl: string;
     createdAt: any; // Firestore Timestamp
 };
@@ -111,7 +111,8 @@ export default function NewsManager({ dictionary, lang }: NewsManagerProps) {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {articles?.map((article) => {
-            const localizedTitle = article.title[lang] || article.title.en;
+            const localizedTitle = (article.title && typeof article.title === 'object') ? (article.title[lang] || article.title.en) : article.title;
+            const localizedContent = (article.content && typeof article.content === 'object') ? (article.content[lang] || article.content.en) : article.content;
             const articleDate = article.createdAt?.toDate();
             return (
               <Card key={article.id} className="flex flex-col">
@@ -133,7 +134,7 @@ export default function NewsManager({ dictionary, lang }: NewsManagerProps) {
                 </CardHeader>
                 <CardContent className="flex-grow">
                     <p className="text-sm text-muted-foreground line-clamp-3">
-                        {article.content[lang] || article.content.en}
+                        {localizedContent}
                     </p>
                 </CardContent>
                 <CardFooter className="flex justify-end gap-2">

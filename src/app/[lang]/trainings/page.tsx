@@ -78,7 +78,8 @@ export default function TrainingsPage({ params: { lang } }: { params: { lang: Lo
                 {mergedFormations.map(mf => {
                     if (!mf.details) return null;
                     const details = mf.details;
-                    const localizedName = details.name[lang] || details.name.en;
+                    const localizedName = (details.name && typeof details.name === 'object') ? (details.name[lang] || details.name.en) : details.name;
+                    const localizedDescription = (details.description && typeof details.description === 'object') ? (details.description[lang] || details.description.en) : details.description;
                     const enrollmentDate = mf.enrollmentDate?.toDate();
 
                     return (
@@ -95,7 +96,7 @@ export default function TrainingsPage({ params: { lang } }: { params: { lang: Lo
                                 )}
                             </CardHeader>
                             <CardContent className="flex-grow">
-                                <p className="text-sm text-muted-foreground">{details.description[lang] || details.description.en}</p>
+                                <p className="text-sm text-muted-foreground">{localizedDescription}</p>
                             </CardContent>
                              <CardFooter className="bg-muted/50 p-4">
                                 <Button asChild className="w-full">

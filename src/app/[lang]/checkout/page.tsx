@@ -76,7 +76,7 @@ export default function CheckoutPage({ params: { lang } }: { params: { lang: Loc
               <CardContent>
                 <ul className="space-y-4">
                   {items.map(item => {
-                    const localizedName = item.name[lang] || item.name.en;
+                    const localizedName = (item.name && typeof item.name === 'object') ? (item.name[lang] || item.name.en) : item.name;
                     return (
                         <li key={item.id} className="flex items-center gap-4">
                             <Image src={item.imageUrl} alt={localizedName} width={80} height={60} className="rounded-md object-cover aspect-[4/3]" />
