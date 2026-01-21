@@ -11,6 +11,9 @@ import { format } from 'date-fns';
 import { enUS, fr, es } from 'date-fns/locale';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, Query } from 'firebase/firestore';
+import type { SessionType } from '@/components/admin/session-type-manager';
+import { cn } from '@/lib/utils';
+import { DayContentProps } from 'react-day-picker';
 
 type TimeSlot = {
     id: string;
@@ -31,23 +34,44 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
     return query(collection(firestore, 'timeSlots')) as Query<TimeSlot>;
   }, [firestore]);
 
-  const { data: timeSlots, isLoading: isLoadingTimeSlots } = useCollection<TimeSlot>(timeSlotsQuery);
+  const sessionTypesQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return collection(firestore, 'sessionTypes') as Query<SessionType>;
+  }, [firestore]);
 
-  const availableSlots = useMemo(() => {
-    if (!timeSlots) return {};
-    return timeSlots.reduce((acc, slot) => {
-      const dateKey = format(slot.startTime.toDate(), 'yyyy-MM-dd');
-      const time = format(slot.startTime.toDate(), 'HH:mm');
-      if (!acc[dateKey]) {
-        acc[dateKey] = [];
-      }
-      if (!acc[dateKey].includes(time)) {
-        acc[dateKey].push(time);
-      }
-      acc[dateKey].sort();
-      return acc;
-    }, {} as { [key: string]: string[] });
-  }, [timeSlots]);
+  const { data: timeSlots, isLoading: isLoadingTimeSlots } = useCollection<TimeSlot>(timeSlotsQuery);
+  const { data: sessionTypes, isLoading: isLoadingSessionTypes } = useCollection<SessionType>(sessionTypesQuery);
+
+  const dayData = useMemo(() => {
+    if (!timeSlots || !sessionTypes) return {};
+
+    const data: { [key: string]: { status: 'available' | 'full', slots: TimeSlot[] } } = {};
+    const sessionTypeMap = new Map(sessionTypes.map(st => [st.id, st]));
+    
+    const slotsByDate = timeSlots.reduce((acc, slot) => {
+        const dateKey = format(slot.startTime.toDate(), 'yyyy-MM-dd');
+        if (!acc[dateKey]) acc[dateKey] = [];
+        acc[dateKey].push(slot);
+        return acc;
+    }, {} as { [key: string]: TimeSlot[] });
+
+    for (const dateKey in slotsByDate) {
+        const slotsOnDate = slotsByDate[dateKey];
+        let isDayAvailable = false;
+        for (const slot of slotsOnDate) {
+            const sessionType = sessionTypeMap.get(slot.sessionTypeId);
+            if (sessionType && slot.bookedParticipantsCount < sessionType.maxParticipants) {
+                isDayAvailable = true;
+                break;
+            }
+        }
+        data[dateKey] = {
+            status: isDayAvailable ? 'available' : 'full',
+            slots: slotsOnDate.sort((a,b) => a.startTime.toMillis() - b.startTime.toMillis()),
+        };
+    }
+    return data;
+  }, [timeSlots, sessionTypes]);
 
   useEffect(() => {
     getDictionary(lang).then(d => setDict(d.agenda));
@@ -68,18 +92,39 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
   };
 
   const selectedDateString = date ? format(date, 'yyyy-MM-dd') : '';
-  const slotsForSelectedDate = availableSlots[selectedDateString] || [];
+  const slotsForSelectedDate = dayData[selectedDateString]?.slots || [];
   
   const localesDateFns: { [key: string]: any } = { en: enUS, fr, es };
   const dateFnsLocale = localesDateFns[lang];
 
-  if (isLoadingTimeSlots || !dict) {
+  if (isLoadingTimeSlots || isLoadingSessionTypes || !dict) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Loader2 className="h-12 w-12 animate-spin text-accent" />
       </div>
     );
   }
+
+  const DayContent = (props: DayContentProps) => {
+    const dateKey = format(props.date, 'yyyy-MM-dd');
+    const status = dayData[dateKey]?.status;
+    if (props.displayMonth.getMonth() !== props.date.getMonth()) {
+        return <>{props.date.getDate()}</>;
+    }
+    return (
+        <div className="relative flex h-full w-full items-center justify-center">
+            {props.date.getDate()}
+            {status && (
+            <div
+                className={cn('absolute bottom-1.5 h-1.5 w-1.5 rounded-full', {
+                'bg-green-500': status === 'available',
+                'bg-red-500': status === 'full',
+                })}
+            />
+            )}
+        </div>
+    );
+  };
 
   return (
     <div className="container mx-auto p-4 sm:p-8">
@@ -99,9 +144,10 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
                             disabled={(d) => {
                                 const today = new Date();
                                 today.setHours(0,0,0,0);
-                                return d < today || !availableSlots[format(d, 'yyyy-MM-dd')];
+                                return d < today || !dayData[format(d, 'yyyy-MM-dd')];
                             }}
                             locale={dateFnsLocale}
+                            components={{ DayContent }}
                         />
                     </CardContent>
                 </Card>
@@ -120,15 +166,21 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
                                 <div className="space-y-2">
                                     <p className="text-center font-semibold mb-4">{format(date, 'd MMMM yyyy', { locale: dateFnsLocale })}</p>
                                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                                        {slotsForSelectedDate.map(slot => (
-                                            <Button
-                                                key={slot}
-                                                variant={selectedSlot === slot ? 'default' : 'outline'}
-                                                onClick={() => handleSlotSelect(slot)}
-                                            >
-                                                {slot}
-                                            </Button>
-                                        ))}
+                                        {slotsForSelectedDate.map(slot => {
+                                            const sessionType = sessionTypes?.find(st => st.id === slot.sessionTypeId);
+                                            const isFull = sessionType ? slot.bookedParticipantsCount >= sessionType.maxParticipants : true;
+                                            const time = format(slot.startTime.toDate(), 'HH:mm');
+                                            return (
+                                                <Button
+                                                    key={slot.id}
+                                                    variant={selectedSlot === time ? 'default' : 'outline'}
+                                                    onClick={() => handleSlotSelect(time)}
+                                                    disabled={isFull}
+                                                >
+                                                    {time}
+                                                </Button>
+                                            )
+                                        })}
                                     </div>
                                 </div>
                             ) : (
