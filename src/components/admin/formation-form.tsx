@@ -12,12 +12,12 @@ import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
 import { getDownloadURL, ref as storageRef, uploadBytesResumable } from 'firebase/storage';
 import type { Formation } from '@/components/providers/cart-provider';
 import { useToast } from '@/hooks/use-toast';
-import { Languages, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 import { Progress } from '../ui/progress';
-import { translateText } from '@/ai/flows/translate-text';
+// import { translateText } from '@/ai/flows/translate-text';
 
 interface FormationFormProps {
   formationToEdit?: Formation;
@@ -49,14 +49,14 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
-  const [isTranslating, setIsTranslating] = useState<null | 'name' | 'description'>(null);
+  // const [isTranslating, setIsTranslating] = useState<null | 'name' | 'description'>(null);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    getValues,
-    setValue,
+    // getValues,
+    // setValue,
   } = useForm<FormationFormData>({
     resolver: zodResolver(formationSchema),
     defaultValues: formationToEdit
@@ -74,29 +74,29 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
         },
   });
 
-  const handleTranslate = async (fieldName: 'name' | 'description') => {
-    const frenchText = getValues(`${fieldName}.fr`);
-    if (!frenchText) {
-        toast({
-            variant: "destructive",
-            title: "Rien à traduire",
-            description: `Veuillez d'abord remplir le champ en français.`,
-        });
-        return;
-    }
-    setIsTranslating(fieldName);
-    try {
-        const result = await translateText({ text: frenchText });
-        setValue(`${fieldName}.en`, result.en);
-        setValue(`${fieldName}.es`, result.es);
-        toast({ title: "Traduction terminée !" });
-    } catch (error) {
-        console.error("Translation failed:", error);
-        toast({ variant: "destructive", title: "Erreur de traduction" });
-    } finally {
-        setIsTranslating(null);
-    }
-  };
+  // const handleTranslate = async (fieldName: 'name' | 'description') => {
+  //   const frenchText = getValues(`${fieldName}.fr`);
+  //   if (!frenchText) {
+  //       toast({
+  //           variant: "destructive",
+  //           title: "Rien à traduire",
+  //           description: `Veuillez d'abord remplir le champ en français.`,
+  //       });
+  //       return;
+  //   }
+  //   setIsTranslating(fieldName);
+  //   try {
+  //       const result = await translateText({ text: frenchText });
+  //       setValue(`${fieldName}.en`, result.en);
+  //       setValue(`${fieldName}.es`, result.es);
+  //       toast({ title: "Traduction terminée !" });
+  //   } catch (error) {
+  //       console.error("Translation failed:", error);
+  //       toast({ variant: "destructive", title: "Erreur de traduction" });
+  //   } finally {
+  //       setIsTranslating(null);
+  //   }
+  // };
 
 
   const onSubmit = async (data: FormationFormData) => {
@@ -186,10 +186,10 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
         <div>
           <div className="flex items-center justify-between">
             <Label htmlFor="name.fr">{dictionary.form.nameFr}</Label>
-            <Button variant="ghost" size="icon" type="button" onClick={() => handleTranslate('name')} disabled={isTranslating === 'name'} className="h-7 w-7">
+            {/* <Button variant="ghost" size="icon" type="button" onClick={() => handleTranslate('name')} disabled={isTranslating === 'name'} className="h-7 w-7">
                 {isTranslating === 'name' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Languages className="h-4 w-4" />}
                 <span className="sr-only">Traduire depuis le français</span>
-            </Button>
+            </Button> */}
           </div>
           <Input id="name.fr" {...register('name.fr')} />
           {errors.name?.fr && <p className="text-sm text-destructive">{errors.name.fr.message}</p>}
@@ -204,10 +204,10 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
       <div>
         <div className="flex items-center justify-between">
             <Label htmlFor="description.fr">{dictionary.form.descriptionFr}</Label>
-            <Button variant="ghost" size="icon" type="button" onClick={() => handleTranslate('description')} disabled={isTranslating === 'description'} className="h-7 w-7">
+            {/* <Button variant="ghost" size="icon" type="button" onClick={() => handleTranslate('description')} disabled={isTranslating === 'description'} className="h-7 w-7">
                 {isTranslating === 'description' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Languages className="h-4 w-4" />}
                 <span className="sr-only">Traduire depuis le français</span>
-            </Button>
+            </Button> */}
         </div>
         <Textarea id="description.fr" {...register('description.fr')} />
         {errors.description?.fr && <p className="text-sm text-destructive">{errors.description.fr.message}</p>}
