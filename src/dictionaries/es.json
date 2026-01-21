@@ -96,6 +96,20 @@
         "alreadyInCartDescription": "ya está en tu cesta.",
         "inCart": "En el carrito"
     },
+    "checkout": {
+        "title": "Pago",
+        "yourCart": "Tu Cesta",
+        "emptyCart": "Tu cesta está vacía.",
+        "browseFormations": "Explorar Formaciones",
+        "summary": "Resumen del Pedido",
+        "total": "Total",
+        "proceedToPayment": "Proceder al Pago",
+        "processingPayment": "Procesando pago...",
+        "paymentSuccessTitle": "¡Pago Exitoso!",
+        "paymentSuccessDescription": "Ahora tienes acceso a tus nuevas formaciones. Redirigiendo al panel...",
+        "paymentErrorTitle": "Pago Fallido",
+        "paymentErrorDescription": "Hubo un problema al procesar tu pago. Por favor, inténtalo de nuevo."
+    },
     "agenda": {
         "title": "Agenda",
         "description": "Reserva tu sesión"

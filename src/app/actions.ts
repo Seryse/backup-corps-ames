@@ -1,7 +1,8 @@
 'use server'
 
 import { db } from '@/firebase/server';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, writeBatch, collection, serverTimestamp } from 'firebase/firestore';
+import type { CartItem } from '@/components/providers/cart-provider';
 
 // This is a simplified check. In a real app, you'd have more robust logic.
 // This function checks a 'sessions' collection for a document matching today's date.
@@ -43,4 +44,36 @@ export async function checkSessionAccess(userId: string): Promise<boolean> {
     console.error("Error checking session access:", error);
     return false;
   }
+}
+
+export async function processCheckout(userId: string, items: CartItem[]): Promise<{success: boolean}> {
+    if (!userId || !items || items.length === 0) {
+        return { success: false };
+    }
+
+    try {
+        const batch = writeBatch(db);
+
+        items.forEach(item => {
+            const userFormationRef = doc(collection(db, 'users', userId, 'formations'));
+            
+            // This is a placeholder token generation strategy.
+            // In a real-world scenario, you would use a more secure and meaningful token generation method.
+            const accessToken = `${item.tokenProductId}-${userId.substring(0, 5)}-${Date.now()}`;
+
+            batch.set(userFormationRef, {
+                userId: userId,
+                formationId: item.id,
+                accessToken: accessToken,
+                enrollmentDate: serverTimestamp(),
+            });
+        });
+
+        await batch.commit();
+
+        return { success: true };
+    } catch (error) {
+        console.error("Error processing checkout:", error);
+        return { success: false };
+    }
 }

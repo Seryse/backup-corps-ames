@@ -96,6 +96,20 @@
         "alreadyInCartDescription": "is already in your cart.",
         "inCart": "In Cart"
     },
+    "checkout": {
+        "title": "Checkout",
+        "yourCart": "Your Cart",
+        "emptyCart": "Your cart is empty.",
+        "browseFormations": "Browse Formations",
+        "summary": "Order Summary",
+        "total": "Total",
+        "proceedToPayment": "Proceed to Payment",
+        "processingPayment": "Processing payment...",
+        "paymentSuccessTitle": "Payment Successful!",
+        "paymentSuccessDescription": "You now have access to your new formations. Redirecting to dashboard...",
+        "paymentErrorTitle": "Payment Failed",
+        "paymentErrorDescription": "There was an issue processing your payment. Please try again."
+    },
     "agenda": {
         "title": "Agenda",
         "description": "Book your session"

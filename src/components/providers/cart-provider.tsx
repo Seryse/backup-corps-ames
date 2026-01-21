@@ -27,8 +27,10 @@ export type CartItem = Formation & {
 interface CartContextType {
   items: CartItem[];
   addToCart: (formation: Formation) => void;
-  // We can add more functions later: removeFromCart, clearCart, etc.
+  removeFromCart: (formationId: string) => void;
+  clearCart: () => void;
   itemCount: number;
+  totalPrice: number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -47,14 +49,30 @@ export function CartProvider({ children }: { children: ReactNode }) {
     });
   };
 
+  const removeFromCart = (formationId: string) => {
+    setItems(prevItems => prevItems.filter(item => item.id !== formationId));
+  };
+
+  const clearCart = () => {
+    setItems([]);
+  };
+
   const itemCount = useMemo(() => {
       return items.reduce((total, item) => total + item.quantity, 0);
   }, [items]);
 
+  const totalPrice = useMemo(() => {
+    return items.reduce((total, item) => total + item.price * item.quantity, 0);
+  }, [items]);
+
+
   const value = {
     items,
     addToCart,
+    removeFromCart,
+    clearCart,
     itemCount,
+    totalPrice,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

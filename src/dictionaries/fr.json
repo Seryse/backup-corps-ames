@@ -96,6 +96,20 @@
         "alreadyInCartDescription": "est déjà dans votre panier.",
         "inCart": "Dans le panier"
     },
+    "checkout": {
+        "title": "Paiement",
+        "yourCart": "Votre Panier",
+        "emptyCart": "Votre panier est vide.",
+        "browseFormations": "Découvrir les formations",
+        "summary": "Résumé de la commande",
+        "total": "Total",
+        "proceedToPayment": "Passer au paiement",
+        "processingPayment": "Traitement du paiement...",
+        "paymentSuccessTitle": "Paiement Réussi !",
+        "paymentSuccessDescription": "Vous avez maintenant accès à vos nouvelles formations. Redirection vers le tableau de bord...",
+        "paymentErrorTitle": "Échec du Paiement",
+        "paymentErrorDescription": "Un problème est survenu lors du traitement de votre paiement. Veuillez réessayer."
+    },
     "agenda": {
         "title": "Agenda",
         "description": "Réservez votre séance"
