@@ -1,0 +1,52 @@
+import Link from 'next/link';
+import { UserNav } from '@/components/auth/user-nav';
+import LanguageSwitcher from './language-switcher';
+import { Dictionary } from '@/lib/dictionaries';
+import { Locale } from '@/i18n-config';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+
+const LotusIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path d="M8.5 18c4.25-1.5 5.5-5.5 5.5-5.5s1.25 4 5.5 5.5" />
+      <path d="M12 12.5a3.5 3.5 0 1 0-7 0" />
+      <path d="M12 12.5a3.5 3.5 0 1 1 7 0" />
+      <path d="M12 18v-5.5" />
+      <path d="M8 8.83C8.42 7.06 9.56 6 12 6s3.58 1.06 4 2.83" />
+      <path d="M12 2v4" />
+    </svg>
+);
+
+
+export default function Header({ dictionary, lang }: { dictionary: Dictionary['header'], lang: Locale }) {
+  return (
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-16 max-w-screen-2xl items-center">
+        <Link href={`/${lang}`} className="mr-6 flex items-center space-x-2">
+            <LotusIcon className="h-6 w-6 text-accent-foreground" />
+            <span className="font-bold font-headline text-lg">Corps et Âmes</span>
+        </Link>
+        <nav className="flex items-center gap-4 text-sm">
+            <Link href={`/${lang}/dashboard`} className="text-foreground/60 transition-colors hover:text-foreground/80">{dictionary.dashboard}</Link>
+            <Link href={`/${lang}/session`} className="text-foreground/60 transition-colors hover:text-foreground/80">{dictionary.session}</Link>
+            <Link href={`/${lang}/admin`} className="text-foreground/60 transition-colors hover:text-foreground/80">{dictionary.admin}</Link>
+        </nav>
+        <div className="flex flex-1 items-center justify-end space-x-2">
+          <LanguageSwitcher lang={lang} />
+          <UserNav dictionary={dictionary} lang={lang} />
+        </div>
+      </div>
+    </header>
+  );
+}

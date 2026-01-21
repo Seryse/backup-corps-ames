@@ -1,0 +1,57 @@
+{
+    "header": {
+        "dashboard": "Panel",
+        "session": "Sesión",
+        "admin": "Admin",
+        "login": "Iniciar Sesión",
+        "logout": "Cerrar Sesión",
+        "userMenu": "Abrir menú de usuario",
+        "viewProfile": "Ver Perfil"
+    },
+    "landing": {
+        "title": "Cuerpo y Almas",
+        "subtitle": "Tu santuario para el bienestar del cuerpo y el alma.",
+        "cta": "Unirse a una Sesión",
+        "description": "Vive sesiones únicas que combinan meditación guiada, música suave y guía espiritual para una profunda reconexión interior."
+    },
+    "auth": {
+        "loginTitle": "Bienvenido de nuevo",
+        "loginSubtitle": "Introduce tus credenciales para acceder a tu espacio.",
+        "signupTitle": "Crea tu cuenta",
+        "signupSubtitle": "Únete a nuestra comunidad y comienza tu viaje.",
+        "emailLabel": "Correo electrónico",
+        "passwordLabel": "Contraseña",
+        "loginButton": "Iniciar Sesión",
+        "signupButton": "Registrarse",
+        "googleButton": "Continuar con Google",
+        "or": "O",
+        "noAccount": "¿No tienes una cuenta?",
+        "hasAccount": "¿Ya tienes una cuenta?",
+        "signupLink": "Regístrate",
+        "loginLink": "Inicia Sesión"
+    },
+    "dashboard": {
+        "title": "Bienvenido a tu Panel",
+        "description": "Aquí puedes gestionar tus sesiones y tu perfil. ¿Listo para tu próximo viaje?",
+        "startSession": "Ir a la Sesión"
+    },
+    "session": {
+        "title": "Sesión en Vivo",
+        "loading": "Preparando la sesión...",
+        "accessDenied": "Acceso Denegado",
+        "accessDeniedMessage": "Tu sesión no está activa o pagada. Por favor, comprueba tu panel.",
+        "backToDashboard": "Volver al Panel",
+        "adminControls": "Controles de Admin",
+        "startIntro": "Iniciar Intro",
+        "subtitles": "Subtítulos",
+        "translation": "Traducción",
+        "startRecognition": "Iniciar Subtítulos",
+        "stopRecognition": "Detener Subtítulos"
+    },
+    "admin": {
+        "title": "Consola de Administración",
+        "introFiles": "Archivos de Intro",
+        "playlistFiles": "Archivos de Playlist",
+        "noFiles": "No se encontraron archivos en este directorio."
+    }
+}

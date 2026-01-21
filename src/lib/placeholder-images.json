@@ -1,3 +1,22 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-spiritual",
+      "description": "A serene, spiritual-themed hero image for the landing page.",
+      "imageUrl": "https://images.unsplash.com/photo-1635699763925-72e18deadd99?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxzZXJlbmUlMjB5b2dhfGVufDB8fHx8MTc2ODk2Mzc5MXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "serene yoga"
+    },
+    {
+      "id": "dashboard-welcome",
+      "description": "A welcoming image for the user dashboard.",
+      "imageUrl": "https://images.unsplash.com/photo-1765371512971-9d4da531d004?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Y2FsbSUyMHdvcmtzcGFjZXxlbnwwfHx8fDE3Njg5NjM3OTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "calm workspace"
+    },
+    {
+      "id": "admin-console",
+      "description": "An image for the admin console header.",
+      "imageUrl": "https://images.unsplash.com/photo-1507831228884-93d43e81a99d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxvcmdhbml6ZWQlMjBkZXNrfGVufDB8fHx8MTc2ODk2Mzc5MHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "organized desk"
+    }
+  ]
 }

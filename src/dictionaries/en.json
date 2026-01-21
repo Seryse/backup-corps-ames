@@ -1,0 +1,57 @@
+{
+    "header": {
+        "dashboard": "Dashboard",
+        "session": "Session",
+        "admin": "Admin",
+        "login": "Login",
+        "logout": "Logout",
+        "userMenu": "Open user menu",
+        "viewProfile": "View Profile"
+    },
+    "landing": {
+        "title": "Body and Souls",
+        "subtitle": "Your sanctuary for wellness of body and soul.",
+        "cta": "Join a Session",
+        "description": "Experience unique sessions combining guided meditation, gentle music, and spiritual guidance for deep inner reconnection."
+    },
+    "auth": {
+        "loginTitle": "Welcome back",
+        "loginSubtitle": "Enter your credentials to access your space.",
+        "signupTitle": "Create your account",
+        "signupSubtitle": "Join our community and start your journey.",
+        "emailLabel": "Email",
+        "passwordLabel": "Password",
+        "loginButton": "Login",
+        "signupButton": "Sign Up",
+        "googleButton": "Continue with Google",
+        "or": "Or",
+        "noAccount": "Don't have an account?",
+        "hasAccount": "Already have an account?",
+        "signupLink": "Sign Up",
+        "loginLink": "Login"
+    },
+    "dashboard": {
+        "title": "Welcome to your Dashboard",
+        "description": "Here you can manage your sessions and your profile. Ready for your next journey?",
+        "startSession": "Go to Session"
+    },
+    "session": {
+        "title": "Live Session",
+        "loading": "Preparing the session...",
+        "accessDenied": "Access Denied",
+        "accessDeniedMessage": "Your session is not active or paid. Please check your dashboard.",
+        "backToDashboard": "Back to Dashboard",
+        "adminControls": "Admin Controls",
+        "startIntro": "Start Intro",
+        "subtitles": "Subtitles",
+        "translation": "Translation",
+        "startRecognition": "Start Subtitles",
+        "stopRecognition": "Stop Subtitles"
+    },
+    "admin": {
+        "title": "Admin Console",
+        "introFiles": "Intro Files",
+        "playlistFiles": "Playlist Files",
+        "noFiles": "No files found in this directory."
+    }
+}

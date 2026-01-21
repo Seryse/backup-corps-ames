@@ -1,0 +1,57 @@
+{
+    "header": {
+        "dashboard": "Tableau de bord",
+        "session": "Session",
+        "admin": "Admin",
+        "login": "Connexion",
+        "logout": "Déconnexion",
+        "userMenu": "Ouvrir le menu utilisateur",
+        "viewProfile": "Voir le Profil"
+    },
+    "landing": {
+        "title": "Corps et Âmes",
+        "subtitle": "Votre sanctuaire pour le bien-être du corps et de l'âme.",
+        "cta": "Rejoindre une Session",
+        "description": "Vivez des sessions uniques alliant méditation guidée, musique douce et guidance spirituelle pour une reconnexion intérieure profonde."
+    },
+    "auth": {
+        "loginTitle": "Bon retour parmi nous",
+        "loginSubtitle": "Entrez vos identifiants pour accéder à votre espace.",
+        "signupTitle": "Créez votre compte",
+        "signupSubtitle": "Rejoignez notre communauté et commencez votre voyage.",
+        "emailLabel": "Email",
+        "passwordLabel": "Mot de passe",
+        "loginButton": "Se connecter",
+        "signupButton": "S'inscrire",
+        "googleButton": "Continuer avec Google",
+        "or": "Ou",
+        "noAccount": "Vous n'avez pas de compte ?",
+        "hasAccount": "Vous avez déjà un compte ?",
+        "signupLink": "Inscrivez-vous",
+        "loginLink": "Connectez-vous"
+    },
+    "dashboard": {
+        "title": "Bienvenue sur votre Tableau de Bord",
+        "description": "Ici, vous pouvez gérer vos sessions et votre profil. Prêt pour votre prochain voyage ?",
+        "startSession": "Aller à la Session"
+    },
+    "session": {
+        "title": "Session en Direct",
+        "loading": "Préparation de la session...",
+        "accessDenied": "Accès Refusé",
+        "accessDeniedMessage": "Votre session n'est pas active ou payée. Veuillez vérifier votre tableau de bord.",
+        "backToDashboard": "Retour au Tableau de Bord",
+        "adminControls": "Contrôles Admin",
+        "startIntro": "Lancer l'Intro",
+        "subtitles": "Sous-titres",
+        "translation": "Traduction",
+        "startRecognition": "Démarrer les sous-titres",
+        "stopRecognition": "Arrêter les sous-titres"
+    },
+    "admin": {
+        "title": "Console d'Administration",
+        "introFiles": "Fichiers d'introduction",
+        "playlistFiles": "Fichiers de playlist",
+        "noFiles": "Aucun fichier trouvé dans ce répertoire."
+    }
+}
