@@ -80,6 +80,11 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
 
   const { data: booking, isLoading: isLoadingBooking } = useDoc<Booking>(bookingRef);
 
+  // Create stable variables from the booking object to use in dependency arrays
+  const bookingExists = !!booking;
+  const bookingUserId = booking?.userId;
+  const bookingVisioToken = booking?.visioToken;
+
   const sessionRef = useMemoFirebase(() => {
     if (!firestore) return null;
     return doc(firestore, 'sessions', bookingId) as DocumentReference<LiveSession>;
@@ -110,20 +115,20 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
 
     if (isUserAdmin) {
       // Admin is authorized if the booking document was successfully loaded via the uid in the URL
-      if (booking) {
+      if (bookingExists) {
         setAuthStatus('authorized');
       } else {
         setAuthStatus('unauthorized');
       }
     } else {
       // Regular user authorization check: must own booking and have valid token
-      if (booking && booking.userId === user.uid && booking.visioToken === token) {
+      if (bookingExists && bookingUserId === user.uid && bookingVisioToken === token) {
         setAuthStatus('authorized');
       } else {
         setAuthStatus('unauthorized');
       }
     }
-  }, [user, isUserLoading, booking, isLoadingBooking, token]);
+  }, [user, isUserLoading, isLoadingBooking, token, bookingExists, bookingUserId, bookingVisioToken]);
 
 
   useEffect(() => {
@@ -136,7 +141,7 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
 
   // --- Daily.co SDK Integration ---
   useEffect(() => {
-    if (authStatus !== 'authorized' || !callFrameRef.current || dailyRef.current || !booking || hasJoinedRef.current) return;
+    if (authStatus !== 'authorized' || !callFrameRef.current || dailyRef.current || !bookingExists || hasJoinedRef.current || !bookingVisioToken) return;
 
     const setupCall = async () => {
         const roomUrl = "https://corps-et-ames.daily.co/corps-et-ames";
@@ -189,7 +194,7 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
         });
 
         try {
-            await callObject.join({ url: roomUrl });
+            await callObject.join({ url: roomUrl, token: bookingVisioToken });
             hasJoinedRef.current = true; // Lock to prevent re-joining
         } catch (error) {
             console.error("Failed to join Daily.co call:", error);
@@ -205,7 +210,7 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
         }
         hasJoinedRef.current = false;
     }
-  }, [authStatus, isAdminView, lang, router, booking]);
+  }, [authStatus, isAdminView, lang, router, bookingExists, bookingVisioToken]);
 
   const handleTriggerIntro = () => updateSessionState(bookingId, { triggerIntro: true });
   const handleStopAudio = () => { /* Logic to stop playlist via session state */ };
