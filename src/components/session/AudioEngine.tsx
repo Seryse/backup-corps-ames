@@ -10,91 +10,86 @@ interface AudioEngineProps {
 
 export default function AudioEngine({ introUrl, triggerIntro, playlistUrl }: AudioEngineProps) {
   const audioContextRef = useRef<AudioContext | null>(null);
-  const introSourceRef = useRef<AudioBufferSourceNode | null>(null);
-  const playlistSourceRef = useRef<AudioBufferSourceNode | null>(null);
   const masterGainRef = useRef<GainNode | null>(null);
   const introPlayedRef = useRef(false);
 
-  // Initialize AudioContext on first user interaction or prop change
+  // We will use a single audio element and swap its source.
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const mediaSourceNodeRef = useRef<MediaElementAudioSourceNode | null>(null);
+
+  // Initialize AudioContext
   useEffect(() => {
     const initAudioContext = () => {
-      if (!audioContextRef.current) {
-        try {
-          const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
-          audioContextRef.current = ctx;
-          masterGainRef.current = ctx.createGain();
-          // Boost the volume to counteract Apple's ducking effect.
-          // A value of 2.5 (250%) should compensate for system-level volume reduction.
-          masterGainRef.current.gain.value = 2.5;
-          masterGainRef.current.connect(ctx.destination);
-        } catch (e) {
-          console.error("Failed to create AudioContext:", e);
+        if (typeof window !== 'undefined' && !audioContextRef.current) {
+            try {
+              const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+              audioContextRef.current = ctx;
+              masterGainRef.current = ctx.createGain();
+              masterGainRef.current.gain.value = 2.5; // Boost to counteract Apple's ducking effect.
+              masterGainRef.current.connect(ctx.destination);
+    
+              // Create the single audio element and connect it to the graph
+              const audio = new Audio();
+              audio.crossOrigin = "anonymous"; // This is key for CORS
+              audioRef.current = audio;
+              mediaSourceNodeRef.current = ctx.createMediaElementSource(audio);
+              mediaSourceNodeRef.current.connect(masterGainRef.current);
+    
+            } catch (e) {
+              console.error("Failed to create AudioContext or Audio Element:", e);
+            }
         }
-      }
-      // Ensure context is running to prevent ducking
-      if (audioContextRef.current && audioContextRef.current.state === 'suspended') {
-        audioContextRef.current.resume();
-      }
     };
+
     initAudioContext();
-  }, [triggerIntro, playlistUrl]);
+  }, []);
 
-  const playAudio = async (url: string, sourceRef: React.MutableRefObject<AudioBufferSourceNode | null>) => {
-    const ctx = audioContextRef.current;
-    if (!ctx || !masterGainRef.current) return;
-
-    if (sourceRef.current) {
-      try { sourceRef.current.stop(); } catch (e) {}
-      sourceRef.current = null;
+  const playUrl = (url: string) => {
+    if (!audioRef.current) return;
+    
+    // Resume context on play, as browsers often require a user gesture.
+    if (audioContextRef.current?.state === 'suspended') {
+        audioContextRef.current?.resume();
     }
     
-    try {
-      const response = await fetch(url);
-      if (!response.ok) throw new Error(`Failed to fetch audio: ${response.statusText}`);
-      const arrayBuffer = await response.arrayBuffer();
-      const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
+    audioRef.current.src = url;
+    audioRef.current.play().catch(e => {
+        console.error(`[AudioEngine] Error playing ${url}:`, e);
+    });
+  }
 
-      const source = ctx.createBufferSource();
-      source.buffer = audioBuffer;
-      source.connect(masterGainRef.current);
-      source.start(0);
-      sourceRef.current = source;
-
-      source.onended = () => {
-        if (sourceRef.current === source) {
-            sourceRef.current = null;
-        }
-      }
-    } catch(error) {
-        console.error("[AudioEngine] Error playing audio from URL:", url, error);
+  const stop = () => {
+    if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = ""; // Detach source
     }
-  };
+  }
 
   useEffect(() => {
     if (triggerIntro && introUrl && !introPlayedRef.current) {
-      introPlayedRef.current = true;
-      if (playlistSourceRef.current) {
-        try { playlistSourceRef.current.stop(); } catch(e) {}
-        playlistSourceRef.current = null;
-      }
-      playAudio(introUrl, introSourceRef);
+      introPlayedRef.current = true; // Mark as played
+      playUrl(introUrl);
     }
   }, [triggerIntro, introUrl]);
 
   useEffect(() => {
     if (playlistUrl) {
-      if (introSourceRef.current) {
-        try { introSourceRef.current.stop(); } catch(e) {}
-        introSourceRef.current = null;
-      }
-      playAudio(playlistUrl, playlistSourceRef);
+      // When a new playlist is selected, play it. This will automatically stop the previous one.
+      introPlayedRef.current = true; // Playing a playlist implies intro is done.
+      playUrl(playlistUrl);
     } else {
-        if (playlistSourceRef.current) {
-            try { playlistSourceRef.current.stop(); } catch(e) {}
-            playlistSourceRef.current = null;
-        }
+      // If playlistUrl is cleared, stop playback.
+      stop();
     }
   }, [playlistUrl]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+        stop();
+        mediaSourceNodeRef.current?.disconnect();
+    };
+  }, []);
 
   return null;
 }
