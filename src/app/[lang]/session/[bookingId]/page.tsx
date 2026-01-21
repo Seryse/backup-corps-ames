@@ -56,7 +56,6 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
   const callFrameRef = useRef<HTMLDivElement>(null);
   const dailyRef = useRef<DailyCall | null>(null);
   const hasJoinedRef = useRef(false); // Lock to prevent re-joining
-  const [remoteAudioStream, setRemoteAudioStream] = useState<MediaStream | null>(null);
 
   // --- Data Fetching ---
     const bookingRef = useMemoFirebase(() => {
@@ -172,14 +171,6 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
         
         dailyRef.current = callObject;
 
-        callObject.on('track-started', (event) => {
-            if (event.track.kind === 'audio' && event.participant.owner) {
-                console.log("Admin audio track started, creating stream for AudioEngine.");
-                const stream = new MediaStream([event.track]);
-                setRemoteAudioStream(stream); 
-            }
-        });
-
         callObject.on('left-meeting', () => {
             console.log('Left meeting');
             // No need to call destroy() here, it's handled by the 'left-meeting' event itself
@@ -215,7 +206,7 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
         }
         hasJoinedRef.current = false;
     }
-  }, [authStatus, isAdminView, lang, router, bookingExists]);
+  }, [authStatus, isAdminView, lang, router, bookingExists, token, bookingVisioToken, bookingUserId]);
 
   const handleTriggerIntro = () => updateSessionState(bookingId, { triggerIntro: true });
   const handleStopAudio = () => { /* Logic to stop playlist via session state */ };
@@ -252,7 +243,6 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
     return (
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {!isAdminView && <AudioEngine 
-            remoteStream={remoteAudioStream}
             introUrl={`https://firebasestorage.googleapis.com/v0/b/corps-et-ames-adc60.appspot.com/o/intros%2Fintro_${lang}.mp3?alt=media`}
             triggerIntro={sessionState?.triggerIntro}
         />}

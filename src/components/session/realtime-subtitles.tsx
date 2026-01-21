@@ -31,7 +31,7 @@ interface LiveSession {
 }
 
 export default function RealtimeSubtitles({ dictionary, lang, isAdmin, sessionId }: RealtimeSubtitlesProps) {
-    const [isListening, setIsListening] = useState(false);
+    const [isListening, setIsListening] = useState(isAdmin);
     const recognitionRef = useRef<any>(null);
     const firestore = useFirestore();
 
@@ -115,11 +115,13 @@ export default function RealtimeSubtitles({ dictionary, lang, isAdmin, sessionId
     };
     
     // Display logic based on user role and language
-    const mainText = isAdmin || lang === 'fr' 
-        ? subtitle?.original 
-        : subtitle?.translations?.[lang];
-        
-    const secondaryText = isAdmin || lang === 'fr' || !mainText ? null : subtitle?.original;
+    const mainText = (isAdmin || lang === 'fr')
+        ? subtitle?.original
+        : subtitle?.translations?.[lang] || subtitle?.original;
+
+    // Show secondary text ONLY if the translation was successful and we are a client
+    const wasTranslationSuccessful = !(isAdmin || lang === 'fr') && subtitle?.translations?.[lang];
+    const secondaryText = wasTranslationSuccessful ? `(${subtitle.original})` : null;
 
     return (
         <Card>
@@ -142,7 +144,7 @@ export default function RealtimeSubtitles({ dictionary, lang, isAdmin, sessionId
                     </p>
                     {secondaryText && (
                         <p className="text-sm text-muted-foreground">
-                           ({secondaryText})
+                           {secondaryText}
                         </p>
                     )}
                 </div>

@@ -3,14 +3,12 @@
 import React, { useEffect, useRef } from 'react';
 
 interface AudioEngineProps {
-  remoteStream: MediaStream | null;
   introUrl: string | undefined;
   triggerIntro: boolean | undefined;
 }
 
-export default function AudioEngine({ remoteStream, introUrl, triggerIntro }: AudioEngineProps) {
+export default function AudioEngine({ introUrl, triggerIntro }: AudioEngineProps) {
   const audioContextRef = useRef<AudioContext | null>(null);
-  const remoteSourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
   const introSourceRef = useRef<AudioBufferSourceNode | null>(null);
   const masterGainRef = useRef<GainNode | null>(null);
   const introPlayedRef = useRef(false); // To ensure intro plays only once
@@ -36,19 +34,7 @@ export default function AudioEngine({ remoteStream, introUrl, triggerIntro }: Au
       ctx.resume();
     }
     
-    // 2. Branchement du flux de l'Admin (Remote)
-    if (remoteStream && !remoteSourceRef.current) {
-        try {
-            remoteSourceRef.current = ctx.createMediaStreamSource(remoteStream);
-            if (masterGainRef.current) {
-                remoteSourceRef.current.connect(masterGainRef.current);
-            }
-        } catch(e) {
-            console.error("Error connecting remote stream to AudioContext:", e);
-        }
-    }
-
-    // 3. Gestion de l'Intro Locale
+    // 2. Gestion de l'Intro Locale
     if (triggerIntro && introUrl && !introPlayedRef.current) {
       introPlayedRef.current = true; // Play only once
       playIntro(introUrl);
@@ -82,7 +68,7 @@ export default function AudioEngine({ remoteStream, introUrl, triggerIntro }: Au
         }
     }
 
-  }, [remoteStream, triggerIntro, introUrl]);
+  }, [triggerIntro, introUrl]);
 
   return null; // Ce composant gère le son en arrière-plan
 };
