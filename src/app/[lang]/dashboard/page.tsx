@@ -59,9 +59,12 @@ export default function HomePage({ params: { lang } }: { params: { lang: Locale 
 
   return (
     <div className="container mx-auto p-4 sm:p-8">
-      <div className="mb-12">
-        <h1 className="text-4xl font-headline mb-2">{dict.home.title}</h1>
-        <p className="text-lg text-muted-foreground">{dict.home.description}</p>
+      <div className="mb-12 flex items-center gap-6">
+        <Image src="/icone.png" alt="Corps et Âmes Logo" width={80} height={80} className="rounded-full shadow-md" />
+        <div>
+            <h1 className="text-4xl font-headline mb-2">{dict.home.title}</h1>
+            <p className="text-lg text-muted-foreground">{dict.home.description}</p>
+        </div>
       </div>
 
       <div className="flex items-center gap-4 mb-8">
