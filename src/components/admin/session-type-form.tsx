@@ -11,11 +11,12 @@ import { useFirestore } from '@/firebase';
 import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
 import type { SessionType } from './session-type-manager';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2 } from 'lucide-react';
+import { Languages, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { translateText } from '@/ai/flows/translate-text';
 
 interface SessionTypeFormProps {
   sessionTypeToEdit?: SessionType;
@@ -53,6 +54,7 @@ export default function SessionTypeForm({ sessionTypeToEdit, onClose, dictionary
   const firestore = useFirestore();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const [isTranslating, setIsTranslating] = useState<null | 'name' | 'description'>(null);
 
   const {
     register,
@@ -60,7 +62,8 @@ export default function SessionTypeForm({ sessionTypeToEdit, onClose, dictionary
     control,
     formState: { errors },
     watch,
-    setValue
+    setValue,
+    getValues,
   } = useForm<SessionTypeFormData>({
     resolver: zodResolver(sessionTypeSchema),
     defaultValues: sessionTypeToEdit
@@ -80,6 +83,30 @@ export default function SessionTypeForm({ sessionTypeToEdit, onClose, dictionary
   });
 
   const sessionModel = watch('sessionModel');
+  
+  const handleTranslate = async (fieldName: 'name' | 'description') => {
+    const frenchText = getValues(`${fieldName}.fr`);
+    if (!frenchText) {
+        toast({
+            variant: "destructive",
+            title: "Rien à traduire",
+            description: `Veuillez d'abord remplir le champ en français.`,
+        });
+        return;
+    }
+    setIsTranslating(fieldName);
+    try {
+        const result = await translateText({ text: frenchText });
+        setValue(`${fieldName}.en`, result.en);
+        setValue(`${fieldName}.es`, result.es);
+        toast({ title: "Traduction terminée !" });
+    } catch (error) {
+        console.error("Translation failed:", error);
+        toast({ variant: "destructive", title: "Erreur de traduction" });
+    } finally {
+        setIsTranslating(null);
+    }
+  };
   
   const onSubmit = async (data: SessionTypeFormData) => {
     if (!firestore) return;
@@ -126,7 +153,13 @@ export default function SessionTypeForm({ sessionTypeToEdit, onClose, dictionary
           {errors.name?.en && <p className="text-sm text-destructive">{errors.name.en.message}</p>}
         </div>
         <div>
-          <Label htmlFor="name.fr">{dictionary.form.nameFr}</Label>
+          <div className="flex items-center justify-between">
+            <Label htmlFor="name.fr">{dictionary.form.nameFr}</Label>
+            <Button variant="ghost" size="icon" type="button" onClick={() => handleTranslate('name')} disabled={isTranslating === 'name'} className="h-7 w-7">
+                {isTranslating === 'name' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Languages className="h-4 w-4" />}
+                <span className="sr-only">Traduire depuis le français</span>
+            </Button>
+          </div>
           <Input id="name.fr" {...register('name.fr')} />
           {errors.name?.fr && <p className="text-sm text-destructive">{errors.name.fr.message}</p>}
         </div>
@@ -138,14 +171,20 @@ export default function SessionTypeForm({ sessionTypeToEdit, onClose, dictionary
       </div>
 
       <div>
+        <div className="flex items-center justify-between">
+            <Label htmlFor="description.fr">{dictionary.form.descriptionFr}</Label>
+            <Button variant="ghost" size="icon" type="button" onClick={() => handleTranslate('description')} disabled={isTranslating === 'description'} className="h-7 w-7">
+                {isTranslating === 'description' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Languages className="h-4 w-4" />}
+                <span className="sr-only">Traduire depuis le français</span>
+            </Button>
+        </div>
+        <Textarea id="description.fr" {...register('description.fr')} />
+        {errors.description?.fr && <p className="text-sm text-destructive">{errors.description.fr.message}</p>}
+      </div>
+      <div>
         <Label htmlFor="description.en">{dictionary.form.descriptionEn}</Label>
         <Textarea id="description.en" {...register('description.en')} />
         {errors.description?.en && <p className="text-sm text-destructive">{errors.description.en.message}</p>}
-      </div>
-      <div>
-        <Label htmlFor="description.fr">{dictionary.form.descriptionFr}</Label>
-        <Textarea id="description.fr" {...register('description.fr')} />
-        {errors.description?.fr && <p className="text-sm text-destructive">{errors.description.fr.message}</p>}
       </div>
       <div>
         <Label htmlFor="description.es">{dictionary.form.descriptionEs}</Label>
