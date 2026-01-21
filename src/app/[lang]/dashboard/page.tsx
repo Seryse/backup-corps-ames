@@ -60,7 +60,7 @@ export default function HomePage({ params: { lang } }: { params: { lang: Locale 
   return (
     <div className="container mx-auto p-4 sm:p-8">
       <div className="mb-12">
-        <h1 className="text-4xl font-headline mb-2">{dict.home.title}, {user?.displayName || 'explorateur'} !</h1>
+        <h1 className="text-4xl font-headline mb-2">{dict.home.title}</h1>
         <p className="text-lg text-muted-foreground">{dict.home.description}</p>
       </div>
 
