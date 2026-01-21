@@ -14,6 +14,7 @@ import SessionTypeManager from '@/components/admin/session-type-manager';
 import { Loader2 } from 'lucide-react';
 
 const adminEmails = ['seryse@live.be', 'jael@live.fr', 'selvura@gmail.com'];
+const adminUids = ['HvsOFzrOwFTHWTBVBextpZtV5I53'];
 
 export default function AdminPage({ params: { lang } }: { params: { lang: Locale } }) {
   const router = useRouter();
@@ -29,7 +30,10 @@ export default function AdminPage({ params: { lang } }: { params: { lang: Locale
 
   useEffect(() => {
     if (!isUserLoading) {
-      if (user && user.email && adminEmails.includes(user.email)) {
+      const isEmailAuthorized = user && user.email && adminEmails.includes(user.email);
+      const isUidAuthorized = user && adminUids.includes(user.uid);
+      
+      if (user && (isEmailAuthorized || isUidAuthorized)) {
         setIsAuthorized(true);
       } else {
         router.replace(`/${lang}/dashboard`);
