@@ -141,7 +141,7 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
 
   // --- Daily.co SDK Integration ---
   useEffect(() => {
-    if (authStatus !== 'authorized' || !callFrameRef.current || dailyRef.current || !bookingExists || hasJoinedRef.current || !bookingVisioToken) return;
+    if (authStatus !== 'authorized' || !callFrameRef.current || dailyRef.current || !bookingExists || hasJoinedRef.current) return;
 
     const setupCall = async () => {
         const roomUrl = "https://corps-et-ames.daily.co/corps-et-ames";
@@ -158,7 +158,6 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
                 border: '0',
             },
             videoSource: true,
-            subscribeToTracksAutomatically: true,
         };
 
         if (isAdminView) {
@@ -194,7 +193,7 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
         });
 
         try {
-            await callObject.join({ url: roomUrl, token: bookingVisioToken });
+            await callObject.join({ url: roomUrl });
             hasJoinedRef.current = true; // Lock to prevent re-joining
         } catch (error) {
             console.error("Failed to join Daily.co call:", error);
@@ -210,7 +209,7 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
         }
         hasJoinedRef.current = false;
     }
-  }, [authStatus, isAdminView, lang, router, bookingExists, bookingVisioToken]);
+  }, [authStatus, isAdminView, lang, router, bookingExists]);
 
   const handleTriggerIntro = () => updateSessionState(bookingId, { triggerIntro: true });
   const handleStopAudio = () => { /* Logic to stop playlist via session state */ };
