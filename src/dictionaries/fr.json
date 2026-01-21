@@ -146,7 +146,14 @@
         "description": "Réservez votre séance"
     },
     "trainings": {
-        "title": "Formations",
-        "description": "Accédez à vos cours et ateliers"
+        "title": "Mes Formations",
+        "description": "Accédez ici à toutes les formations que vous avez acquises.",
+        "no_formations_title": "Aucune formation acquise",
+        "no_formations_description": "Il semble que vous n'ayez pas encore de formation. Parcourez notre boutique pour commencer votre voyage.",
+        "browse_shop": "Visiter la boutique",
+        "access_token": "Votre Jeton d'Accès",
+        "token_info": "Utilisez ce jeton pour accéder au hub dédié à cette formation.",
+        "enrolled_on": "Inscrit le",
+        "token_copied": "Jeton copié dans le presse-papiers !"
     }
 }

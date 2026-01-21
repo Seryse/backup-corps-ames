@@ -146,7 +146,14 @@
         "description": "Reserva tu sesión"
     },
     "trainings": {
-        "title": "Formaciones",
-        "description": "Accede a tus cursos y talleres"
+        "title": "Mis Formaciones",
+        "description": "Accede a todas tus formaciones compradas aquí.",
+        "no_formations_title": "No hay formaciones compradas",
+        "no_formations_description": "Parece que aún no has comprado ninguna formación. Explora nuestra tienda para comenzar tu viaje.",
+        "browse_shop": "Explorar la tienda",
+        "access_token": "Tu Token de Acceso",
+        "token_info": "Usa este token para acceder al hub dedicado para esta formación.",
+        "enrolled_on": "Inscrito el",
+        "token_copied": "¡Token copiado al portapapeles!"
     }
 }

@@ -146,7 +146,14 @@
         "description": "Book your session"
     },
     "trainings": {
-        "title": "Trainings",
-        "description": "Access your courses and workshops"
+        "title": "My Trainings",
+        "description": "Access all your purchased trainings here.",
+        "no_formations_title": "No Purchased Trainings",
+        "no_formations_description": "It looks like you haven't purchased any trainings yet. Browse our shop to start your journey.",
+        "browse_shop": "Browse Shop",
+        "access_token": "Your Access Token",
+        "token_info": "Use this token to access the dedicated hub for this training.",
+        "enrolled_on": "Enrolled on",
+        "token_copied": "Token copied to clipboard!"
     }
 }
