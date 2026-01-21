@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Locale } from '@/i18n-config';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
-import { collection, query, orderBy, Query, collectionGroup } from 'firebase/firestore';
+import { collection, query, Query, collectionGroup } from 'firebase/firestore';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Loader2, Video, Calendar, Clock, Users, Link as LinkIcon } from 'lucide-react';
@@ -54,7 +54,7 @@ export default function UpcomingSessions({ lang, dictionary }: { lang: Locale, d
 
   const bookingsQuery = useMemoFirebase(() => {
     if (!firestore) return null;
-    return query(collectionGroup(firestore, 'bookings'), orderBy('bookingTime', 'desc')) as Query<Booking>;
+    return query(collectionGroup(firestore, 'bookings')) as Query<Booking>;
   }, [firestore]);
 
   const sessionTypesQuery = useMemoFirebase(() => {
