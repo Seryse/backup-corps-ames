@@ -1,6 +1,6 @@
 import { getDictionary } from '@/lib/dictionaries';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -32,10 +32,10 @@ export default async function DashboardPage({ params: { lang } }: { params: { la
             <div className="flex items-start gap-4">
                 <HeartHand className="h-12 w-12 text-accent mt-1" />
                 <div>
-                    <CardTitle className="font-headline text-3xl">{dict.dashboard.title}</CardTitle>
-                    <CardDescription className="mt-2 text-lg">
+                    <h2 className="font-headline text-3xl font-semibold tracking-tight">{dict.dashboard.title}</h2>
+                    <p className="mt-2 text-lg text-muted-foreground">
                         {dict.dashboard.description}
-                    </CardDescription>
+                    </p>
                 </div>
             </div>
             <div className="mt-6 flex justify-start">

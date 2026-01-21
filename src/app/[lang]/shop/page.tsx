@@ -1,6 +1,6 @@
 import { getDictionary, Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { ShoppingBag, PlusCircle } from 'lucide-react';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -40,10 +40,10 @@ function ProductCard({ product, dict, lang }: { product: Product, dict: Dictiona
                 )}
             </CardHeader>
             <CardContent className="flex-1 p-4">
-                <CardTitle className="text-xl font-headline">{dict.products[product.nameKey]}</CardTitle>
-                <CardDescription className="mt-2 text-sm text-muted-foreground">
+                <h3 className="text-xl font-headline font-semibold tracking-tight">{dict.products[product.nameKey]}</h3>
+                <p className="mt-2 text-sm text-muted-foreground">
                     {dict.products[product.descriptionKey]}
-                </CardDescription>
+                </p>
             </CardContent>
             <CardFooter className="p-4 flex justify-between items-center bg-muted/50">
                 <p className="text-lg font-semibold text-accent-foreground">
