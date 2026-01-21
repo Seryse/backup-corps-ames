@@ -194,9 +194,15 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
 
         try {
             await callObject.join({ url: roomUrl });
-            hasJoinedRef.current = true; // Lock to prevent re-joining
+            hasJoinedRef.current = true; // Lock to prevent re-joining AFTER successful join
         } catch (error) {
             console.error("Failed to join Daily.co call:", error);
+            // On failure, destroy the instance and reset the lock to allow retries
+            if(dailyRef.current) {
+                dailyRef.current.destroy();
+                dailyRef.current = null;
+            }
+            hasJoinedRef.current = false;
         }
     };
 
