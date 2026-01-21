@@ -1,26 +1,53 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { getDictionary, Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Calendar } from '@/components/ui/calendar';
 import { Button } from '@/components/ui/button';
-import { CalendarDays, Clock } from 'lucide-react';
-import { addDays, format } from 'date-fns';
-import { fr } from 'date-fns/locale';
+import { CalendarDays, Clock, Loader2 } from 'lucide-react';
+import { format } from 'date-fns';
+import { enUS, fr, es } from 'date-fns/locale';
+import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { collection, query, Query } from 'firebase/firestore';
 
-// Mock data for available time slots for specific dates
-const availableSlots: { [key: string]: string[] } = {
-  [format(addDays(new Date(), 2), 'yyyy-MM-dd')]: ['10:00', '11:00', '14:00'],
-  [format(addDays(new Date(), 5), 'yyyy-MM-dd')]: ['09:00', '10:00', '15:00', '16:00'],
-  [format(addDays(new Date(), 7), 'yyyy-MM-dd')]: ['11:00', '12:00'],
+type TimeSlot = {
+    id: string;
+    sessionTypeId: string;
+    startTime: any; // Firestore Timestamp
+    endTime: any; // Firestore Timestamp
+    bookedParticipantsCount: number;
 };
 
 export default function AgendaPage({ params: { lang } }: { params: { lang: Locale } }) {
   const [dict, setDict] = useState<Dictionary['agenda'] | null>(null);
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
+  const firestore = useFirestore();
+
+  const timeSlotsQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return query(collection(firestore, 'timeSlots')) as Query<TimeSlot>;
+  }, [firestore]);
+
+  const { data: timeSlots, isLoading: isLoadingTimeSlots } = useCollection<TimeSlot>(timeSlotsQuery);
+
+  const availableSlots = useMemo(() => {
+    if (!timeSlots) return {};
+    return timeSlots.reduce((acc, slot) => {
+      const dateKey = format(slot.startTime.toDate(), 'yyyy-MM-dd');
+      const time = format(slot.startTime.toDate(), 'HH:mm');
+      if (!acc[dateKey]) {
+        acc[dateKey] = [];
+      }
+      if (!acc[dateKey].includes(time)) {
+        acc[dateKey].push(time);
+      }
+      acc[dateKey].sort();
+      return acc;
+    }, {} as { [key: string]: string[] });
+  }, [timeSlots]);
 
   useEffect(() => {
     getDictionary(lang).then(d => setDict(d.agenda));
@@ -28,7 +55,7 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
 
   const handleDateSelect = (selectedDate: Date | undefined) => {
     setDate(selectedDate);
-    setSelectedSlot(null); // Reset selected slot when date changes
+    setSelectedSlot(null);
   };
 
   const handleSlotSelect = (slot: string) => {
@@ -36,13 +63,23 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
   };
   
   const handleBooking = () => {
-    // In a future step, this will add the session to the cart and proceed to checkout
-    // For now, it's just a placeholder action
-    alert(`Booking confirmed for ${date ? format(date, 'PPP', { locale: lang === 'fr' ? fr : undefined }) : ''} at ${selectedSlot}`);
+    const locales: { [key: string]: any } = { en: enUS, fr, es };
+    alert(`Booking confirmed for ${date ? format(date, 'PPP', { locale: locales[lang] }) : ''} at ${selectedSlot}`);
   };
 
   const selectedDateString = date ? format(date, 'yyyy-MM-dd') : '';
   const slotsForSelectedDate = availableSlots[selectedDateString] || [];
+  
+  const localesDateFns: { [key: string]: any } = { en: enUS, fr, es };
+  const dateFnsLocale = localesDateFns[lang];
+
+  if (isLoadingTimeSlots || !dict) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loader2 className="h-12 w-12 animate-spin text-accent" />
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-4 sm:p-8">
@@ -64,7 +101,7 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
                                 today.setHours(0,0,0,0);
                                 return d < today || !availableSlots[format(d, 'yyyy-MM-dd')];
                             }}
-                            locale={lang === 'fr' ? fr : undefined}
+                            locale={dateFnsLocale}
                         />
                     </CardContent>
                 </Card>
@@ -81,7 +118,7 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
                         {date ? (
                             slotsForSelectedDate.length > 0 ? (
                                 <div className="space-y-2">
-                                    <p className="text-center font-semibold mb-4">{format(date, 'd MMMM yyyy', { locale: lang === 'fr' ? fr : undefined })}</p>
+                                    <p className="text-center font-semibold mb-4">{format(date, 'd MMMM yyyy', { locale: dateFnsLocale })}</p>
                                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                                         {slotsForSelectedDate.map(slot => (
                                             <Button
@@ -106,7 +143,7 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
                         )}
                         {selectedSlot && date && (
                             <div className="mt-6 text-center">
-                                <p className="text-sm mb-4">{dict?.confirmBooking || 'You are booking a session for'} <strong>{format(date, 'd MMMM yyyy', { locale: lang === 'fr' ? fr : undefined })}</strong> at <strong>{selectedSlot}</strong>.</p>
+                                <p className="text-sm mb-4">{dict?.confirmBooking || 'You are booking a session for'} <strong>{format(date, 'd MMMM yyyy', { locale: dateFnsLocale })}</strong> at <strong>{selectedSlot}</strong>.</p>
                                 <Button onClick={handleBooking} className="w-full">{dict?.bookNow || 'Book Now'}</Button>
                             </div>
                         )}
