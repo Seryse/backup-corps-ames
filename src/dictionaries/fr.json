@@ -124,6 +124,10 @@
             "monthly": "Chaque mois"
         },
         "repeatCount": "Nombre de répétitions",
+        "todaysSessions": "Séances du Jour",
+        "joinCall": "Rejoindre l'Appel",
+        "noSessionsToday": "Aucune séance prévue aujourd'hui",
+        "noSessionsTodayDescription": "Les séances réservées pour aujourd'hui apparaîtront ici.",
         "form": {
             "nameEn": "Nom (EN)",
             "nameFr": "Nom (FR)",

@@ -124,6 +124,10 @@
             "monthly": "Mensualmente"
         },
         "repeatCount": "Número de repeticiones",
+        "todaysSessions": "Sesiones de Hoy",
+        "joinCall": "Unirse a la Llamada",
+        "noSessionsToday": "No hay sesiones programadas para hoy",
+        "noSessionsTodayDescription": "Cualquier sesión reservada para hoy aparecerá aquí.",
         "form": {
             "nameEn": "Nombre (EN)",
             "nameFr": "Nombre (FR)",

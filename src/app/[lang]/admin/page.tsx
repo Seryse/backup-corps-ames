@@ -12,6 +12,7 @@ import { Separator } from '@/components/ui/separator';
 import NewsManager from '@/components/admin/news-manager';
 import SessionTypeManager from '@/components/admin/session-type-manager';
 import { Loader2 } from 'lucide-react';
+import UpcomingSessions from '@/components/admin/upcoming-sessions';
 
 const adminEmails = ['seryse@live.be', 'jael@live.fr', 'selvura@gmail.com'];
 const adminUids = ['HvsOFzrOwFTHWTBVBextpZtV5I53'];
@@ -68,6 +69,8 @@ export default function AdminPage({ params: { lang } }: { params: { lang: Locale
       </div>
       
       <div className="space-y-8">
+        <UpcomingSessions dictionary={dict} lang={lang} />
+        <Separator />
         <NewsManager dictionary={dict.admin} lang={lang} />
         <Separator />
         <FormationManager dictionary={dict.admin} lang={lang} />

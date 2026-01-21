@@ -124,6 +124,10 @@
             "monthly": "Monthly"
         },
         "repeatCount": "Number of repetitions",
+        "todaysSessions": "Today's Sessions",
+        "joinCall": "Join Call",
+        "noSessionsToday": "No Sessions Scheduled for Today",
+        "noSessionsTodayDescription": "Any sessions booked for today will appear here.",
         "form": {
             "nameEn": "Name (EN)",
             "nameFr": "Name (FR)",
