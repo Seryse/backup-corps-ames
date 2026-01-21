@@ -93,37 +93,6 @@ export default function HomePage({ params: { lang } }: { params: { lang: Locale 
             </div>
         )}
 
-        {formations && formations.length > 0 && (
-            <section>
-                <div className="flex items-center gap-4 mb-8">
-                    <GraduationCap className="h-8 w-8 text-accent" />
-                    <h2 className="text-3xl font-headline">{dict.home.ourFormations}</h2>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {formations.map(formation => {
-                        const localizedName = formation.name?.[lang] || formation.name?.en || '...';
-                        return (
-                            <Card key={formation.id} className="flex flex-col overflow-hidden shadow-lg transition-shadow duration-300 hover:shadow-xl">
-                                <CardHeader className="p-0">
-                                    <div className="relative aspect-video bg-muted flex items-center justify-center">
-                                        <Image src={formation.imageUrl} alt={localizedName} fill className="object-cover" />
-                                    </div>
-                                </CardHeader>
-                                <CardContent className="p-4 flex-grow">
-                                    <h3 className="text-xl font-headline">{localizedName}</h3>
-                                </CardContent>
-                                <CardFooter>
-                                    <Button asChild className="w-full">
-                                        <Link href={`/${lang}/shop`}>{dict.home.discoverFormations}</Link>
-                                    </Button>
-                                </CardFooter>
-                            </Card>
-                        )
-                    })}
-                </div>
-            </section>
-        )}
-
         {sessionTypes && sessionTypes.length > 0 && (
             <section>
                 <div className="flex items-center gap-4 mb-8">
@@ -150,6 +119,37 @@ export default function HomePage({ params: { lang } }: { params: { lang: Locale 
                                 <CardFooter>
                                     <Button asChild className="w-full">
                                         <Link href={`/${lang}/agenda`}>{dict.home.bookASession}</Link>
+                                    </Button>
+                                </CardFooter>
+                            </Card>
+                        )
+                    })}
+                </div>
+            </section>
+        )}
+
+        {formations && formations.length > 0 && (
+            <section>
+                <div className="flex items-center gap-4 mb-8">
+                    <GraduationCap className="h-8 w-8 text-accent" />
+                    <h2 className="text-3xl font-headline">{dict.home.ourFormations}</h2>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {formations.map(formation => {
+                        const localizedName = formation.name?.[lang] || formation.name?.en || '...';
+                        return (
+                            <Card key={formation.id} className="flex flex-col overflow-hidden shadow-lg transition-shadow duration-300 hover:shadow-xl">
+                                <CardHeader className="p-0">
+                                    <div className="relative aspect-video bg-muted flex items-center justify-center">
+                                        <Image src={formation.imageUrl} alt={localizedName} fill className="object-cover" />
+                                    </div>
+                                </CardHeader>
+                                <CardContent className="p-4 flex-grow">
+                                    <h3 className="text-xl font-headline">{localizedName}</h3>
+                                </CardContent>
+                                <CardFooter>
+                                    <Button asChild className="w-full">
+                                        <Link href={`/${lang}/shop`}>{dict.home.discoverFormations}</Link>
                                     </Button>
                                 </CardFooter>
                             </Card>
