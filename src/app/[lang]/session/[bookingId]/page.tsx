@@ -55,6 +55,7 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
   // --- Video Call State ---
   const callFrameRef = useRef<HTMLDivElement>(null);
   const dailyRef = useRef<DailyCall | null>(null);
+  const hasJoinedRef = useRef(false); // Lock to prevent re-joining
   const [remoteAudioStream, setRemoteAudioStream] = useState<MediaStream | null>(null);
 
   // --- Data Fetching ---
@@ -135,17 +136,13 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
 
   // --- Daily.co SDK Integration ---
   useEffect(() => {
-    if (authStatus !== 'authorized' || !callFrameRef.current || dailyRef.current || !booking) return;
+    if (authStatus !== 'authorized' || !callFrameRef.current || dailyRef.current || !booking || hasJoinedRef.current) return;
 
     const setupCall = async () => {
-        // =================================================================
-        // IMPORTANT: This is your actual Daily.co room URL
         const roomUrl = "https://corps-et-ames.daily.co/corps-et-ames";
-        // =================================================================
-        
         const DailyIframe = (await import('@daily-co/daily-js')).default;
         
-        const callObject = DailyIframe.createFrame(callFrameRef.current!, {
+        const dailyOptions: any = {
             showLeaveButton: true,
             iframeStyle: {
                 position: 'absolute',
@@ -155,12 +152,19 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
                 height: '100%',
                 border: '0',
             },
-            // Complex audio setup is handled by AudioEngine.
-            // Let's keep this simple for now.
-            audioSource: false,
             videoSource: true,
             subscribeToTracksAutomatically: true,
-        });
+        };
+
+        if (isAdminView) {
+            // Admin needs to broadcast audio.
+            dailyOptions.audioSource = true;
+        } else {
+            // Client should not send audio, they only listen.
+            dailyOptions.audioSource = false;
+        }
+
+        const callObject = DailyIframe.createFrame(callFrameRef.current!, dailyOptions);
         
         dailyRef.current = callObject;
 
@@ -174,8 +178,9 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
 
         callObject.on('left-meeting', () => {
             console.log('Left meeting');
-            callObject.destroy();
+            // No need to call destroy() here, it's handled by the 'left-meeting' event itself
             dailyRef.current = null;
+            hasJoinedRef.current = false;
             if (!isAdminView) {
                 setTestimonialModalOpen(true);
             } else {
@@ -184,9 +189,8 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
         });
 
         try {
-            // We join with URL only. The room must be public.
-            // The visioToken from Firestore is used for authorization to this page, not for Daily.
             await callObject.join({ url: roomUrl });
+            hasJoinedRef.current = true; // Lock to prevent re-joining
         } catch (error) {
             console.error("Failed to join Daily.co call:", error);
         }
@@ -195,8 +199,11 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
     setupCall();
     
     return () => {
-        dailyRef.current?.destroy();
-        dailyRef.current = null;
+        if (dailyRef.current) {
+            dailyRef.current.destroy();
+            dailyRef.current = null;
+        }
+        hasJoinedRef.current = false;
     }
   }, [authStatus, isAdminView, lang, router, booking]);
 
