@@ -211,7 +211,9 @@
         "bookingErrorTitle": "Booking Failed",
         "bookingErrorFull": "This time slot is now full.",
         "bookingErrorGeneric": "An error occurred during booking. Please try again.",
-        "loginToBook": "Log in to book"
+        "loginToBook": "Log in to book",
+        "previousMonth": "Previous month",
+        "nextMonth": "Next month"
     },
     "trainings": {
         "title": "My Trainings",

@@ -211,7 +211,9 @@
         "bookingErrorTitle": "Fallo en la Reserva",
         "bookingErrorFull": "Este horario ya está completo.",
         "bookingErrorGeneric": "Ocurrió un error durante la reserva. Por favor, inténtalo de nuevo.",
-        "loginToBook": "Inicia sesión para reservar"
+        "loginToBook": "Inicia sesión para reservar",
+        "previousMonth": "Mes anterior",
+        "nextMonth": "Mes siguiente"
     },
     "trainings": {
         "title": "Mis Formaciones",

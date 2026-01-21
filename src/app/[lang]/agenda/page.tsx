@@ -4,12 +4,13 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { getDictionary, Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Calendar from 'react-calendar';
-import type { Value } from 'react-calendar/dist/cjs/shared/types';
+import 'react-calendar/dist/Calendar.css';
+import type { CalendarProps } from 'react-calendar';
 import { Button } from '@/components/ui/button';
-import { CalendarDays, Clock, Loader2, Info, User } from 'lucide-react';
-import { format } from 'date-fns';
+import { CalendarDays, Clock, Loader2, Info, User, ChevronLeft, ChevronRight } from 'lucide-react';
+import { format, addMonths, subMonths } from 'date-fns';
 import { enUS, fr, es } from 'date-fns/locale';
 import { useFirestore, useCollection, useMemoFirebase, useUser } from '@/firebase';
 import { collection, query, Query } from 'firebase/firestore';
@@ -17,6 +18,8 @@ import type { SessionType } from '@/components/admin/session-type-manager';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { createBooking } from '@/app/actions';
+
+type Value = CalendarProps['value'];
 
 type TimeSlot = {
     id: string;
@@ -29,6 +32,7 @@ type TimeSlot = {
 export default function AgendaPage({ params: { lang } }: { params: { lang: Locale } }) {
   const [dict, setDict] = useState<Dictionary['agenda'] | null>(null);
   const [date, setDate] = useState<Date | undefined>(new Date());
+  const [activeDate, setActiveDate] = useState(new Date()); // For controlling calendar view
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
   const [isBooking, setIsBooking] = useState(false);
   
@@ -85,9 +89,33 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
     getDictionary(lang).then(d => setDict(d.agenda));
   }, [lang]);
 
+  const DayContent = ({ date, view }: { date: Date; view: string }) => {
+    if (view === 'month') {
+        const dateKey = format(date, 'yyyy-MM-dd');
+        const dayInfo = dayData[dateKey];
+        if (dayInfo) {
+            return (
+                <div className="flex justify-center items-center">
+                    <div
+                        className={cn('h-1.5 w-1.5 rounded-full mt-1.5', {
+                            'bg-green-500': dayInfo.status === 'available',
+                            'bg-red-500': dayInfo.status === 'full',
+                        })}
+                    />
+                </div>
+            );
+        }
+    }
+    return <div className="h-[7px]" />;
+  };
+
   const handleDateSelect = (selectedDate: Value) => {
     if (selectedDate instanceof Date) {
         setDate(selectedDate);
+        setActiveDate(selectedDate);
+    } else if (Array.isArray(selectedDate) && selectedDate[0] instanceof Date) {
+        setDate(selectedDate[0]);
+        setActiveDate(selectedDate[0]);
     } else {
         setDate(undefined);
     }
@@ -124,26 +152,6 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
     }
   };
 
-  const renderDots = ({ date: tileDate, view }: { date: Date, view: string }) => {
-    if (view === 'month') {
-        const dateKey = format(tileDate, 'yyyy-MM-dd');
-        const dayInfo = dayData[dateKey];
-        if (dayInfo) {
-            return (
-                <div className="flex justify-center items-center">
-                    <div
-                        className={cn('h-1.5 w-1.5 rounded-full mt-1', {
-                        'bg-green-500': dayInfo.status === 'available',
-                        'bg-red-500': dayInfo.status === 'full',
-                        })}
-                    />
-                </div>
-            );
-        }
-    }
-    return null;
-  };
-
   const selectedDateString = date ? format(date, 'yyyy-MM-dd') : '';
   const slotsForSelectedDate = date && dayData[selectedDateString] ? dayData[selectedDateString].slots : [];
   const selectedSessionType = selectedSlot ? sessionTypes?.find(st => st.id === selectedSlot.sessionTypeId) : null;
@@ -168,13 +176,44 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
                 <Card>
-                    <CardContent className="p-2 flex justify-center">
-                        <Calendar
+                    <CardContent className="p-0">
+                         <Calendar
                             onChange={handleDateSelect}
                             value={date}
                             locale={lang}
                             tileDisabled={({date}) => date < new Date(new Date().setHours(0,0,0,0))}
-                            tileContent={renderDots}
+                            tileContent={({ date, view }) => <DayContent date={date} view={view} />}
+                            activeStartDate={activeDate}
+                            onActiveStartDateChange={({ activeStartDate }) => activeStartDate && setActiveDate(activeStartDate)}
+                            view="month"
+                            onViewChange={() => {}}
+                            prevLabel={null}
+                            prev2Label={null}
+                            nextLabel={null}
+                            next2Label={null}
+                            navigationLabel={({ date: navDate }) => (
+                                <div className="flex items-center justify-between w-full px-2">
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={(e) => { e.preventDefault(); setActiveDate(subMonths(activeDate, 1))}}
+                                        aria-label={dict?.previousMonth || 'Previous month'}
+                                    >
+                                        <ChevronLeft className="h-5 w-5" />
+                                    </Button>
+                                    <span className="font-headline text-lg capitalize">
+                                        {format(navDate, 'MMMM yyyy', { locale: dateFnsLocale })}
+                                    </span>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={(e) => { e.preventDefault(); setActiveDate(addMonths(activeDate, 1))}}
+                                        aria-label={dict?.nextMonth || 'Next month'}
+                                    >
+                                        <ChevronRight className="h-5 w-5" />
+                                    </Button>
+                                </div>
+                            )}
                         />
                     </CardContent>
                 </Card>
