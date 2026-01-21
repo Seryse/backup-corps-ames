@@ -11,7 +11,7 @@ import { useFirestore } from '@/firebase';
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 
 interface RealtimeSubtitlesProps {
-    dictionary: Dictionary['session'];
+    dictionary: any;
     lang: Locale;
     isAdmin: boolean;
 }
@@ -55,64 +55,57 @@ export default function RealtimeSubtitles({ dictionary, lang, isAdmin }: Realtim
             };
             // Update Firestore
             await setDoc(doc(firestore, "subtitles", SESSION_ID), newSubtitle);
-        } catch (error) {
+        } catch (error) => {
             console.error("Translation error:", error);
         }
     }, [lang, firestore]);
 
-    const startListening = () => {
+    useEffect(() => {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (!SpeechRecognition) {
-            alert('Speech recognition not supported in this browser.');
+            console.warn('Speech recognition not supported in this browser.');
             return;
         }
 
-        const recognition = new SpeechRecognition();
-        recognition.continuous = true;
-        recognition.interimResults = true;
-        recognition.lang = 'fr-FR'; // Admin's language
+        if (isListening && !recognitionRef.current) {
+            const recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'fr-FR'; // Admin's language
 
-        recognition.onresult = (event: any) => {
-            let finalTranscript = '';
-            for (let i = event.resultIndex; i < event.results.length; ++i) {
-                if (event.results[i].isFinal) {
-                    finalTranscript += event.results[i][0].transcript;
+            recognition.onresult = (event: any) => {
+                let finalTranscript = '';
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        finalTranscript += event.results[i][0].transcript;
+                    }
                 }
-            }
-            if (finalTranscript) {
-                handleTranscript(finalTranscript);
-            }
-        };
-        
-        recognition.onerror = (event: any) => {
-            console.error('Speech recognition error:', event.error);
-        };
-        
-        recognition.onend = () => {
-            if(isListening){
-                recognition.start(); // Restart if it stops automatically
-            }
-        };
+                if (finalTranscript) {
+                    handleTranscript(finalTranscript.trim());
+                }
+            };
+            
+            recognition.onerror = (event: any) => {
+                console.error('Speech recognition error:', event.error);
+                setIsListening(false); // Stop on error
+            };
+            
+            recognition.onend = () => {
+                if (isListening) {
+                    recognition.start(); // Restart if it stops automatically and we're still supposed to be listening
+                }
+            };
 
-        recognition.start();
-        recognitionRef.current = recognition;
-        setIsListening(true);
-    };
-
-    const stopListening = () => {
-        if (recognitionRef.current) {
+            recognition.start();
+            recognitionRef.current = recognition;
+        } else if (!isListening && recognitionRef.current) {
             recognitionRef.current.stop();
             recognitionRef.current = null;
         }
-        setIsListening(false);
-    };
+    }, [isListening, handleTranscript]);
 
     const toggleListening = () => {
-        if (isListening) {
-            stopListening();
-        } else {
-            startListening();
-        }
+        setIsListening(prev => !prev);
     };
 
     return (
@@ -120,14 +113,14 @@ export default function RealtimeSubtitles({ dictionary, lang, isAdmin }: Realtim
             <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-xl font-headline">
                     <Languages className="h-5 w-5"/>
-                    {dictionary.subtitles}
+                    {dictionary.subtitles || 'Subtitles'}
                 </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
                 {isAdmin && (
                     <Button onClick={toggleListening} className="w-full justify-start gap-2" variant={isListening ? 'destructive' : 'default'}>
                         {isListening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
-                        {isListening ? dictionary.stopRecognition : dictionary.startRecognition}
+                        {isListening ? (dictionary.stopRecognition || 'Stop Recognition') : (dictionary.startRecognition || 'Start Recognition')}
                     </Button>
                 )}
                 <div className="min-h-[100px] p-4 bg-muted/50 rounded-md space-y-2">

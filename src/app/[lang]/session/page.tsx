@@ -9,12 +9,16 @@ import { checkSessionAccess } from '@/app/actions';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Loader2, ShieldAlert, MessageSquare } from 'lucide-react';
+import RealtimeSubtitles from '@/components/session/realtime-subtitles';
 
-export default function HubPage({ params: { lang } }: { params: { lang: Locale } }) {
+export default function SessionPage({ params: { lang } }: { params: { lang: Locale } }) {
   const { user, isUserLoading } = useUser();
   const router = useRouter();
   const [dict, setDict] = useState<Dictionary | null>(null);
   const [accessGranted, setAccessGranted] = useState<boolean | null>(null);
+  
+  // Hardcoded admin UID for now. In a real app, this would use custom claims.
+  const isAdmin = user?.uid === '5cKGxV6aYXYx1cM3s1aXN3z3X2E3';
 
   useEffect(() => {
     getDictionary(lang).then(d => setDict(d));
@@ -43,7 +47,7 @@ export default function HubPage({ params: { lang } }: { params: { lang: Locale }
     );
   }
 
-  if (!accessGranted) {
+  if (!accessGranted && !isAdmin) {
     return (
       <div className="flex h-screen flex-col items-center justify-center bg-background p-4">
         <Card className="max-w-md text-center">
@@ -70,16 +74,26 @@ export default function HubPage({ params: { lang } }: { params: { lang: Locale }
             <MessageSquare className="h-10 w-10 text-accent" />
             <h1 className="text-4xl font-headline">{dict.session.title}</h1>
         </div>
-        <Card>
-            <CardHeader>
-                <CardTitle>{dict.session.welcome_message}</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <p className="text-muted-foreground">
-                    {dict.session.forum_coming_soon}
-                </p>
-            </CardContent>
-        </Card>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="md:col-span-2 space-y-8">
+                {/* Placeholder for Video Player */}
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Live Session Video</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="aspect-video bg-muted rounded-md flex items-center justify-center">
+                            <p className="text-muted-foreground">Video player coming soon...</p>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+
+            <div className="space-y-8">
+                 <RealtimeSubtitles dictionary={dict.session} lang={lang} isAdmin={isAdmin} />
+            </div>
+        </div>
     </div>
   );
 }

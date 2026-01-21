@@ -37,7 +37,7 @@ const realTimeSubtitlesPrompt = ai.definePrompt({
   name: 'realTimeSubtitlesPrompt',
   input: {schema: RealTimeSubtitlesWithTranslationInputSchema},
   output: {schema: RealTimeSubtitlesWithTranslationOutputSchema},
-  prompt: `Translate the following text into {{{targetLanguage}}}:\n\n{{text}}`,
+  prompt: `Translate the following text into {{{targetLanguage}}}:\n\n"{{{text}}}"`,
 });
 
 const realTimeSubtitlesWithTranslationFlow = ai.defineFlow(
@@ -47,6 +47,9 @@ const realTimeSubtitlesWithTranslationFlow = ai.defineFlow(
     outputSchema: RealTimeSubtitlesWithTranslationOutputSchema,
   },
   async input => {
+    if (!input.text.trim()) {
+      return { translatedText: '' };
+    }
     const {output} = await realTimeSubtitlesPrompt(input);
     return output!;
   }

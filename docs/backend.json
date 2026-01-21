@@ -119,6 +119,26 @@
         }
       },
       "required": ["title", "content", "imageUrl", "createdAt"]
+    },
+    "Subtitle": {
+      "title": "Subtitle",
+      "type": "object",
+      "description": "Represents a single subtitle entry with its translation for a live session.",
+      "properties": {
+        "original": {
+          "type": "string",
+          "description": "The original text captured from speech."
+        },
+        "translated": {
+          "type": "string",
+          "description": "The translated text in the target language."
+        },
+        "timestamp": {
+          "type": "number",
+          "description": "The timestamp when the subtitle was generated."
+        }
+      },
+      "required": ["original", "translated", "timestamp"]
     }
   },
   "auth": {
@@ -145,6 +165,12 @@
         "$ref": "#/entities/NewsArticle"
       },
       "description": "Stores all news articles."
+    },
+    "/subtitles/{sessionId}": {
+      "schema": {
+        "$ref": "#/entities/Subtitle"
+      },
+      "description": "Stores the current subtitle for a live session. 'sessionId' is a unique identifier for the session, e.g., 'current_session'."
     }
   }
 }

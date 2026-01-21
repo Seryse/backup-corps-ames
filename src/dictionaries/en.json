@@ -2,7 +2,7 @@
     "header": {
         "home": "Home",
         "dashboard": "Dashboard",
-        "session": "Hub",
+        "session": "Live Session",
         "admin": "Admin",
         "login": "Login",
         "logout": "Logout",
@@ -55,13 +55,16 @@
         "noNewsDescription": "Check back later for updates."
     },
     "session": {
-        "title": "Community Hub",
-        "loading": "Preparing the hub...",
+        "title": "Live Session",
+        "loading": "Preparing the session...",
         "accessDenied": "Access Denied",
-        "accessDeniedMessage": "You must purchase at least one training to access the hub.",
+        "accessDeniedMessage": "You must purchase at least one training to access this area.",
         "backToDashboard": "Back to Home",
-        "welcome_message": "Welcome to the Hub!",
-        "forum_coming_soon": "Forum features will be available here soon."
+        "welcome_message": "Welcome to the Live Session!",
+        "forum_coming_soon": "The session will begin shortly.",
+        "subtitles": "Live Subtitles & Translation",
+        "startRecognition": "Start Broadcasting",
+        "stopRecognition": "Stop Broadcasting"
     },
     "admin": {
         "title": "Admin Console",
