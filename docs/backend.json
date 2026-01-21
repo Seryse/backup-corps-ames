@@ -1,7 +1,6 @@
 {
   "entities": {
     "Formation": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Formation",
       "type": "object",
       "description": "Represents a training course or program offered (e.g., Reiki Level 1, Divination Mastery).",
@@ -36,7 +35,6 @@
       ]
     },
     "UserFormation": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "UserFormation",
       "type": "object",
       "description": "Represents a user's enrollment in a specific formation and their access token.",
@@ -79,44 +77,17 @@
     ]
   },
   "firestore": {
-    "structure": [
-      {
-        "path": "/formations/{formationId}",
-        "definition": {
-          "entityName": "Formation",
-          "schema": {
-            "$ref": "#/backend/entities/Formation"
-          },
-          "description": "Stores information about each formation.  'formationId' is the unique identifier for the formation.",
-          "params": [
-            {
-              "name": "formationId",
-              "description": "The unique identifier for the formation."
-            }
-          ]
-        }
+    "/formations/{formationId}": {
+      "schema": {
+        "$ref": "#/entities/Formation"
       },
-      {
-        "path": "/users/{userId}/formations/{formationId}",
-        "definition": {
-          "entityName": "UserFormation",
-          "schema": {
-            "$ref": "#/backend/entities/UserFormation"
-          },
-          "description": "Represents a user's enrollment in a specific formation and their access token.  This subcollection uses path-based ownership for simplified security rules. Includes 'accessToken' for accessing formation content.",
-          "params": [
-            {
-              "name": "userId",
-              "description": "The unique identifier for the user."
-            },
-            {
-              "name": "formationId",
-              "description": "The unique identifier for the formation."
-            }
-          ]
-        }
-      }
-    ],
-    "reasoning": "The Firestore structure is designed to ensure authorization independence, clarity, and scalability, aligning with the specified principles. We leverage denormalization to avoid `get()` calls in security rules, ensuring atomic operations and simplifying debugging. The structure also supports secure `list` operations using structural segregation and path-based ownership.\n\nSpecifically:\n\n*   **User Formations:** Formations that a user has access to are stored under the `/users/{userId}/formations/{formationId}` path. This path-based ownership ensures that access rules can be written based on the user's ID without needing to read parent documents.  The `accessToken` is stored here, providing a secure way to access the related hub/content.\n\n*   **Formations:** The `formations` collection stores all available training courses. This separation allows for easy querying and management of formations independent of user access rights.\n\nThis design prioritizes authorization independence and supports the required QAPs. It also lays the foundation for future features related to user-specific content and access control."
+      "description": "Stores information about each formation. 'formationId' is the unique identifier for the formation."
+    },
+    "/users/{userId}/formations/{formationId}": {
+      "schema": {
+        "$ref": "#/entities/UserFormation"
+      },
+      "description": "Represents a user's enrollment in a specific formation and their access token. This subcollection uses path-based ownership for simplified security rules. Includes 'accessToken' for accessing formation content."
+    }
   }
 }

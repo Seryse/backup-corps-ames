@@ -1,104 +1,19 @@
-/**
- * This ruleset enforces a strict user-ownership model for personal data while providing a public, read-only catalog of available courses.
- *
- * Core Philosophy:
- * The security model is designed to isolate user data completely. A user can only access and manage their own information, specifically their course enrollments. All other data, such as the global list of available courses, is treated as public but immutable from the client side.
- *
- * Data Structure:
- * - /formations/{formationId}: A top-level collection containing publicly readable information about all available courses. This collection is managed by backend processes, not clients.
- * - /users/{userId}/formations/{formationId}: A user-specific subcollection containing records of the courses a user is enrolled in. All access to this path is strictly controlled by the `{userId}` wildcard.
- *
- * Key Security Decisions:
- * - User Data Isolation: Rules strictly enforce that a user's `request.auth.uid` must match the `{userId}` in the path for any access to the `/users/{userId}` data tree. This prevents any user from seeing or modifying another user's data.
- * - Public Read-Only Catalog: The `/formations` collection is readable by anyone, including unauthenticated users, to allow browsing of the course catalog. All write operations are disabled to prevent tampering.
- * - Admin-Managed Content: Creation and modification of the central `/formations` catalog are prohibited by these rules. This content must be managed through a trusted server environment using the Firebase Admin SDK.
- *
- * Denormalization for Authorization:
- * The rules leverage path-based security by nesting user-specific enrollment data (`UserFormation`) under a path that includes their user ID (`/users/{userId}/...`). This avoids the need for costly and slow `get()` calls to other documents for authorization checks.
- *
- * Structural Segregation:
- * The separation of public course data (`/formations`) from private user enrollments (`/users/{userId}/formations`) is a key design choice. This ensures that queries for public data do not risk exposing private information and simplifies the rules required to secure each collection.
- */
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Helper Functions
-    // --------------------------------
-
-    /**
-     * Checks if a user is authenticated.
-     */
-    function isSignedIn() {
-      return request.auth != null;
-    }
-
-    /**
-     * Validates if the requesting user is the owner of the document based on the path's userId.
-     */
     function isOwner(userId) {
-      return isSignedIn() && request.auth.uid == userId;
+      return request.auth != null && request.auth.uid == userId;
     }
 
-    /**
-     * Validates ownership for an existing document. Used for update and delete operations.
-     */
-    function isExistingOwner(userId) {
-      return isOwner(userId) && resource != null;
-    }
-
-    /**
-     * Validates relational integrity on UserFormation creation.
-     * Ensures the document's internal userId matches the one in the path.
-     */
-    function hasValidUserFormationDataForCreate(userId) {
-      let data = request.resource.data;
-      return data.userId == userId;
-    }
-
-
-
-    /**
-     * Ensures critical relational fields in a UserFormation document are immutable on update.
-     */
-    function hasValidUserFormationDataForUpdate() {
-      let incomingData = request.resource.data;
-      let existingData = resource.data;
-      return incomingData.userId == existingData.userId;
-    }
-
-
-    // Collection Rules
-    // --------------------------------
-
-    /**
-     * @description Publicly readable catalog of all available training courses. Writes are disabled to ensure data integrity.
-     * @path /formations/{formationId}
-     * @allow (get) Any user, authenticated or not, can read a specific formation document.
-     * @deny (create) An authenticated user cannot create a new formation document. This must be done via an admin process.
-     * @principle Secures catalog data as client-read-only. Content must be managed via a trusted server environment.
-     */
     match /formations/{formationId} {
-      allow get: if true;
-      allow list: if true;
-      allow create: if false; // Must be managed by Admin SDK
-      allow update: if false; // Must be managed by Admin SDK
-      allow delete: if false; // Must be managed by Admin SDK
+      allow read: if true;
+      allow write: if false; // Managed by admin
     }
 
-    /**
-     * @description A user's enrollment record in a specific formation. Only the owner can access or modify their own records.
-     * @path /users/{userId}/formations/{formationId}
-     * @allow (create) An authenticated user (UID 'user_abc') can create their own enrollment at `/users/user_abc/formations/reiki-1`.
-     * @deny (get) User 'user_abc' cannot read an enrollment at `/users/user_xyz/formations/reiki-1`.
-     * @principle Enforces strict data ownership based on the user's ID in the path, isolating user data.
-     */
     match /users/{userId}/formations/{formationId} {
-      allow get: if isOwner(userId);
-      allow list: if isOwner(userId);
-      allow create: if isOwner(userId) && hasValidUserFormationDataForCreate(userId);
-      allow update: if isExistingOwner(userId) && hasValidUserFormationDataForUpdate();
-      allow delete: if isExistingOwner(userId);
+      allow read, write: if isOwner(userId);
     }
   }
 }
