@@ -61,6 +61,17 @@ export function AuthForm({ mode, dictionary, lang }: AuthFormProps) {
     resolver: zodResolver(formSchema),
   });
 
+  const handleAuthError = (error: any) => {
+    const errorCode = error.code || 'auth/generic';
+    const errorMessage = (dictionary.errors as any)?.[errorCode] || (dictionary.errors as any)?.['auth/generic'] || 'An unexpected error occurred.';
+
+    toast({
+        variant: 'destructive',
+        title: dictionary.loginErrorTitle || 'Authentication Error',
+        description: errorMessage,
+    });
+  }
+
   const onSubmit = (data: FormData) => {
     setIsLoading(true);
     const promise = mode === "signup"
@@ -71,13 +82,7 @@ export function AuthForm({ mode, dictionary, lang }: AuthFormProps) {
         .then(() => {
             router.push(`/${lang}/dashboard`);
         })
-        .catch((error: any) => {
-            toast({
-                variant: "destructive",
-                title: dictionary.loginErrorTitle || "Authentication Error",
-                description: error.message,
-            });
-        })
+        .catch(handleAuthError)
         .finally(() => {
             setIsLoading(false);
         });
@@ -91,21 +96,7 @@ export function AuthForm({ mode, dictionary, lang }: AuthFormProps) {
         .then(() => {
             router.push(`/${lang}/dashboard`);
         })
-        .catch((error: any) => {
-            if (error.code === 'auth/account-exists-with-different-credential') {
-                 toast({
-                    variant: "destructive",
-                    title: "Compte existant",
-                    description: "Un compte existe déjà avec cet e-mail. Veuillez vous connecter avec votre méthode d'origine.",
-                });
-            } else {
-                toast({
-                    variant: "destructive",
-                    title: "Google Sign-In Error",
-                    description: error.message,
-                });
-            }
-        })
+        .catch(handleAuthError)
         .finally(() => {
             setIsLoading(false);
         });

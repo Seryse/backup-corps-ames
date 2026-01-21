@@ -31,7 +31,17 @@
         "noAccount": "Don't have an account?",
         "hasAccount": "Already have an account?",
         "signupLink": "Sign Up",
-        "loginLink": "Login"
+        "loginLink": "Login",
+        "loginErrorTitle": "Authentication Error",
+        "errors": {
+            "auth/invalid-credential": "Incorrect email or password.",
+            "auth/email-already-in-use": "An account already exists with this email address.",
+            "auth/weak-password": "Password should be at least 6 characters.",
+            "auth/user-not-found": "No account found with this email address.",
+            "auth/wrong-password": "Incorrect password.",
+            "auth/account-exists-with-different-credential": "An account with this email already exists. Please sign in with your original method.",
+            "auth/generic": "An authentication error occurred. Please try again."
+        }
     },
     "dashboard": {
         "title": "Welcome to your Dashboard",

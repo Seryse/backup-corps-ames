@@ -31,7 +31,17 @@
         "noAccount": "¿No tienes una cuenta?",
         "hasAccount": "¿Ya tienes una cuenta?",
         "signupLink": "Regístrate",
-        "loginLink": "Inicia Sesión"
+        "loginLink": "Inicia Sesión",
+        "loginErrorTitle": "Error de autenticación",
+        "errors": {
+            "auth/invalid-credential": "Correo electrónico o contraseña incorrectos.",
+            "auth/email-already-in-use": "Ya existe una cuenta con esta dirección de correo electrónico.",
+            "auth/weak-password": "La contraseña debe tener al menos 6 caracteres.",
+            "auth/user-not-found": "No se encontró ninguna cuenta con esta dirección de correo electrónico.",
+            "auth/wrong-password": "Contraseña incorrecta.",
+            "auth/account-exists-with-different-credential": "Ya existe una cuenta con este correo electrónico. Inicie sesión con su método original.",
+            "auth/generic": "Se produjo un error de autenticación. Por favor, inténtelo de nuevo."
+        }
     },
     "dashboard": {
         "title": "Bienvenido a tu Panel",

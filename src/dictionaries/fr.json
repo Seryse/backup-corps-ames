@@ -31,7 +31,17 @@
         "noAccount": "Vous n'avez pas de compte ?",
         "hasAccount": "Vous avez déjà un compte ?",
         "signupLink": "Inscrivez-vous",
-        "loginLink": "Connectez-vous"
+        "loginLink": "Connectez-vous",
+        "loginErrorTitle": "Erreur d'authentification",
+        "errors": {
+            "auth/invalid-credential": "Email ou mot de passe incorrect.",
+            "auth/email-already-in-use": "Un compte existe déjà avec cette adresse email.",
+            "auth/weak-password": "Le mot de passe doit contenir au moins 6 caractères.",
+            "auth/user-not-found": "Aucun compte trouvé avec cette adresse email.",
+            "auth/wrong-password": "Mot de passe incorrect.",
+            "auth/account-exists-with-different-credential": "Un compte existe déjà avec cet e-mail. Veuillez vous connecter avec votre méthode d'origine.",
+            "auth/generic": "Une erreur d'authentification est survenue. Veuillez réessayer."
+        }
     },
     "dashboard": {
         "title": "Bienvenue sur votre Tableau de Bord",
