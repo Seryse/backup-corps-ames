@@ -21,7 +21,7 @@ const products: Product[] = [
     { id: '3', nameKey: 'yogaMatName', descriptionKey: 'yogaMatDescription', price: 40, currency: 'EUR', imageId: 'product-yoga-mat' },
 ];
 
-function ProductCard({ product, dict }: { product: Product, dict: Dictionary['shop'] }) {
+function ProductCard({ product, dict, lang }: { product: Product, dict: Dictionary['shop'], lang: Locale }) {
     const productImage = PlaceHolderImages.find(p => p.id === product.imageId);
     
     return (
@@ -47,7 +47,7 @@ function ProductCard({ product, dict }: { product: Product, dict: Dictionary['sh
             </CardContent>
             <CardFooter className="p-4 flex justify-between items-center bg-muted/50">
                 <p className="text-lg font-semibold text-accent-foreground">
-                    {new Intl.NumberFormat(dict.locale, { style: 'currency', currency: product.currency }).format(product.price)}
+                    {new Intl.NumberFormat(lang, { style: 'currency', currency: product.currency }).format(product.price)}
                 </p>
                 <Button size="sm">
                     <PlusCircle className="mr-2 h-4 w-4" />
@@ -71,7 +71,7 @@ export default async function ShopPage({ params: { lang } }: { params: { lang: L
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {products.map(product => (
-                <ProductCard key={product.id} product={product} dict={{...dict.shop, locale: lang}} />
+                <ProductCard key={product.id} product={product} dict={dict.shop} lang={lang} />
             ))}
         </div>
     </div>
