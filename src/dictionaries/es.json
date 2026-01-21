@@ -62,6 +62,13 @@
     "session": {
         "title": "Sesión en Vivo",
         "loading": "Preparando la sesión...",
+        "no_upcoming_title": "No hay sesiones próximas",
+        "no_upcoming_description": "Las sesiones en vivo compradas a través de la agenda aparecerán aquí. El enlace de conexión se activará 10 minutos antes de la hora de la cita.",
+        "book_a_session": "Reservar una sesión",
+        "starts_in_distance": "Comienza {distance}",
+        "starts_in_minutes": "Comienza en {minutes} minutos",
+        "in_progress": "Sesión en curso",
+        "connect": "Conectar",
         "accessDenied": "Acceso Denegado",
         "accessDeniedMessage": "Debes comprar al menos una formación para acceder a esta área.",
         "backToDashboard": "Volver a Inicio",
@@ -228,5 +235,3 @@
         "access_hub": "Acceder al Hub"
     }
 }
-
-    

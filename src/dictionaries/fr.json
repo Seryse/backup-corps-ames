@@ -62,6 +62,13 @@
     "session": {
         "title": "Session en Direct",
         "loading": "Préparation de la session...",
+        "no_upcoming_title": "Aucune session à venir",
+        "no_upcoming_description": "Les sessions live achetées via l'agenda apparaîtront ici. Le lien de connexion sera activé 10 minutes avant l'heure du rendez-vous.",
+        "book_a_session": "Réserver une séance",
+        "starts_in_distance": "Commence {distance}",
+        "starts_in_minutes": "Commence dans {minutes} minutes",
+        "in_progress": "Session en cours",
+        "connect": "Se connecter",
         "accessDenied": "Accès Refusé",
         "accessDeniedMessage": "Vous devez avoir acquis au moins une formation pour accéder à cet espace.",
         "backToDashboard": "Retour à l'Accueil",
@@ -228,5 +235,3 @@
         "access_hub": "Accéder au Hub"
     }
 }
-
-    

@@ -62,6 +62,13 @@
     "session": {
         "title": "Live Session",
         "loading": "Preparing the session...",
+        "no_upcoming_title": "No upcoming sessions",
+        "no_upcoming_description": "Live sessions purchased via the agenda will appear here. The connection link will be activated 10 minutes before the appointment time.",
+        "book_a_session": "Book a session",
+        "starts_in_distance": "Starts {distance}",
+        "starts_in_minutes": "Starts in {minutes} minutes",
+        "in_progress": "Session in progress",
+        "connect": "Connect",
         "accessDenied": "Access Denied",
         "accessDeniedMessage": "You must purchase at least one training to access this area.",
         "backToDashboard": "Back to Home",
@@ -228,5 +235,3 @@
         "access_hub": "Access Hub"
     }
 }
-
-    
