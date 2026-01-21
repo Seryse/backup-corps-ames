@@ -10,7 +10,7 @@ import 'react-calendar/dist/Calendar.css';
 import type { CalendarProps } from 'react-calendar';
 import { Button } from '@/components/ui/button';
 import { CalendarDays, Clock, Loader2, Info, User, ChevronLeft, ChevronRight } from 'lucide-react';
-import { format, addMonths, subMonths } from 'date-fns';
+import { format } from 'date-fns';
 import { enUS, fr, es } from 'date-fns/locale';
 import { useFirestore, useCollection, useMemoFirebase, useUser } from '@/firebase';
 import { collection, query, Query } from 'firebase/firestore';
@@ -184,34 +184,16 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
                             tileDisabled={({date}) => date < new Date(new Date().setHours(0,0,0,0))}
                             tileContent={({ date, view }) => <DayContent date={date} view={view} />}
                             activeStartDate={activeDate}
+                            onActiveStartDateChange={({ activeStartDate }) => activeStartDate && setActiveDate(activeStartDate)}
                             view="month"
-                            onViewChange={() => {}}
-                            prevLabel={null}
+                            prevLabel={<ChevronLeft className="h-5 w-5" aria-label={dict?.previousMonth || 'Previous month'} />}
+                            nextLabel={<ChevronRight className="h-5 w-5" aria-label={dict?.nextMonth || 'Next month'} />}
                             prev2Label={null}
-                            nextLabel={null}
                             next2Label={null}
                             navigationLabel={({ date: navDate }) => (
-                                <div className="flex items-center justify-between w-full px-2">
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        onClick={(e) => { e.preventDefault(); setActiveDate(subMonths(activeDate, 1))}}
-                                        aria-label={dict?.previousMonth || 'Previous month'}
-                                    >
-                                        <ChevronLeft className="h-5 w-5" />
-                                    </Button>
-                                    <span className="font-headline text-lg capitalize">
-                                        {format(navDate, 'MMMM yyyy', { locale: dateFnsLocale })}
-                                    </span>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        onClick={(e) => { e.preventDefault(); setActiveDate(addMonths(activeDate, 1))}}
-                                        aria-label={dict?.nextMonth || 'Next month'}
-                                    >
-                                        <ChevronRight className="h-5 w-5" />
-                                    </Button>
-                                </div>
+                                <span className="font-headline text-lg capitalize">
+                                    {format(navDate, 'MMMM yyyy', { locale: dateFnsLocale })}
+                                </span>
                             )}
                         />
                     </CardContent>
