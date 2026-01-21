@@ -14,7 +14,7 @@ import { useFirestore, useCollection, useMemoFirebase, useUser } from '@/firebas
 import { collection, query, Query } from 'firebase/firestore';
 import type { SessionType } from '@/components/admin/session-type-manager';
 import { cn } from '@/lib/utils';
-import { DayContentProps } from 'react-day-picker';
+import { DayPicker, DayContentProps } from 'react-day-picker';
 import { useToast } from '@/hooks/use-toast';
 import { createBooking } from '@/app/actions';
 
@@ -163,7 +163,7 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
                 <Card>
-                    <CardContent className="p-0 flex justify-center">
+                    <CardContent className="p-0">
                         <Calendar
                             mode="single"
                             selected={date}
@@ -203,6 +203,7 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
                                                 key={slot.id}
                                                 variant={selectedSlot?.id === slot.id ? 'default' : 'outline'}
                                                 onMouseEnter={() => handleSlotSelect(slot)}
+                                                onClick={() => handleSlotSelect(slot)}
                                                 disabled={isFull}
                                             >
                                                 {format(slot.startTime.toDate(), 'HH:mm')}
