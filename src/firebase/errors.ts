@@ -70,23 +70,28 @@ function buildAuthObject(currentUser: User | null): FirebaseAuthObject | null {
 
 /**
  * Builds the complete, simulated request object for the error message.
- * It safely tries to get the current authenticated user.
+ * It safely tries to get the current authenticated user only on the client-side.
  * @param context The context of the failed Firestore operation.
  * @returns A structured request object.
  */
 function buildRequestObject(context: SecurityRuleContext): SecurityRuleRequest {
   let authObject: FirebaseAuthObject | null = null;
-  try {
-    // Safely attempt to get the current user.
-    const firebaseAuth = getAuth();
-    const currentUser = firebaseAuth.currentUser;
-    if (currentUser) {
-      authObject = buildAuthObject(currentUser);
+  
+  // This is the crucial check: only run this code in the browser.
+  if (typeof window !== 'undefined') {
+    try {
+      // Safely attempt to get the current user.
+      const firebaseAuth = getAuth();
+      const currentUser = firebaseAuth.currentUser;
+      if (currentUser) {
+        authObject = buildAuthObject(currentUser);
+      }
+    } catch {
+      // This will catch errors if the Firebase app is not yet initialized.
+      // In this case, we'll proceed without auth information, which is fine.
     }
-  } catch {
-    // This will catch errors if the Firebase app is not yet initialized.
-    // In this case, we'll proceed without auth information.
   }
+
 
   return {
     auth: authObject,
