@@ -2,7 +2,7 @@
     "header": {
         "home": "Accueil",
         "dashboard": "Tableau de bord",
-        "session": "Session",
+        "session": "Hub",
         "admin": "Admin",
         "login": "Connexion",
         "logout": "Déconnexion",
@@ -55,17 +55,13 @@
         "noNewsDescription": "Revenez plus tard pour les mises à jour."
     },
     "session": {
-        "title": "Session en Direct",
-        "loading": "Préparation de la session...",
+        "title": "Hub Communautaire",
+        "loading": "Préparation du hub...",
         "accessDenied": "Accès Refusé",
-        "accessDeniedMessage": "Votre session n'est pas active ou payée. Veuillez vérifier votre tableau de bord.",
+        "accessDeniedMessage": "Vous devez avoir acquis au moins une formation pour accéder au hub.",
         "backToDashboard": "Retour à l'Accueil",
-        "adminControls": "Contrôles Admin",
-        "startIntro": "Lancer l'Intro",
-        "subtitles": "Sous-titres",
-        "translation": "Traduction",
-        "startRecognition": "Démarrer les sous-titres",
-        "stopRecognition": "Arrêter les sous-titres"
+        "welcome_message": "Bienvenue dans le Hub !",
+        "forum_coming_soon": "Les fonctionnalités du forum seront bientôt disponibles ici."
     },
     "admin": {
         "title": "Console d'Administration",
