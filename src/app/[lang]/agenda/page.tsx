@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation';
 import { getDictionary, Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Calendar } from '@/components/ui/calendar';
+import Calendar from 'react-calendar';
+import type { Value } from 'react-calendar/dist/cjs/shared/types';
 import { Button } from '@/components/ui/button';
 import { CalendarDays, Clock, Loader2, Info, User } from 'lucide-react';
 import { format } from 'date-fns';
@@ -14,7 +15,6 @@ import { useFirestore, useCollection, useMemoFirebase, useUser } from '@/firebas
 import { collection, query, Query } from 'firebase/firestore';
 import type { SessionType } from '@/components/admin/session-type-manager';
 import { cn } from '@/lib/utils';
-import { DayPicker, DayContentProps } from 'react-day-picker';
 import { useToast } from '@/hooks/use-toast';
 import { createBooking } from '@/app/actions';
 
@@ -85,8 +85,12 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
     getDictionary(lang).then(d => setDict(d.agenda));
   }, [lang]);
 
-  const handleDateSelect = (selectedDate: Date | undefined) => {
-    setDate(selectedDate);
+  const handleDateSelect = (selectedDate: Value) => {
+    if (selectedDate instanceof Date) {
+        setDate(selectedDate);
+    } else {
+        setDate(undefined);
+    }
     setSelectedSlot(null);
   };
 
@@ -120,6 +124,26 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
     }
   };
 
+  const renderDots = ({ date: tileDate, view }: { date: Date, view: string }) => {
+    if (view === 'month') {
+        const dateKey = format(tileDate, 'yyyy-MM-dd');
+        const dayInfo = dayData[dateKey];
+        if (dayInfo) {
+            return (
+                <div className="flex justify-center items-center">
+                    <div
+                        className={cn('h-1.5 w-1.5 rounded-full mt-1', {
+                        'bg-green-500': dayInfo.status === 'available',
+                        'bg-red-500': dayInfo.status === 'full',
+                        })}
+                    />
+                </div>
+            );
+        }
+    }
+    return null;
+  };
+
   const selectedDateString = date ? format(date, 'yyyy-MM-dd') : '';
   const slotsForSelectedDate = date && dayData[selectedDateString] ? dayData[selectedDateString].slots : [];
   const selectedSessionType = selectedSlot ? sessionTypes?.find(st => st.id === selectedSlot.sessionTypeId) : null;
@@ -135,25 +159,6 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
     );
   }
 
-  const DayContent = (props: DayContentProps) => {
-    const dateKey = format(props.date, 'yyyy-MM-dd');
-    const dayInfo = dayData[dateKey];
-  
-    return (
-      <div className="relative flex h-full w-full items-center justify-center">
-        <span>{format(props.date, 'd')}</span>
-        {dayInfo && (
-          <div
-            className={cn('absolute bottom-1 h-1.5 w-1.5 rounded-full', {
-              'bg-green-500': dayInfo.status === 'available',
-              'bg-red-500': dayInfo.status === 'full',
-            })}
-          />
-        )}
-      </div>
-    );
-  };
-
   return (
     <div className="container mx-auto p-4 sm:p-8">
         <div className="flex items-center gap-4 mb-8">
@@ -163,17 +168,13 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
                 <Card>
-                    <CardContent className="p-0">
+                    <CardContent className="p-2 flex justify-center">
                         <Calendar
-                            mode="single"
-                            selected={date}
-                            onSelect={handleDateSelect}
-                            className="rounded-md"
-                            disabled={(d) => d < new Date(new Date().setHours(0,0,0,0))}
-                            locale={dateFnsLocale}
-                            components={{
-                              DayContent: DayContent
-                            }}
+                            onChange={handleDateSelect}
+                            value={date}
+                            locale={lang}
+                            tileDisabled={({date}) => date < new Date(new Date().setHours(0,0,0,0))}
+                            tileContent={renderDots}
                         />
                     </CardContent>
                 </Card>
@@ -203,7 +204,7 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
                                                 key={slot.id}
                                                 variant={selectedSlot?.id === slot.id ? 'default' : 'outline'}
                                                 onMouseEnter={() => handleSlotSelect(slot)}
-                                                onClick={() => handleSlotSelect(slot)}
+                                                onClick={() => setSelectedSlot(slot)}
                                                 disabled={isFull}
                                             >
                                                 {format(slot.startTime.toDate(), 'HH:mm')}
