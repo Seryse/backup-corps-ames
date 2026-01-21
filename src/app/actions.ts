@@ -1,10 +1,11 @@
 'use server'
 
 import { db } from '@/firebase/server';
-import { doc, getDoc, writeBatch, collection, serverTimestamp, getDocs, query, limit, runTransaction, increment } from 'firebase/firestore';
+import { doc, getDoc, writeBatch, collection, serverTimestamp, getDocs, query, limit, runTransaction, increment, updateDoc, addDoc } from 'firebase/firestore';
 import type { CartItem } from '@/components/providers/cart-provider';
 import type { TranslateTextInput } from '@/ai/types';
 import type { SessionType } from '@/components/admin/session-type-manager';
+import { randomBytes } from 'crypto';
 
 // This function now checks if the user has purchased at least one formation.
 export async function checkSessionAccess(userId: string): Promise<boolean> {
@@ -116,4 +117,55 @@ export async function translateTextAction(input: TranslateTextInput) {
   return await translateText(input);
 }
 
+export async function updateSessionState(sessionId: string, data: { triggerIntro?: boolean, activePlaylistUrl?: string }) {
+    if (!sessionId) return { success: false, error: 'Session ID is required.' };
+    
+    try {
+        const sessionRef = doc(db, 'sessions', sessionId);
+        await updateDoc(sessionRef, data);
+        return { success: true };
+    } catch (error: any) {
+        console.error("Error updating session state:", error);
+        return { success: false, error: error.message };
+    }
+}
+
+export async function submitTestimonial(
+    { bookingId, userId, feedbackText, mediaUrl }: { bookingId: string, userId: string, feedbackText?: string, mediaUrl?: string }
+): Promise<{ success: boolean, couponCode?: string, error?: string }> {
+    if (!userId || !bookingId) return { success: false, error: 'User and Booking ID are required.' };
+
+    try {
+        const batch = writeBatch(db);
+
+        // 1. Save the testimonial
+        const testimonialRef = doc(collection(db, 'testimonials'));
+        batch.set(testimonialRef, {
+            userId,
+            bookingId,
+            feedbackText: feedbackText || '',
+            mediaUrl: mediaUrl || '',
+            submittedAt: serverTimestamp(),
+        });
+        
+        // 2. Generate and save the coupon
+        const couponCode = `MERCI-${randomBytes(3).toString('hex').toUpperCase()}`;
+        const couponRef = doc(collection(db, 'coupons'));
+        batch.set(couponRef, {
+            code: couponCode,
+            userId,
+            discountPercentage: 10,
+            createdAt: serverTimestamp(),
+            isUsed: false
+        });
+
+        await batch.commit();
+
+        return { success: true, couponCode };
+
+    } catch (error: any) {
+        console.error("Error submitting testimonial:", error);
+        return { success: false, error: error.message };
+    }
+}
     

@@ -6,59 +6,65 @@ import { Button } from '@/components/ui/button';
 import { Mic, MicOff, Languages } from 'lucide-react';
 import { Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
-import { realTimeSubtitlesWithTranslation } from '@/ai/flows/real-time-subtitles-translation';
-import { useFirestore } from '@/firebase';
-import { doc, onSnapshot, setDoc } from 'firebase/firestore';
+import { translateTextAction } from '@/app/actions';
+import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
+import { doc, updateDoc, DocumentReference } from 'firebase/firestore';
 
 interface RealtimeSubtitlesProps {
     dictionary: any;
     lang: Locale;
     isAdmin: boolean;
+    sessionId: string;
 }
 
 interface SubtitleData {
     original: string;
-    translated: string;
+    translations: {
+        en: string;
+        es: string;
+    };
     timestamp: number;
 }
 
-const SESSION_ID = 'current_session'; // In a real app, this would be dynamic
+interface LiveSession {
+    subtitle?: SubtitleData;
+}
 
-export default function RealtimeSubtitles({ dictionary, lang, isAdmin }: RealtimeSubtitlesProps) {
+export default function RealtimeSubtitles({ dictionary, lang, isAdmin, sessionId }: RealtimeSubtitlesProps) {
     const [isListening, setIsListening] = useState(false);
-    const [subtitle, setSubtitle] = useState<SubtitleData | null>(null);
     const recognitionRef = useRef<any>(null);
     const firestore = useFirestore();
 
-    // Listen for subtitles from Firestore
-    useEffect(() => {
-        if (!firestore) return;
-        const unsub = onSnapshot(doc(firestore, "subtitles", SESSION_ID), (doc) => {
-            if (doc.exists()) {
-                setSubtitle(doc.data() as SubtitleData);
-            }
-        });
-        return () => unsub();
-    }, [firestore]);
+    const sessionRef = useMemoFirebase(() => {
+        if (!firestore || !sessionId) return null;
+        return doc(firestore, 'sessions', sessionId) as DocumentReference<LiveSession>;
+    }, [firestore, sessionId]);
+    
+    const { data: sessionState } = useDoc<LiveSession>(sessionRef);
+    const subtitle = sessionState?.subtitle;
 
     const handleTranscript = useCallback(async (transcript: string) => {
-        if (!firestore) return;
+        if (!firestore || !sessionId || !transcript.trim()) return;
         try {
-            const translationResult = await realTimeSubtitlesWithTranslation({
-                text: transcript,
-                targetLanguage: lang,
-            });
+            const translations = await translateTextAction({ text: transcript });
+            
             const newSubtitle: SubtitleData = {
                 original: transcript,
-                translated: translationResult.translatedText,
+                translations: {
+                    en: translations.en,
+                    es: translations.es,
+                },
                 timestamp: Date.now(),
             };
-            // Update Firestore
-            await setDoc(doc(firestore, "subtitles", SESSION_ID), newSubtitle);
-        } catch (error) => {
-            console.error("Translation error:", error);
+
+            await updateDoc(doc(firestore, "sessions", sessionId), {
+                subtitle: newSubtitle,
+            });
+
+        } catch (error) {
+            console.error("Translation or Firestore update error:", error);
         }
-    }, [lang, firestore]);
+    }, [firestore, sessionId]);
 
     useEffect(() => {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -71,7 +77,7 @@ export default function RealtimeSubtitles({ dictionary, lang, isAdmin }: Realtim
             const recognition = new SpeechRecognition();
             recognition.continuous = true;
             recognition.interimResults = true;
-            recognition.lang = 'fr-FR'; // Admin's language
+            recognition.lang = 'fr-FR'; // Admin's language is French
 
             recognition.onresult = (event: any) => {
                 let finalTranscript = '';
@@ -87,12 +93,12 @@ export default function RealtimeSubtitles({ dictionary, lang, isAdmin }: Realtim
             
             recognition.onerror = (event: any) => {
                 console.error('Speech recognition error:', event.error);
-                setIsListening(false); // Stop on error
+                setIsListening(false);
             };
             
             recognition.onend = () => {
                 if (isListening) {
-                    recognition.start(); // Restart if it stops automatically and we're still supposed to be listening
+                    recognition.start();
                 }
             };
 
@@ -107,6 +113,13 @@ export default function RealtimeSubtitles({ dictionary, lang, isAdmin }: Realtim
     const toggleListening = () => {
         setIsListening(prev => !prev);
     };
+    
+    // Display logic based on user role and language
+    const mainText = isAdmin || lang === 'fr' 
+        ? subtitle?.original 
+        : subtitle?.translations?.[lang];
+        
+    const secondaryText = isAdmin || lang === 'fr' || !mainText ? null : subtitle?.original;
 
     return (
         <Card>
@@ -125,11 +138,11 @@ export default function RealtimeSubtitles({ dictionary, lang, isAdmin }: Realtim
                 )}
                 <div className="min-h-[100px] p-4 bg-muted/50 rounded-md space-y-2">
                     <p className="text-lg font-semibold text-foreground">
-                        {subtitle?.translated || "..."}
+                        {mainText || "..."}
                     </p>
-                    {!isAdmin && subtitle && (
+                    {secondaryText && (
                         <p className="text-sm text-muted-foreground">
-                           ({subtitle.original})
+                           ({secondaryText})
                         </p>
                     )}
                 </div>

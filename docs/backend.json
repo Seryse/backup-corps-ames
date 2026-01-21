@@ -236,6 +236,60 @@
         }
       },
       "required": ["userId", "timeSlotId", "sessionTypeId", "bookingTime", "status", "visioToken"]
+    },
+    "LiveSession": {
+      "title": "Live Session State",
+      "type": "object",
+      "description": "Stores the real-time state of a live video session.",
+      "properties": {
+        "hostId": {
+          "type": "string",
+          "description": "The UID of the host (praticien)."
+        },
+        "bookingId": {
+          "type": "string",
+          "description": "Reference to the booking document."
+        },
+        "triggerIntro": {
+          "type": "boolean",
+          "description": "A flag set by the admin to trigger the intro audio on the client side."
+        },
+        "activePlaylistUrl": {
+          "type": "string",
+          "description": "URL of the background music playlist currently being played by the admin."
+        },
+        "subtitle": {
+          "$ref": "#/entities/Subtitle"
+        }
+      },
+      "required": ["hostId", "bookingId"]
+    },
+    "Testimonial": {
+      "title": "Testimonial",
+      "type": "object",
+      "description": "User feedback provided after a session.",
+      "properties": {
+        "userId": { "type": "string" },
+        "bookingId": { "type": "string" },
+        "submittedAt": { "type": "string", "format": "date-time" },
+        "feedbackText": { "type": "string" },
+        "mediaUrl": { "type": "string", "format": "uri" },
+        "mediaType": { "type": "string", "enum": ["audio", "video"] }
+      },
+      "required": ["userId", "bookingId", "submittedAt"]
+    },
+    "Coupon": {
+      "title": "Coupon",
+      "type": "object",
+      "description": "A promotional coupon code.",
+      "properties": {
+        "code": { "type": "string" },
+        "userId": { "type": "string" },
+        "discountPercentage": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "isUsed": { "type": "boolean" }
+      },
+      "required": ["code", "userId", "discountPercentage", "createdAt", "isUsed"]
     }
   },
   "auth": {
@@ -267,7 +321,7 @@
       "schema": {
         "$ref": "#/entities/Subtitle"
       },
-      "description": "Stores the current subtitle for a live session. 'sessionId' is a unique identifier for the session, e.g., 'current_session'."
+      "description": "[DEPRECATED] Stores the current subtitle for a live session. This is now part of the /sessions/{sessionId} document."
     },
     "/sessionTypes/{sessionTypeId}": {
       "schema": { "$ref": "#/entities/SessionType" },
@@ -280,6 +334,24 @@
     "/users/{userId}/bookings/{bookingId}": {
       "schema": { "$ref": "#/entities/Booking" },
       "description": "Stores a user's session bookings."
+    },
+    "/sessions/{sessionId}": {
+      "schema": {
+        "$ref": "#/entities/LiveSession"
+      },
+      "description": "Stores the real-time state for a specific live session. The sessionId is typically the bookingId."
+    },
+    "/testimonials/{testimonialId}": {
+      "schema": {
+        "$ref": "#/entities/Testimonial"
+      },
+      "description": "Stores user testimonials submitted after sessions."
+    },
+    "/coupons/{couponId}": {
+      "schema": {
+        "$ref": "#/entities/Coupon"
+      },
+      "description": "Stores generated coupon codes for users."
     }
   }
 }

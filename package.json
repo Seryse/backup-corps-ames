@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@daily-co/daily-js": "^0.63.0",
     "@formatjs/intl-localematcher": "^0.5.4",
     "@genkit-ai/google-genai": "^1.20.0",
     "@genkit-ai/next": "^1.20.0",
