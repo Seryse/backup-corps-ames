@@ -3,66 +3,57 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { getDictionary, Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
-import { ShoppingBag, Loader2, TriangleAlert } from 'lucide-react';
+import { ShoppingBag, Loader2 } from 'lucide-react';
 import type { Formation } from '@/components/providers/cart-provider';
 import { FormationCard } from '@/components/shop/formation-card';
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
-import { collection } from 'firebase/firestore';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
-// This type represents the structure of the document in Firestore, with localized fields
-export type FormationDocument = Omit<Formation, 'name' | 'description' | 'id'> & {
-    name: { [key in Locale]?: string };
-    description: { [key in Locale]?: string };
-};
+// This is a temporary list of formations for display purposes.
+// We will connect this to Firestore in the next step.
+const staticFormations: Formation[] = [
+  {
+    id: 'reiki-1',
+    name: 'Reiki Niveau 1',
+    description: 'Initiation au premier degré de Reiki, pour apprendre à canaliser l\'énergie universelle pour soi-même.',
+    price: 15000,
+    currency: 'eur',
+    imageId: 'reiki-formation',
+    tokenProductId: 'prod_reiki1'
+  },
+  {
+    id: 'divination-mastery',
+    name: 'Maîtrise de la Divination',
+    description: 'Explorez différents arts divinatoires comme le tarot, les oracles et la géomancie.',
+    price: 22000,
+    currency: 'eur',
+    imageId: 'divination-mastery',
+    tokenProductId: 'prod_divination'
+  },
+  {
+    id: 'rune-crafting',
+    name: 'Fabrication de Runes',
+    description: 'Apprenez à fabriquer et à consacrer votre propre jeu de runes pour la divination et la magie.',
+    price: 18000,
+    currency: 'eur',
+    imageId: 'rune-crafting',
+    tokenProductId: 'prod_runes'
+  }
+];
+
 
 export default function ShopPage({ params: { lang } }: { params: { lang: Locale } }) {
   const [dict, setDict] = useState<Dictionary['shop'] | null>(null);
-  const firestore = useFirestore();
 
   useEffect(() => {
     getDictionary(lang).then(d => setDict(d.shop));
   }, [lang]);
-
-  const formationsCollection = useMemoFirebase(() => {
-    if (!firestore) return null;
-    return collection(firestore, 'formations');
-  }, [firestore]);
   
-  const { data: formationsData, isLoading, error } = useCollection<FormationDocument>(formationsCollection);
-
-  // This transforms the Firestore data into the format the `FormationCard` expects,
-  // selecting the correct language for the current user.
-  const formations: Formation[] | null = useMemo(() => {
-    if (!formationsData) return null;
-    return formationsData.map(doc => ({
-      ...doc,
-      name: (doc.name && doc.name[lang]) || (doc.name && doc.name['fr']) || doc.id, // Fallback logic
-      description: (doc.description && doc.description[lang]) || (doc.description && doc.description['fr']) || '', // Fallback logic
-    }));
-  }, [formationsData, lang]);
-  
-  if (isLoading || !dict) {
+  if (!dict) {
     return (
       <div className="flex h-[50vh] flex-col items-center justify-center bg-background">
         <Loader2 className="h-12 w-12 animate-spin text-accent" />
         <p className="mt-4 text-lg font-semibold">{dict?.loading || 'Chargement des formations...'}</p>
       </div>
     )
-  }
-
-  if (error) {
-      return (
-          <div className="container mx-auto p-4 sm:p-8">
-            <Alert variant="destructive">
-                <TriangleAlert className="h-4 w-4" />
-                <AlertTitle>Erreur de chargement</AlertTitle>
-                <AlertDescription>
-                    Un problème est survenu lors de la récupération des formations. Veuillez réessayer plus tard.
-                </AlertDescription>
-            </Alert>
-          </div>
-      )
   }
 
   return (
@@ -72,9 +63,9 @@ export default function ShopPage({ params: { lang } }: { params: { lang: Locale 
             <h1 className="text-4xl font-headline">{dict.title}</h1>
         </div>
         
-        {formations && formations.length > 0 ? (
+        {staticFormations && staticFormations.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {formations.map(formation => (
+                {staticFormations.map(formation => (
                     <FormationCard key={formation.id} formation={formation} dict={dict} lang={lang} />
                 ))}
             </div>

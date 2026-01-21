@@ -20,8 +20,8 @@ export function FormationCard({ formation, dict, lang }: { formation: Formation,
     const handleAddToCart = () => {
         if (isAlreadyInCart) {
             toast({
-                title: "Déjà dans le panier",
-                description: `${formation.name} est déjà dans votre panier.`,
+                title: dict.alreadyInCart,
+                description: `${formation.name} ${dict.alreadyInCartDescription}`,
             });
             return;
         }
@@ -59,7 +59,7 @@ export function FormationCard({ formation, dict, lang }: { formation: Formation,
                 </p>
                 <Button size="sm" onClick={handleAddToCart} disabled={isAlreadyInCart}>
                     <PlusCircle className="mr-2 h-4 w-4" />
-                    {isAlreadyInCart ? "Déjà ajouté" : dict.addToCart}
+                    {isAlreadyInCart ? dict.inCart : dict.addToCart}
                 </Button>
             </CardFooter>
         </Card>

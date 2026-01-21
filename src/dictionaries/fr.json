@@ -59,12 +59,14 @@
     },
     "shop": {
         "title": "Boutique",
-        "description": "Découvrez nos produits",
         "addToCart": "Ajouter au panier",
-        "productAdded": "Produit Ajouté",
+        "formationAdded": "Formation Ajoutée",
         "addedToCart": "a été ajouté à votre panier.",
         "loading": "Chargement des formations...",
-        "noFormations": "Aucune formation n'est disponible pour le moment."
+        "noFormations": "Aucune formation n'est disponible pour le moment.",
+        "alreadyInCart": "Déjà dans le panier",
+        "alreadyInCartDescription": "est déjà dans votre panier.",
+        "inCart": "Dans le panier"
     },
     "agenda": {
         "title": "Agenda",

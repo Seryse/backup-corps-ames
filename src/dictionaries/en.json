@@ -59,12 +59,14 @@
     },
     "shop": {
         "title": "Shop",
-        "description": "Discover our products",
         "addToCart": "Add to Cart",
-        "productAdded": "Product Added",
+        "formationAdded": "Formation Added",
         "addedToCart": "has been added to your cart.",
         "loading": "Loading formations...",
-        "noFormations": "No formations available at the moment."
+        "noFormations": "No formations available at the moment.",
+        "alreadyInCart": "Already in Cart",
+        "alreadyInCartDescription": "is already in your cart.",
+        "inCart": "In Cart"
     },
     "agenda": {
         "title": "Agenda",

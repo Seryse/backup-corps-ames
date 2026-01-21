@@ -59,12 +59,14 @@
     },
     "shop": {
         "title": "Tienda",
-        "description": "Descubre nuestros productos",
         "addToCart": "Añadir al carrito",
-        "productAdded": "Producto Añadido",
+        "formationAdded": "Formación Añadida",
         "addedToCart": "ha sido añadido a tu cesta.",
         "loading": "Cargando formaciones...",
-        "noFormations": "No hay formaciones disponibles por el momento."
+        "noFormations": "No hay formaciones disponibles por el momento.",
+        "alreadyInCart": "Ya en el carrito",
+        "alreadyInCartDescription": "ya está en tu cesta.",
+        "inCart": "En el carrito"
     },
     "agenda": {
         "title": "Agenda",
