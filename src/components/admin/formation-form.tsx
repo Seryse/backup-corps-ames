@@ -7,14 +7,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { useFirestore, useStorage } from '@/firebase';
+import { useFirestore } from '@/firebase';
 import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
-import { getDownloadURL, ref as storageRef, uploadBytesResumable } from 'firebase/storage';
 import type { Formation } from '@/components/providers/cart-provider';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Languages } from 'lucide-react';
 import { useState } from 'react';
-import { Progress } from '../ui/progress';
 import { translateTextAction } from '@/app/actions';
 
 interface FormationFormProps {
@@ -43,10 +41,8 @@ type FormationFormData = z.infer<typeof formationSchema>;
 
 export default function FormationForm({ formationToEdit, onClose, dictionary }: FormationFormProps) {
   const firestore = useFirestore();
-  const storage = useStorage();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const [isTranslating, setIsTranslating] = useState<null | 'name' | 'description'>(null);
 
   const {
@@ -98,53 +94,25 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
 
 
   const onSubmit = (data: FormationFormData) => {
-    if (!firestore || !storage) return;
+    if (!firestore) return;
     setIsLoading(true);
-    setUploadProgress(null);
 
-    const getImageUrl = new Promise<string>((resolve, reject) => {
-        if (data.imageFile && data.imageFile.length > 0) {
-            const file = data.imageFile[0];
-            const uniqueFileName = `${Date.now()}-${file.name}`;
-            const fileRef = storageRef(storage, `formations/${uniqueFileName}`);
-            const uploadTask = uploadBytesResumable(fileRef, file);
+    const formationData = {
+      name: data.name,
+      description: data.description,
+      price: Math.round(data.price * 100),
+      currency: data.currency,
+      tokenProductId: data.tokenProductId,
+      imageUrl: formationToEdit?.imageUrl || 'https://placehold.co/600x400/E6E6FA/333333?text=Image',
+    };
 
-            uploadTask.on('state_changed',
-                (snapshot) => {
-                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    setUploadProgress(progress);
-                },
-                (error) => reject(error),
-                async () => {
-                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-                    resolve(downloadURL);
-                }
-            );
-        } else if (formationToEdit?.imageUrl) {
-            resolve(formationToEdit.imageUrl);
-        } else {
-            reject(new Error("Image is required."));
-        }
-    });
-
-    getImageUrl.then(imageUrl => {
-        const formationData = {
-          name: data.name,
-          description: data.description,
-          price: Math.round(data.price * 100),
-          currency: data.currency,
-          tokenProductId: data.tokenProductId,
-          imageUrl: imageUrl,
-        };
-
-        const firestorePromise = formationToEdit?.id
-            ? setDoc(doc(firestore, 'formations', formationToEdit.id), formationData)
-            : addDoc(collection(firestore, 'formations'), formationData);
-        
-        return firestorePromise.then(() => {
-            toast({ title: formationToEdit ? dictionary.success.formationUpdated : dictionary.success.formationAdded });
-            onClose();
-        });
+    const firestorePromise = formationToEdit?.id
+        ? setDoc(doc(firestore, 'formations', formationToEdit.id), formationData)
+        : addDoc(collection(firestore, 'formations'), formationData);
+    
+    firestorePromise.then(() => {
+        toast({ title: formationToEdit ? dictionary.success.formationUpdated : dictionary.success.formationAdded });
+        onClose();
     })
     .catch(e => {
         console.error("Form submission error:", e);
@@ -156,7 +124,6 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
     })
     .finally(() => {
         setIsLoading(false);
-        setUploadProgress(null);
     });
   };
 
@@ -228,12 +195,12 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
       </div>
       
       <div>
-          <Label htmlFor="imageFile">{dictionary.form.image}</Label>
-          <Input id="imageFile" type="file" accept="image/*" {...register('imageFile')} />
-          {uploadProgress !== null && <Progress value={uploadProgress} className="w-full mt-2" />}
+          <Label htmlFor="imageFile">{dictionary.form.image} (désactivé)</Label>
+          <Input id="imageFile" type="file" accept="image/*" disabled />
+          {/* <Input id="imageFile" type="file" accept="image/*" {...register('imageFile')} /> */}
           {formationToEdit?.imageUrl && (
             <div className="mt-4">
-                <p className="text-sm font-medium">Current Image:</p>
+                <p className="text-sm font-medium">Image Actuelle:</p>
                 <img src={formationToEdit.imageUrl} alt="Current formation" className="mt-2 h-20 w-20 object-cover rounded-md" />
             </div>
           )}

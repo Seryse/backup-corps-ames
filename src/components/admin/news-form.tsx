@@ -7,13 +7,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { useFirestore, useStorage } from '@/firebase';
+import { useFirestore } from '@/firebase';
 import { addDoc, collection, doc, serverTimestamp, setDoc } from 'firebase/firestore';
-import { getDownloadURL, ref as storageRef, uploadBytesResumable } from 'firebase/storage';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Languages } from 'lucide-react';
 import { useState } from 'react';
-import { Progress } from '../ui/progress';
 import type { NewsArticle } from './news-manager';
 import { translateTextAction } from '@/app/actions';
 
@@ -40,10 +38,8 @@ type NewsFormData = z.infer<typeof newsSchema>;
 
 export default function NewsForm({ articleToEdit, onClose, dictionary }: NewsFormProps) {
   const firestore = useFirestore();
-  const storage = useStorage();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const [isTranslating, setIsTranslating] = useState<null | 'title' | 'content'>(null);
 
   const {
@@ -90,63 +86,32 @@ export default function NewsForm({ articleToEdit, onClose, dictionary }: NewsFor
   };
 
   const onSubmit = (data: NewsFormData) => {
-    if (!firestore || !storage) return;
+    if (!firestore) return;
     setIsLoading(true);
-    setUploadProgress(null);
 
-    const getImageUrl = new Promise<string>((resolve, reject) => {
-        if (data.imageFile && data.imageFile.length > 0) {
-            const file = data.imageFile[0];
-            const uniqueFileName = `${Date.now()}-${file.name}`;
-            const fileRef = storageRef(storage, `news/${uniqueFileName}`);
-            const uploadTask = uploadBytesResumable(fileRef, file);
+    const articleData = {
+        title: data.title,
+        content: data.content,
+        imageUrl: articleToEdit?.imageUrl || 'https://placehold.co/600x400/E6E6FA/333333?text=Image',
+        createdAt: articleToEdit?.createdAt || serverTimestamp(),
+    };
 
-            uploadTask.on('state_changed',
-                (snapshot) => {
-                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    setUploadProgress(progress);
-                },
-                (error) => reject(error),
-                async () => {
-                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-                    resolve(downloadURL);
-                }
-            );
-        } else if (articleToEdit?.imageUrl) {
-            resolve(articleToEdit.imageUrl);
-        } else {
-            reject(new Error("Image is required."));
-        }
-    });
+    const firestorePromise = articleToEdit?.id
+        ? setDoc(doc(firestore, 'news', articleToEdit.id), articleData, { merge: true })
+        : addDoc(collection(firestore, 'news'), articleData);
 
-    getImageUrl.then(imageUrl => {
-        const articleData = {
-            title: data.title,
-            content: data.content,
-            imageUrl: imageUrl,
-            createdAt: articleToEdit?.createdAt || serverTimestamp(),
-        };
-
-        const firestorePromise = articleToEdit?.id
-            ? setDoc(doc(firestore, 'news', articleToEdit.id), articleData, { merge: true })
-            : addDoc(collection(firestore, 'news'), articleData);
-
-        return firestorePromise.then(() => {
-            toast({ title: articleToEdit ? dictionary.success.articleUpdated : dictionary.success.articleAdded });
-            onClose();
-        });
-    })
-    .catch(e => {
+    firestorePromise.then(() => {
+        toast({ title: articleToEdit ? dictionary.success.articleUpdated : dictionary.success.articleAdded });
+        onClose();
+    }).catch(e => {
         console.error("Form submission error:", e);
         toast({
             variant: "destructive",
             title: dictionary.error.generic,
             description: e.message || "An unexpected error occurred.",
         });
-    })
-    .finally(() => {
+    }).finally(() => {
         setIsLoading(false);
-        setUploadProgress(null);
     });
   };
 
@@ -199,12 +164,11 @@ export default function NewsForm({ articleToEdit, onClose, dictionary }: NewsFor
       </div>
       
       <div>
-          <Label htmlFor="imageFile">{dictionary.form.image}</Label>
-          <Input id="imageFile" type="file" accept="image/*" {...register('imageFile')} />
-          {uploadProgress !== null && <Progress value={uploadProgress} className="w-full mt-2" />}
+          <Label htmlFor="imageFile">{dictionary.form.image} (désactivé)</Label>
+          <Input id="imageFile" type="file" accept="image/*" disabled />
           {articleToEdit?.imageUrl && (
             <div className="mt-4">
-                <p className="text-sm font-medium">Current Image:</p>
+                <p className="text-sm font-medium">Image Actuelle:</p>
                 <img src={articleToEdit.imageUrl} alt="Current article" className="mt-2 h-20 w-auto object-contain rounded-md" />
             </div>
           )}
