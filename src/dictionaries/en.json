@@ -55,7 +55,35 @@
         "title": "Admin Console",
         "introFiles": "Intro Files",
         "playlistFiles": "Playlist Files",
-        "noFiles": "No files found in this directory."
+        "noFiles": "No files found in this directory.",
+        "manageFormations": "Manage Formations",
+        "addFormation": "Add Formation",
+        "editFormation": "Edit Formation",
+        "deleteFormation": "Delete Formation",
+        "deleteFormationConfirmTitle": "Are you sure?",
+        "deleteFormationConfirmDescription": "This action cannot be undone. This will permanently delete the formation.",
+        "form": {
+            "nameEn": "Name (EN)",
+            "nameFr": "Name (FR)",
+            "nameEs": "Name (ES)",
+            "descriptionEn": "Description (EN)",
+            "descriptionFr": "Description (FR)",
+            "descriptionEs": "Description (ES)",
+            "price": "Price",
+            "currency": "Currency (e.g., eur, usd)",
+            "imageId": "Image ID",
+            "tokenProductId": "Token Product ID",
+            "cancel": "Cancel",
+            "save": "Save"
+        },
+        "success": {
+            "formationAdded": "Formation added successfully!",
+            "formationUpdated": "Formation updated successfully!",
+            "formationDeleted": "Formation deleted successfully!"
+        },
+        "error": {
+            "generic": "An error occurred. Please try again."
+        }
     },
     "shop": {
         "title": "Shop",

@@ -55,7 +55,35 @@
         "title": "Consola de Administración",
         "introFiles": "Archivos de Intro",
         "playlistFiles": "Archivos de Playlist",
-        "noFiles": "No se encontraron archivos en este directorio."
+        "noFiles": "No se encontraron archivos en este directorio.",
+        "manageFormations": "Gestionar Formaciones",
+        "addFormation": "Añadir Formación",
+        "editFormation": "Editar Formación",
+        "deleteFormation": "Eliminar Formación",
+        "deleteFormationConfirmTitle": "¿Estás seguro?",
+        "deleteFormationConfirmDescription": "Esta acción no se puede deshacer. Esto eliminará permanentemente la formación.",
+        "form": {
+            "nameEn": "Nombre (EN)",
+            "nameFr": "Nombre (FR)",
+            "nameEs": "Nombre (ES)",
+            "descriptionEn": "Descripción (EN)",
+            "descriptionFr": "Descripción (FR)",
+            "descriptionEs": "Descripción (ES)",
+            "price": "Precio",
+            "currency": "Moneda (e.g., eur, usd)",
+            "imageId": "ID de Imagen",
+            "tokenProductId": "ID de Producto Token",
+            "cancel": "Cancelar",
+            "save": "Guardar"
+        },
+        "success": {
+            "formationAdded": "¡Formación añadida con éxito!",
+            "formationUpdated": "¡Formación actualizada con éxito!",
+            "formationDeleted": "¡Formación eliminada con éxito!"
+        },
+        "error": {
+            "generic": "Ocurrió un error. Por favor, inténtalo de nuevo."
+        }
     },
     "shop": {
         "title": "Tienda",

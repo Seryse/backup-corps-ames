@@ -55,7 +55,35 @@
         "title": "Console d'Administration",
         "introFiles": "Fichiers d'introduction",
         "playlistFiles": "Fichiers de playlist",
-        "noFiles": "Aucun fichier trouvé dans ce répertoire."
+        "noFiles": "Aucun fichier trouvé dans ce répertoire.",
+        "manageFormations": "Gérer les Formations",
+        "addFormation": "Ajouter une Formation",
+        "editFormation": "Modifier la Formation",
+        "deleteFormation": "Supprimer la Formation",
+        "deleteFormationConfirmTitle": "Êtes-vous sûr ?",
+        "deleteFormationConfirmDescription": "Cette action est irréversible. La formation sera supprimée définitivement.",
+        "form": {
+            "nameEn": "Nom (EN)",
+            "nameFr": "Nom (FR)",
+            "nameEs": "Nom (ES)",
+            "descriptionEn": "Description (EN)",
+            "descriptionFr": "Description (FR)",
+            "descriptionEs": "Description (ES)",
+            "price": "Prix",
+            "currency": "Devise (ex: eur, usd)",
+            "imageId": "ID de l'image",
+            "tokenProductId": "ID du Produit Token",
+            "cancel": "Annuler",
+            "save": "Enregistrer"
+        },
+        "success": {
+            "formationAdded": "Formation ajoutée avec succès !",
+            "formationUpdated": "Formation mise à jour avec succès !",
+            "formationDeleted": "Formation supprimée avec succès !"
+        },
+        "error": {
+            "generic": "Une erreur est survenue. Veuillez réessayer."
+        }
     },
     "shop": {
         "title": "Boutique",

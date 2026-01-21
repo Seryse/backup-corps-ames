@@ -7,6 +7,8 @@ import { ref } from 'firebase/storage';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { File, Music } from 'lucide-react';
 import { Locale } from '@/i18n-config';
+import FormationManager from '@/components/admin/formation-manager';
+import { Separator } from '@/components/ui/separator';
 
 async function listFiles(path: string) {
   try {
@@ -29,7 +31,7 @@ async function FileList({ title, path, icon: Icon }: { title: string, path: stri
         <Card>
             <CardHeader className="flex flex-row items-center gap-2">
                 <Icon className="h-6 w-6 text-accent" />
-                <CardTitle className="font-headline">{title}</CardTitle>
+                <h2 className="font-headline text-xl">{title}</h2>
             </CardHeader>
             <CardContent>
                 {files.length > 0 ? (
@@ -73,9 +75,13 @@ export default async function AdminPage({ params: { lang } }: { params: { lang: 
         </div>
       </div>
       
-      <div className="grid md:grid-cols-2 gap-8">
-        <FileList title={dict.admin.introFiles} path="/intros" icon={File} />
-        <FileList title={dict.admin.playlistFiles} path="/playlists" icon={Music} />
+      <div className="space-y-8">
+        <div className="grid md:grid-cols-2 gap-8">
+            <FileList title={dict.admin.introFiles} path="/intros" icon={File} />
+            <FileList title={dict.admin.playlistFiles} path="/playlists" icon={Music} />
+        </div>
+        <Separator />
+        <FormationManager dictionary={dict.admin} lang={lang} />
       </div>
     </div>
   );
