@@ -101,7 +101,7 @@ export default function FormationManager({ dictionary, lang }: FormationManagerP
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {formations?.map((formation) => {
-            const localizedName = (formation.name && typeof formation.name === 'object') ? (formation.name[lang] || formation.name.en) : formation.name;
+            const localizedName = formation.name[lang] || formation.name.en;
             return (
               <Card key={formation.id} className="flex flex-col">
                 <CardHeader>

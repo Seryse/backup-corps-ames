@@ -51,8 +51,8 @@ export default function HomePage({ params: { lang } }: { params: { lang: Locale 
       {articles && articles.length > 0 ? (
         <div className="grid gap-12">
           {articles.map(article => {
-            const localizedTitle = (article.title && typeof article.title === 'object') ? (article.title[lang] || article.title.en) : article.title;
-            const localizedContent = (article.content && typeof article.content === 'object') ? (article.content[lang] || article.content.en) : article.content;
+            const localizedTitle = article.title[lang] || article.title.en;
+            const localizedContent = article.content[lang] || article.content.en;
             const articleDate = article.createdAt?.toDate();
             
             return (

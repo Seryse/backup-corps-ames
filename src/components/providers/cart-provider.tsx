@@ -12,8 +12,8 @@ export type LocalizedString = {
 // Define the shape of a formation in the cart
 export type Formation = {
   id: string;
-  name: LocalizedString | string;
-  description: LocalizedString | string;
+  name: LocalizedString;
+  description: LocalizedString;
   price: number;
   currency: string;
   imageUrl: string;

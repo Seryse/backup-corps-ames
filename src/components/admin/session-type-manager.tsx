@@ -32,8 +32,8 @@ const SessionTypeForm = dynamic(() => import('./session-type-form'), {
 
 export type SessionType = {
     id: string;
-    name: LocalizedString | string;
-    description: LocalizedString | string;
+    name: LocalizedString;
+    description: LocalizedString;
     sessionModel: 'private' | 'small_group' | 'large_group';
     maxParticipants: number;
     price: number;
@@ -116,7 +116,7 @@ export default function SessionTypeManager({ dictionary, lang }: SessionTypeMana
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {sessionTypes?.map((st) => {
-            const localizedName = (st.name && typeof st.name === 'object') ? (st.name[lang] || st.name.en) : st.name;
+            const localizedName = st.name[lang] || st.name.en;
             return (
               <Card key={st.id} className="flex flex-col">
                 <CardHeader>
