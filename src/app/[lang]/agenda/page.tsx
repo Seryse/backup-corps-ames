@@ -137,19 +137,20 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
 
   const DayContent = (props: DayContentProps) => {
     const dateKey = format(props.date, 'yyyy-MM-dd');
-    const status = dayData[dateKey]?.status;
+    const dayInfo = dayData[dateKey];
+  
     return (
-        <div className="relative flex h-full w-full items-center justify-center">
-            <span>{props.date.getDate()}</span>
-            {status && (
-            <div
-                className={cn('absolute bottom-1 h-1.5 w-1.5 rounded-full', {
-                'bg-green-500': status === 'available',
-                'bg-red-500': status === 'full',
-                })}
-            />
-            )}
-        </div>
+      <div className="relative flex h-full w-full items-center justify-center">
+        <span>{format(props.date, 'd')}</span>
+        {dayInfo && (
+          <div
+            className={cn('absolute bottom-1 h-1.5 w-1.5 rounded-full', {
+              'bg-green-500': dayInfo.status === 'available',
+              'bg-red-500': dayInfo.status === 'full',
+            })}
+          />
+        )}
+      </div>
     );
   };
 
@@ -170,7 +171,9 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
                             className="rounded-md"
                             disabled={(d) => d < new Date(new Date().setHours(0,0,0,0))}
                             locale={dateFnsLocale}
-                            components={{ DayContent }}
+                            components={{
+                              DayContent: DayContent
+                            }}
                         />
                     </CardContent>
                 </Card>
