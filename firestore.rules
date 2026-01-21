@@ -12,6 +12,15 @@ service cloud.firestore {
       return request.auth != null && request.auth.uid in ['HvsOFzrOwFTHWTBVBextpZtV5I53'];
     }
 
+    function isBookingIncrement(before, after) {
+      return after.bookedParticipantsCount == before.bookedParticipantsCount + 1
+          && after.sessionTypeId == before.sessionTypeId
+          && after.startTime == before.startTime
+          && after.endTime == before.endTime
+          && after.keys().hasAll(['sessionTypeId', 'startTime', 'endTime', 'bookedParticipantsCount'])
+          && after.keys().size() == 4;
+    }
+
     match /formations/{formationId} {
       allow read: if true;
       allow write: if isAdmin();
@@ -38,13 +47,16 @@ service cloud.firestore {
 
     match /timeSlots/{timeSlotId} {
       allow read: if true;
+      // Admin has full write access
       allow write: if isAdmin();
+      // Any authenticated user can update a time slot IF they are just incrementing the count
+      allow update: if request.auth != null && isBookingIncrement(resource.data, request.resource.data);
     }
 
     match /users/{userId}/bookings/{bookingId} {
-      allow write: if isOwner(userId);
       allow get: if isOwner(userId) || isAdmin();
       allow list: if isOwner(userId) || isAdmin();
+      allow write: if isOwner(userId) || isAdmin();
     }
 
     match /sessions/{sessionId} {

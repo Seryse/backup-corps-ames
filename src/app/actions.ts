@@ -1,7 +1,7 @@
 'use server'
 
 import { db } from '@/firebase/server';
-import { doc, getDoc, writeBatch, collection, serverTimestamp, getDocs, query, limit, runTransaction, increment, updateDoc, addDoc } from 'firebase/firestore';
+import { doc, getDoc, writeBatch, collection, serverTimestamp, getDocs, query, limit, updateDoc, addDoc } from 'firebase/firestore';
 import type { CartItem } from '@/components/providers/cart-provider';
 import type { TranslateTextInput } from '@/ai/types';
 import type { SessionType } from '@/components/admin/session-type-manager';
@@ -55,58 +55,6 @@ export async function processCheckout(userId: string, items: CartItem[]): Promis
     } catch (error) {
         console.error("Error processing checkout:", error);
         return { success: false };
-    }
-}
-
-export async function createBooking(userId: string, timeSlotId: string, sessionTypeId: string): Promise<{ success: boolean, error?: string }> {
-    if (!userId || !timeSlotId || !sessionTypeId) {
-        return { success: false, error: 'Missing required information.' };
-    }
-
-    try {
-        const timeSlotRef = doc(db, 'timeSlots', timeSlotId);
-        const sessionTypeRef = doc(db, 'sessionTypes', sessionTypeId);
-        const userBookingRef = doc(collection(db, 'users', userId, 'bookings'));
-
-        await runTransaction(db, async (transaction) => {
-            const timeSlotDoc = await transaction.get(timeSlotRef);
-            const sessionTypeDoc = await transaction.get(sessionTypeRef);
-
-            if (!timeSlotDoc.exists()) {
-                throw new Error("Time slot not found.");
-            }
-            if (!sessionTypeDoc.exists()) {
-                throw new Error("Session type not found.");
-            }
-
-            const timeSlotData = timeSlotDoc.data();
-            const sessionTypeData = sessionTypeDoc.data() as SessionType;
-            
-            if (timeSlotData.bookedParticipantsCount >= sessionTypeData.maxParticipants) {
-                throw new Error("This time slot is now full.");
-            }
-            
-            transaction.update(timeSlotRef, {
-                bookedParticipantsCount: increment(1)
-            });
-
-            // This is a placeholder token generation strategy for the visio conference.
-            const visioToken = `VISIO-${userId.substring(0, 4)}-${timeSlotId.substring(0, 4)}-${Date.now()}`;
-
-            transaction.set(userBookingRef, {
-                userId,
-                timeSlotId,
-                sessionTypeId,
-                bookingTime: serverTimestamp(),
-                status: 'confirmed',
-                visioToken: visioToken, // Save the token
-            });
-        });
-
-        return { success: true };
-    } catch (error: any) {
-        console.error("Error creating booking:", error);
-        return { success: false, error: error.message || 'An unknown error occurred during booking.' };
     }
 }
 

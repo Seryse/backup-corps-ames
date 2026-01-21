@@ -17,7 +17,7 @@ import { collection, query, Query } from 'firebase/firestore';
 import type { SessionType } from '@/components/admin/session-type-manager';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
-import { createBooking } from '@/app/actions';
+import { createBooking } from '@/lib/booking-actions';
 
 type Value = CalendarProps['value'];
 
@@ -134,14 +134,14 @@ export default function AgendaPage({ params }: { params: Promise<{ lang: Locale 
   };
   
   const handleBooking = async () => {
-    if (!selectedSlot) return;
+    if (!selectedSlot || !firestore) return;
     if (!user) {
         router.push(`/${lang}/login`);
         return;
     }
 
     setIsBooking(true);
-    const result = await createBooking(user.uid, selectedSlot.id, selectedSlot.sessionTypeId);
+    const result = await createBooking(firestore, user.uid, selectedSlot.id, selectedSlot.sessionTypeId);
     setIsBooking(false);
 
     if (result.success) {
