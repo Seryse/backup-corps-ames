@@ -90,7 +90,7 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
     setSelectedSlot(null);
   };
 
-  const handleSlotSelect = (slot: TimeSlot) => {
+  const handleSlotSelect = (slot: TimeSlot | null) => {
     setSelectedSlot(slot);
   };
   
@@ -162,7 +162,7 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
                 <Card>
-                    <CardContent className="p-0 sm:p-4 flex justify-center">
+                    <CardContent className="p-0 sm:p-4">
                         <Calendar
                             mode="single"
                             selected={date}
@@ -190,7 +190,7 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
                                 <p className="text-muted-foreground text-center">{dict?.selectDate || 'Please select a date from the calendar.'}</p>
                             </div>
                         ) : slotsForSelectedDate.length > 0 ? (
-                            <div className="space-y-4">
+                            <div className="space-y-4" onMouseLeave={() => handleSlotSelect(null)}>
                                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                                     {slotsForSelectedDate.map(slot => {
                                         const sessionType = sessionTypes?.find(st => st.id === slot.sessionTypeId);
@@ -199,7 +199,7 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
                                             <Button
                                                 key={slot.id}
                                                 variant={selectedSlot?.id === slot.id ? 'default' : 'outline'}
-                                                onClick={() => handleSlotSelect(slot)}
+                                                onMouseEnter={() => handleSlotSelect(slot)}
                                                 disabled={isFull}
                                             >
                                                 {format(slot.startTime.toDate(), 'HH:mm')}
