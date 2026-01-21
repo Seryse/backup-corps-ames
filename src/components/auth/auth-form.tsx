@@ -9,6 +9,7 @@ import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
+  fetchSignInMethodsForEmail,
 } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -72,34 +73,48 @@ export function AuthForm({ mode, dictionary, lang }: AuthFormProps) {
     });
   }
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = async (data: FormData) => {
     setIsLoading(true);
-    const promise = mode === "signup"
-        ? createUserWithEmailAndPassword(auth, data.email, data.password)
-        : signInWithEmailAndPassword(auth, data.email, data.password);
-
-    promise
-        .then(() => {
-            router.push(`/${lang}/dashboard`);
-        })
-        .catch(handleAuthError)
-        .finally(() => {
-            setIsLoading(false);
-        });
+    try {
+        if (mode === 'signup') {
+            const signInMethods = await fetchSignInMethodsForEmail(auth, data.email);
+            if (signInMethods.length > 0) {
+                const providerName = signInMethods.includes('google.com') 
+                    ? 'Google' 
+                    : signInMethods.includes('password') 
+                    ? 'email' 
+                    : 'another method';
+                
+                toast({
+                    variant: 'destructive',
+                    title: dictionary.signupTitle,
+                    description: `Cet email est déjà associé à un compte via ${providerName}. Veuillez plutôt vous connecter.`,
+                });
+                return;
+            }
+            await createUserWithEmailAndPassword(auth, data.email, data.password);
+        } else {
+            await signInWithEmailAndPassword(auth, data.email, data.password);
+        }
+        router.push(`/${lang}/dashboard`);
+    } catch (error: any) {
+        handleAuthError(error);
+    } finally {
+        setIsLoading(false);
+    }
   };
 
-  const handleGoogleSignIn = () => {
+  const handleGoogleSignIn = async () => {
     setIsLoading(true);
     const provider = new GoogleAuthProvider();
-    
-    signInWithPopup(auth, provider)
-        .then(() => {
-            router.push(`/${lang}/dashboard`);
-        })
-        .catch(handleAuthError)
-        .finally(() => {
-            setIsLoading(false);
-        });
+    try {
+        await signInWithPopup(auth, provider);
+        router.push(`/${lang}/dashboard`);
+    } catch (error: any) {
+        handleAuthError(error);
+    } finally {
+        setIsLoading(false);
+    }
   };
 
   return (
