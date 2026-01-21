@@ -202,8 +202,16 @@
         "availableSlots": "Available Slots",
         "noSlots": "No slots available for this date.",
         "selectDate": "Please select a date from the calendar.",
-        "confirmBooking": "You are booking a session for",
-        "bookNow": "Book Now"
+        "bookNow": "Book Now",
+        "sessionDetails": "Session Details",
+        "bookThisSlot": "Book this slot",
+        "bookingInProgress": "Booking in progress...",
+        "bookingSuccessTitle": "Booking Confirmed!",
+        "bookingSuccessDescription": "Your session has been booked. You can view it in 'My Bookings'.",
+        "bookingErrorTitle": "Booking Failed",
+        "bookingErrorFull": "This time slot is now full.",
+        "bookingErrorGeneric": "An error occurred during booking. Please try again.",
+        "loginToBook": "Log in to book"
     },
     "trainings": {
         "title": "My Trainings",
@@ -218,3 +226,5 @@
         "access_hub": "Access Hub"
     }
 }
+
+    

@@ -202,8 +202,16 @@
         "availableSlots": "Horarios Disponibles",
         "noSlots": "No hay horarios disponibles para esta fecha.",
         "selectDate": "Por favor, selecciona una fecha en el calendario.",
-        "confirmBooking": "Estás reservando una sesión para el",
-        "bookNow": "Reservar Ahora"
+        "bookNow": "Reservar Ahora",
+        "sessionDetails": "Detalles de la Sesión",
+        "bookThisSlot": "Reservar este horario",
+        "bookingInProgress": "Reservando...",
+        "bookingSuccessTitle": "¡Reserva Confirmada!",
+        "bookingSuccessDescription": "Tu sesión ha sido reservada. Puedes verla en 'Mis Reservas'.",
+        "bookingErrorTitle": "Fallo en la Reserva",
+        "bookingErrorFull": "Este horario ya está completo.",
+        "bookingErrorGeneric": "Ocurrió un error durante la reserva. Por favor, inténtalo de nuevo.",
+        "loginToBook": "Inicia sesión para reservar"
     },
     "trainings": {
         "title": "Mis Formaciones",
@@ -218,3 +226,5 @@
         "access_hub": "Acceder al Hub"
     }
 }
+
+    
