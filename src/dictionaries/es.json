@@ -6,7 +6,10 @@
         "login": "Iniciar Sesión",
         "logout": "Cerrar Sesión",
         "userMenu": "Abrir menú de usuario",
-        "viewProfile": "Ver Perfil"
+        "viewProfile": "Ver Perfil",
+        "shop": "Tienda",
+        "agenda": "Agenda",
+        "trainings": "Formaciones"
     },
     "landing": {
         "title": "Cuerpo y Almas",
@@ -53,5 +56,17 @@
         "introFiles": "Archivos de Intro",
         "playlistFiles": "Archivos de Playlist",
         "noFiles": "No se encontraron archivos en este directorio."
+    },
+    "shop": {
+        "title": "Tienda",
+        "description": "Descubre nuestros productos"
+    },
+    "agenda": {
+        "title": "Agenda",
+        "description": "Reserva tu sesión"
+    },
+    "trainings": {
+        "title": "Formaciones",
+        "description": "Accede a tus cursos y talleres"
     }
 }

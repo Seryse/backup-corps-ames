@@ -6,7 +6,10 @@
         "login": "Connexion",
         "logout": "Déconnexion",
         "userMenu": "Ouvrir le menu utilisateur",
-        "viewProfile": "Voir le Profil"
+        "viewProfile": "Voir le Profil",
+        "shop": "Boutique",
+        "agenda": "Agenda",
+        "trainings": "Formations"
     },
     "landing": {
         "title": "Corps et Âmes",
@@ -53,5 +56,17 @@
         "introFiles": "Fichiers d'introduction",
         "playlistFiles": "Fichiers de playlist",
         "noFiles": "Aucun fichier trouvé dans ce répertoire."
+    },
+    "shop": {
+        "title": "Boutique",
+        "description": "Découvrez nos produits"
+    },
+    "agenda": {
+        "title": "Agenda",
+        "description": "Réservez votre séance"
+    },
+    "trainings": {
+        "title": "Formations",
+        "description": "Accédez à vos cours et ateliers"
     }
 }

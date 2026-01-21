@@ -3,8 +3,9 @@ import { UserNav } from '@/components/auth/user-nav';
 import LanguageSwitcher from './language-switcher';
 import { Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
-import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Menu, ShoppingBag, CalendarDays, GraduationCap, PanelsTopLeft, Tv, Shield } from 'lucide-react';
 
 const LotusIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg
@@ -30,6 +31,15 @@ const LotusIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 
 export default function Header({ dictionary, lang }: { dictionary: Dictionary['header'], lang: Locale }) {
+  const navLinks = [
+      { href: `/${lang}/dashboard`, label: dictionary.dashboard, icon: PanelsTopLeft },
+      { href: `/${lang}/shop`, label: dictionary.shop, icon: ShoppingBag },
+      { href: `/${lang}/agenda`, label: dictionary.agenda, icon: CalendarDays },
+      { href: `/${lang}/trainings`, label: dictionary.trainings, icon: GraduationCap },
+      { href: `/${lang}/session`, label: dictionary.session, icon: Tv },
+      { href: `/${lang}/admin`, label: dictionary.admin, icon: Shield },
+  ]
+  
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 max-w-screen-2xl items-center">
@@ -37,14 +47,44 @@ export default function Header({ dictionary, lang }: { dictionary: Dictionary['h
             <LotusIcon className="h-6 w-6 text-accent-foreground" />
             <span className="font-bold font-headline text-lg">Corps et Âmes</span>
         </Link>
-        <nav className="flex items-center gap-4 text-sm">
-            <Link href={`/${lang}/dashboard`} className="text-foreground/60 transition-colors hover:text-foreground/80">{dictionary.dashboard}</Link>
-            <Link href={`/${lang}/session`} className="text-foreground/60 transition-colors hover:text-foreground/80">{dictionary.session}</Link>
-            <Link href={`/${lang}/admin`} className="text-foreground/60 transition-colors hover:text-foreground/80">{dictionary.admin}</Link>
+        
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex items-center gap-4 text-sm">
+             {navLinks.map(({href, label}) => (
+                <Link key={href} href={href} className="text-foreground/60 transition-colors hover:text-foreground/80">{label}</Link>
+            ))}
         </nav>
+        
         <div className="flex flex-1 items-center justify-end space-x-2">
-          <LanguageSwitcher lang={lang} />
-          <UserNav dictionary={dictionary} lang={lang} />
+            {/* Mobile Navigation */}
+            <Sheet>
+                <SheetTrigger asChild>
+                    <Button variant="ghost" size="icon" className="md:hidden">
+                        <Menu className="h-6 w-6" />
+                        <span className="sr-only">Open menu</span>
+                    </Button>
+                </SheetTrigger>
+                <SheetContent side="left" className="pt-12">
+                    <nav className="grid gap-4">
+                        {navLinks.map(({href, label, icon: Icon}) => (
+                            <Link key={href} href={href} className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
+                                <Icon className="h-5 w-5" />
+                                {label}
+                            </Link>
+                        ))}
+                    </nav>
+                     <div className="absolute bottom-4 left-4 right-4 flex flex-col gap-2">
+                        <LanguageSwitcher lang={lang} />
+                        <UserNav dictionary={dictionary} lang={lang} />
+                    </div>
+                </SheetContent>
+            </Sheet>
+
+            {/* Desktop items */}
+            <div className="hidden md:flex items-center space-x-2">
+                <LanguageSwitcher lang={lang} />
+                <UserNav dictionary={dictionary} lang={lang} />
+            </div>
         </div>
       </div>
     </header>

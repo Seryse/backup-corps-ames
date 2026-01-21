@@ -6,7 +6,10 @@
         "login": "Login",
         "logout": "Logout",
         "userMenu": "Open user menu",
-        "viewProfile": "View Profile"
+        "viewProfile": "View Profile",
+        "shop": "Shop",
+        "agenda": "Agenda",
+        "trainings": "Trainings"
     },
     "landing": {
         "title": "Body and Souls",
@@ -53,5 +56,17 @@
         "introFiles": "Intro Files",
         "playlistFiles": "Playlist Files",
         "noFiles": "No files found in this directory."
+    },
+    "shop": {
+        "title": "Shop",
+        "description": "Discover our products"
+    },
+    "agenda": {
+        "title": "Agenda",
+        "description": "Book your session"
+    },
+    "trainings": {
+        "title": "Trainings",
+        "description": "Access your courses and workshops"
     }
 }
