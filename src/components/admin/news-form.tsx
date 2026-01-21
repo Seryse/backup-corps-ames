@@ -11,13 +11,13 @@ import { useFirestore, useStorage } from '@/firebase';
 import { addDoc, collection, doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { getDownloadURL, ref as storageRef, uploadBytesResumable } from 'firebase/storage';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Languages } from 'lucide-react';
 import { useState } from 'react';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 import { Progress } from '../ui/progress';
 import type { NewsArticle } from './news-manager';
-// import { translateText } from '@/ai/flows/translate-text';
+import { translateText } from '@/ai/flows/translate-text';
 
 interface NewsFormProps {
   articleToEdit?: NewsArticle;
@@ -46,14 +46,14 @@ export default function NewsForm({ articleToEdit, onClose, dictionary }: NewsFor
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
-  // const [isTranslating, setIsTranslating] = useState<null | 'title' | 'content'>(null);
+  const [isTranslating, setIsTranslating] = useState<null | 'title' | 'content'>(null);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    // getValues,
-    // setValue,
+    getValues,
+    setValue,
   } = useForm<NewsFormData>({
     resolver: zodResolver(newsSchema),
     defaultValues: articleToEdit
@@ -67,29 +67,29 @@ export default function NewsForm({ articleToEdit, onClose, dictionary }: NewsFor
         },
   });
 
-  // const handleTranslate = async (fieldName: 'title' | 'content') => {
-  //   const frenchText = getValues(`${fieldName}.fr`);
-  //   if (!frenchText) {
-  //       toast({
-  //           variant: "destructive",
-  //           title: "Rien à traduire",
-  //           description: `Veuillez d'abord remplir le champ en français.`,
-  //       });
-  //       return;
-  //   }
-  //   setIsTranslating(fieldName);
-  //   try {
-  //       const result = await translateText({ text: frenchText });
-  //       setValue(`${fieldName}.en`, result.en);
-  //       setValue(`${fieldName}.es`, result.es);
-  //       toast({ title: "Traduction terminée !" });
-  //   } catch (error) {
-  //       console.error("Translation failed:", error);
-  //       toast({ variant: "destructive", title: "Erreur de traduction" });
-  //   } finally {
-  //       setIsTranslating(null);
-  //   }
-  // };
+  const handleTranslate = async (fieldName: 'title' | 'content') => {
+    const frenchText = getValues(`${fieldName}.fr`);
+    if (!frenchText) {
+        toast({
+            variant: "destructive",
+            title: "Rien à traduire",
+            description: `Veuillez d'abord remplir le champ en français.`,
+        });
+        return;
+    }
+    setIsTranslating(fieldName);
+    try {
+        const result = await translateText({ text: frenchText });
+        setValue(`${fieldName}.en`, result.en);
+        setValue(`${fieldName}.es`, result.es);
+        toast({ title: "Traduction terminée !" });
+    } catch (error) {
+        console.error("Translation failed:", error);
+        toast({ variant: "destructive", title: "Erreur de traduction" });
+    } finally {
+        setIsTranslating(null);
+    }
+  };
 
   const onSubmit = async (data: NewsFormData) => {
     if (!firestore || !storage) return;
@@ -175,10 +175,10 @@ export default function NewsForm({ articleToEdit, onClose, dictionary }: NewsFor
         <div>
           <div className="flex items-center justify-between">
             <Label htmlFor="title.fr">{dictionary.form.titleFr}</Label>
-            {/* <Button variant="ghost" size="icon" type="button" onClick={() => handleTranslate('title')} disabled={isTranslating === 'title'} className="h-7 w-7">
+            <Button variant="ghost" size="icon" type="button" onClick={() => handleTranslate('title')} disabled={isTranslating === 'title'} className="h-7 w-7">
               {isTranslating === 'title' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Languages className="h-4 w-4" />}
               <span className="sr-only">Traduire depuis le français</span>
-            </Button> */}
+            </Button>
           </div>
           <Input id="title.fr" {...register('title.fr')} />
           {errors.title?.fr && <p className="text-sm text-destructive">{errors.title.fr.message}</p>}
@@ -193,10 +193,10 @@ export default function NewsForm({ articleToEdit, onClose, dictionary }: NewsFor
       <div>
         <div className="flex items-center justify-between">
           <Label htmlFor="content.fr">{dictionary.form.contentFr}</Label>
-          {/* <Button variant="ghost" size="icon" type="button" onClick={() => handleTranslate('content')} disabled={isTranslating === 'content'} className="h-7 w-7">
+          <Button variant="ghost" size="icon" type="button" onClick={() => handleTranslate('content')} disabled={isTranslating === 'content'} className="h-7 w-7">
             {isTranslating === 'content' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Languages className="h-4 w-4" />}
             <span className="sr-only">Traduire depuis le français</span>
-          </Button> */}
+          </Button>
         </div>
         <Textarea id="content.fr" {...register('content.fr')} rows={5} />
         {errors.content?.fr && <p className="text-sm text-destructive">{errors.content.fr.message}</p>}
