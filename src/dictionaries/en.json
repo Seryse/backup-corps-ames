@@ -143,7 +143,12 @@
     },
     "agenda": {
         "title": "Agenda",
-        "description": "Book your session"
+        "description": "Book your session",
+        "availableSlots": "Available Slots",
+        "noSlots": "No slots available for this date.",
+        "selectDate": "Please select a date from the calendar.",
+        "confirmBooking": "You are booking a session for",
+        "bookNow": "Book Now"
     },
     "trainings": {
         "title": "My Trainings",

@@ -143,7 +143,12 @@
     },
     "agenda": {
         "title": "Agenda",
-        "description": "Reserva tu sesión"
+        "description": "Reserva tu sesión",
+        "availableSlots": "Horarios Disponibles",
+        "noSlots": "No hay horarios disponibles para esta fecha.",
+        "selectDate": "Por favor, selecciona una fecha en el calendario.",
+        "confirmBooking": "Estás reservando una sesión para el",
+        "bookNow": "Reservar Ahora"
     },
     "trainings": {
         "title": "Mis Formaciones",

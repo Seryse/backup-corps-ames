@@ -143,7 +143,12 @@
     },
     "agenda": {
         "title": "Agenda",
-        "description": "Réservez votre séance"
+        "description": "Réservez votre séance",
+        "availableSlots": "Créneaux Disponibles",
+        "noSlots": "Aucun créneau disponible pour cette date.",
+        "selectDate": "Veuillez sélectionner une date sur le calendrier.",
+        "confirmBooking": "Vous réservez une séance pour le",
+        "bookNow": "Réserver maintenant"
     },
     "trainings": {
         "title": "Mes Formations",
