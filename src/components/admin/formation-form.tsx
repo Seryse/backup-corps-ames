@@ -34,7 +34,6 @@ const formationSchema = z.object({
   currency: z.string().min(2, 'Currency is required'),
   tokenProductId: z.string().min(1, 'Token Product ID is required'),
   imageUrl: z.string().url().optional(),
-  imageFile: z.any().optional(),
 });
 
 type FormationFormData = z.infer<typeof formationSchema>;
@@ -80,7 +79,8 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
     }
     setIsTranslating(fieldName);
     try {
-        const result = await translateTextAction({ text: frenchText });
+        const { translateText } = await import('@/ai/flows/translate-text');
+        const result = await translateText({ text: frenchText });
         setValue(`${fieldName}.en`, result.en);
         setValue(`${fieldName}.es`, result.es);
         toast({ title: dictionary.success.translationSuccess });
@@ -197,7 +197,6 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
       <div>
           <Label htmlFor="imageFile">{dictionary.form.image} (désactivé)</Label>
           <Input id="imageFile" type="file" accept="image/*" disabled />
-          {/* <Input id="imageFile" type="file" accept="image/*" {...register('imageFile')} /> */}
           {formationToEdit?.imageUrl && (
             <div className="mt-4">
                 <p className="text-sm font-medium">Image Actuelle:</p>

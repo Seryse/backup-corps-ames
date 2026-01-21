@@ -31,7 +31,6 @@ const newsSchema = z.object({
   title: localizedStringSchema,
   content: localizedStringSchema,
   imageUrl: z.string().url().optional(),
-  imageFile: z.any().optional(),
 });
 
 type NewsFormData = z.infer<typeof newsSchema>;
@@ -73,7 +72,8 @@ export default function NewsForm({ articleToEdit, onClose, dictionary }: NewsFor
     }
     setIsTranslating(fieldName);
     try {
-        const result = await translateTextAction({ text: frenchText });
+        const { translateText } = await import('@/ai/flows/translate-text');
+        const result = await translateText({ text: frenchText });
         setValue(`${fieldName}.en`, result.en);
         setValue(`${fieldName}.es`, result.es);
         toast({ title: dictionary.success.translationSuccess });
