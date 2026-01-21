@@ -92,7 +92,7 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
   };
 
   const selectedDateString = date ? format(date, 'yyyy-MM-dd') : '';
-  const slotsForSelectedDate = dayData[selectedDateString]?.slots || [];
+  const slotsForSelectedDate = date && dayData[selectedDateString] ? dayData[selectedDateString].slots : [];
   
   const localesDateFns: { [key: string]: any } = { en: enUS, fr, es };
   const dateFnsLocale = localesDateFns[lang];
@@ -108,9 +108,6 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
   const DayContent = (props: DayContentProps) => {
     const dateKey = format(props.date, 'yyyy-MM-dd');
     const status = dayData[dateKey]?.status;
-    if (props.displayMonth.getMonth() !== props.date.getMonth()) {
-        return <>{props.date.getDate()}</>;
-    }
     return (
         <div className="relative flex h-full w-full items-center justify-center">
             {props.date.getDate()}
@@ -161,42 +158,42 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="min-h-[200px]">
-                        {date ? (
-                            slotsForSelectedDate.length > 0 ? (
-                                <div className="space-y-2">
-                                    <p className="text-center font-semibold mb-4">{format(date, 'd MMMM yyyy', { locale: dateFnsLocale })}</p>
-                                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                                        {slotsForSelectedDate.map(slot => {
-                                            const sessionType = sessionTypes?.find(st => st.id === slot.sessionTypeId);
-                                            const isFull = sessionType ? slot.bookedParticipantsCount >= sessionType.maxParticipants : true;
-                                            const time = format(slot.startTime.toDate(), 'HH:mm');
-                                            return (
-                                                <Button
-                                                    key={slot.id}
-                                                    variant={selectedSlot === time ? 'default' : 'outline'}
-                                                    onClick={() => handleSlotSelect(time)}
-                                                    disabled={isFull}
-                                                >
-                                                    {time}
-                                                </Button>
-                                            )
-                                        })}
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className="flex items-center justify-center h-full">
-                                    <p className="text-muted-foreground text-center">{dict?.noSlots || 'No slots available for this date.'}</p>
-                                </div>
-                            )
-                        ) : (
-                             <div className="flex items-center justify-center h-full">
+                        {!date ? (
+                            <div className="flex items-center justify-center h-full">
                                 <p className="text-muted-foreground text-center">{dict?.selectDate || 'Please select a date from the calendar.'}</p>
                             </div>
-                        )}
-                        {selectedSlot && date && (
-                            <div className="mt-6 text-center">
-                                <p className="text-sm mb-4">{dict?.confirmBooking || 'You are booking a session for'} <strong>{format(date, 'd MMMM yyyy', { locale: dateFnsLocale })}</strong> at <strong>{selectedSlot}</strong>.</p>
-                                <Button onClick={handleBooking} className="w-full">{dict?.bookNow || 'Book Now'}</Button>
+                        ) : (
+                            <div className='w-full'>
+                                <p className="text-center font-semibold mb-4">{format(date, 'd MMMM yyyy', { locale: dateFnsLocale })}</p>
+                                {slotsForSelectedDate.length > 0 ? (
+                                    <div className="space-y-4">
+                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                                            {slotsForSelectedDate.map(slot => {
+                                                const sessionType = sessionTypes?.find(st => st.id === slot.sessionTypeId);
+                                                const isFull = sessionType ? slot.bookedParticipantsCount >= sessionType.maxParticipants : true;
+                                                const time = format(slot.startTime.toDate(), 'HH:mm');
+                                                return (
+                                                    <Button
+                                                        key={slot.id}
+                                                        variant={selectedSlot === time ? 'default' : 'outline'}
+                                                        onClick={() => handleSlotSelect(time)}
+                                                        disabled={isFull}
+                                                    >
+                                                        {time}
+                                                    </Button>
+                                                )
+                                            })}
+                                        </div>
+                                        {selectedSlot && (
+                                            <div className="mt-6 text-center">
+                                                <p className="text-sm mb-4">{dict?.confirmBooking || 'You are booking a session for'} <strong>{format(date, 'd MMMM yyyy', { locale: dateFnsLocale })}</strong> at <strong>{selectedSlot}</strong>.</p>
+                                                <Button onClick={handleBooking} className="w-full">{dict?.bookNow || 'Book Now'}</Button>
+                                            </div>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <p className="text-muted-foreground text-center">{dict?.noSlots || 'No slots available for this date.'}</p>
+                                )}
                             </div>
                         )}
                     </CardContent>
