@@ -155,7 +155,10 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
                 height: '100%',
                 border: '0',
             },
-            audioSource: false, 
+            // Admin is the host with audio, clients are participants without audio by default.
+            // All participants have video enabled.
+            audioSource: isAdminView,
+            videoSource: true,
             subscribeToTracksAutomatically: true,
         });
         
