@@ -89,12 +89,16 @@ export async function createBooking(userId: string, timeSlotId: string, sessionT
                 bookedParticipantsCount: increment(1)
             });
 
+            // This is a placeholder token generation strategy for the visio conference.
+            const visioToken = `VISIO-${userId.substring(0, 4)}-${timeSlotId.substring(0, 4)}-${Date.now()}`;
+
             transaction.set(userBookingRef, {
                 userId,
                 timeSlotId,
                 sessionTypeId,
                 bookingTime: serverTimestamp(),
                 status: 'confirmed',
+                visioToken: visioToken, // Save the token
             });
         });
 

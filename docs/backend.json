@@ -229,9 +229,13 @@
         "timeSlotId": { "type": "string" },
         "sessionTypeId": { "type": "string" },
         "bookingTime": { "type": "string", "format": "date-time" },
-        "status": { "type": "string", "enum": ["confirmed", "pending", "cancelled"] }
+        "status": { "type": "string", "enum": ["confirmed", "pending", "cancelled"] },
+        "visioToken": {
+          "type": "string",
+          "description": "The unique token granting access to the live video session for this booking."
+        }
       },
-      "required": ["userId", "timeSlotId", "sessionTypeId", "bookingTime", "status"]
+      "required": ["userId", "timeSlotId", "sessionTypeId", "bookingTime", "status", "visioToken"]
     }
   },
   "auth": {
