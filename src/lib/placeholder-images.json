@@ -17,6 +17,24 @@
       "description": "An image for the admin console header.",
       "imageUrl": "https://images.unsplash.com/photo-1507831228884-93d43e81a99d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxvcmdhbml6ZWQlMjBkZXNrfGVufDB8fHx8MTc2ODk2Mzc5MHww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "organized desk"
+    },
+    {
+      "id": "product-meditation-stone",
+      "description": "A product image of meditation stones.",
+      "imageUrl": "https://images.unsplash.com/photo-1610306673578-6bc52bc45668?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxtZWRpdGF0aW9uJTIwc3RvbmVzfGVufDB8fHx8MTc2ODk2NjI1NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "meditation stones"
+    },
+    {
+      "id": "product-essential-oil",
+      "description": "A product image of essential oils.",
+      "imageUrl": "https://images.unsplash.com/photo-1515377905703-c4788e51af15?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxlc3NlbnRpYWwlMjBvaWx8ZW58MHx8fHwxNzY4OTQ5MjYyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "essential oil"
+    },
+    {
+      "id": "product-yoga-mat",
+      "description": "A product image of a yoga mat.",
+      "imageUrl": "https://images.unsplash.com/photo-1591291621060-89264efbeaed?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHx5b2dhJTIwbWF0fGVufDB8fHx8MTc2ODk1NDMzMHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "yoga mat"
     }
   ]
 }

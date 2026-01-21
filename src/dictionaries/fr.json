@@ -59,7 +59,16 @@
     },
     "shop": {
         "title": "Boutique",
-        "description": "Découvrez nos produits"
+        "description": "Découvrez nos produits",
+        "addToCart": "Ajouter au panier",
+        "products": {
+            "meditationStoneName": "Pierres de Méditation",
+            "meditationStoneDescription": "Set de 7 pierres d'équilibrage des chakras.",
+            "essentialOilName": "Huile Essentielle",
+            "essentialOilDescription": "Flacon de 10ml d'huile essentielle de lavande pure.",
+            "yogaMatName": "Tapis de Yoga Écologique",
+            "yogaMatDescription": "Tapis de yoga en liège naturel et caoutchouc."
+        }
     },
     "agenda": {
         "title": "Agenda",
