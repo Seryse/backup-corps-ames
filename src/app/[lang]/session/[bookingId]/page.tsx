@@ -129,9 +129,8 @@ export default function LiveSessionPage({ params: { lang, bookingId } }: { param
 
     const setupCall = async () => {
         // =================================================================
-        // IMPORTANT: Replace this with your actual Daily.co room URL
-        // You can create one for free at https://www.daily.co/
-        const roomUrl = "https://your-domain.daily.co/your-room";
+        // IMPORTANT: This is your actual Daily.co room URL
+        const roomUrl = "https://corps-et-ames.daily.co/corps-et-ames";
         // =================================================================
         
         const DailyIframe = (await import('@daily-co/daily-js')).default;
