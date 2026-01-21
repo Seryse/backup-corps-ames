@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: 'Corps et Âmes',
   description: "Sanctuaire de bien-être pour le corps et l'âme.",
   icons: {
-    icon: '/logo.svg',
+    icon: '/igone.png',
   },
 };
 
