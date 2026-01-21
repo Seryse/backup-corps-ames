@@ -155,8 +155,8 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
                 height: '100%',
                 border: '0',
             },
-            // Admin is the host, clients are participants. All have video.
-            // No one has audio enabled by default to start.
+            // Complex audio setup is handled by AudioEngine.
+            // Let's keep this simple for now.
             audioSource: false,
             videoSource: true,
             subscribeToTracksAutomatically: true,
@@ -184,7 +184,9 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
         });
 
         try {
-            await callObject.join({ url: roomUrl, token: booking.visioToken });
+            // We join with URL only. The room must be public.
+            // The visioToken from Firestore is used for authorization to this page, not for Daily.
+            await callObject.join({ url: roomUrl });
         } catch (error) {
             console.error("Failed to join Daily.co call:", error);
         }
