@@ -95,6 +95,18 @@
         "deleteSessionTypeConfirmTitle": "Êtes-vous sûr ?",
         "deleteSessionTypeConfirmDescription": "Cela supprimera définitivement ce type de séance et tous ses créneaux associés. Cette action est irréversible.",
         "manageSlots": "Gérer les créneaux",
+        "manageSlotsTitle": "Gérer les Créneaux",
+        "addSlot": "Ajouter un créneau",
+        "addSlotFor": "Ajouter un nouveau créneau pour la séance : {sessionName}",
+        "startTime": "Heure de début",
+        "endTime": "Heure de fin",
+        "addSlotButton": "Ajouter",
+        "existingSlots": "Créneaux existants",
+        "existingSlotsFor": "Liste des créneaux programmés pour : {sessionName}",
+        "deleteSlotConfirmTitle": "Supprimer ce créneau ?",
+        "deleteSlotConfirmDescription": "Cette action est irréversible et supprimera le créneau.",
+        "noSlotsForSession": "Aucun créneau programmé pour cette séance.",
+        "delete": "Supprimer",
         "form": {
             "nameEn": "Nom (EN)",
             "nameFr": "Nom (FR)",
@@ -138,7 +150,9 @@
             "sessionTypeAdded": "Type de séance ajouté avec succès !",
             "sessionTypeUpdated": "Type de séance mis à jour avec succès !",
             "sessionTypeDeleted": "Type de séance supprimé avec succès !",
-            "translationSuccess": "Traduction terminée !"
+            "translationSuccess": "Traduction terminée !",
+            "slotAdded": "Créneau ajouté avec succès !",
+            "slotDeleted": "Créneau supprimé avec succès !"
         },
         "error": {
             "generic": "Une erreur est survenue. Veuillez réessayer.",

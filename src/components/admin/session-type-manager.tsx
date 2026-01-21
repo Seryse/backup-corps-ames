@@ -26,6 +26,7 @@ import { FirestorePermissionError } from '@/firebase/errors';
 import { Locale } from '@/i18n-config';
 import type { LocalizedString } from '@/components/providers/cart-provider';
 import { Badge } from '../ui/badge';
+import Link from 'next/link';
 
 const SessionTypeForm = dynamic(() => import('./session-type-form'), {
   loading: () => <div className="flex h-64 items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>,
@@ -146,8 +147,10 @@ export default function SessionTypeManager({ dictionary, lang }: SessionTypeMana
                   <p className="text-sm text-muted-foreground">{dictionary.form.maxParticipants}: {st.maxParticipants}</p>
                 </CardContent>
                 <CardFooter className="flex justify-end gap-2">
-                  <Button variant="secondary" size="sm" disabled>
-                    {dictionary.manageSlots}
+                  <Button variant="secondary" size="sm" asChild>
+                    <Link href={`/${lang}/admin/slots/${st.id}`}>
+                      {dictionary.manageSlots}
+                    </Link>
                   </Button>
                   <Button variant="outline" size="icon" onClick={() => handleEdit(st)}>
                     <Edit className="h-4 w-4" />

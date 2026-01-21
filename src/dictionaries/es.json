@@ -95,6 +95,18 @@
         "deleteSessionTypeConfirmTitle": "¿Estás seguro?",
         "deleteSessionTypeConfirmDescription": "Esto eliminará permanentemente este tipo de sesión y todos sus horarios asociados. Esta acción no se puede deshacer.",
         "manageSlots": "Gestionar Horarios",
+        "manageSlotsTitle": "Gestionar Horarios",
+        "addSlot": "Añadir Horario",
+        "addSlotFor": "Añadir un nuevo horario para la sesión: {sessionName}",
+        "startTime": "Hora de Inicio",
+        "endTime": "Hora de Finalización",
+        "addSlotButton": "Añadir",
+        "existingSlots": "Horarios Existentes",
+        "existingSlotsFor": "Lista de horarios programados para: {sessionName}",
+        "deleteSlotConfirmTitle": "¿Eliminar este horario?",
+        "deleteSlotConfirmDescription": "Esta acción es irreversible y eliminará el horario.",
+        "noSlotsForSession": "No hay horarios programados para esta sesión todavía.",
+        "delete": "Eliminar",
         "form": {
             "nameEn": "Nombre (EN)",
             "nameFr": "Nombre (FR)",
@@ -138,7 +150,9 @@
             "sessionTypeAdded": "¡Tipo de sesión añadido con éxito!",
             "sessionTypeUpdated": "¡Tipo de sesión actualizado con éxito!",
             "sessionTypeDeleted": "¡Tipo de sesión eliminado con éxito!",
-            "translationSuccess": "¡Traducción completa!"
+            "translationSuccess": "¡Traducción completa!",
+            "slotAdded": "¡Horario añadido con éxito!",
+            "slotDeleted": "¡Horario eliminado con éxito!"
         },
         "error": {
             "generic": "Ocurrió un error. Por favor, inténtalo de nuevo.",

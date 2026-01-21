@@ -1,17 +1,49 @@
-import { getDictionary } from '@/lib/dictionaries';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useUser } from '@/firebase';
+import { getDictionary, Dictionary } from '@/lib/dictionaries';
+import { PlaceHolderImages, ImagePlaceholder } from '@/lib/placeholder-images';
 import Image from 'next/image';
 import { Locale } from '@/i18n-config';
 import FormationManager from '@/components/admin/formation-manager';
 import { Separator } from '@/components/ui/separator';
 import NewsManager from '@/components/admin/news-manager';
 import SessionTypeManager from '@/components/admin/session-type-manager';
-// import { File, Music } from 'lucide-react';
-// import FileLister from '@/components/admin/file-lister';
+import { Loader2 } from 'lucide-react';
 
-export default async function AdminPage({ params: { lang } }: { params: { lang: Locale } }) {
-  const dict = await getDictionary(lang);
-  const adminImage = PlaceHolderImages.find(p => p.id === 'admin-console');
+const adminEmails = ['seryse@live.be', 'jael@live.fr', 'selvura@gmail.com'];
+
+export default function AdminPage({ params: { lang } }: { params: { lang: Locale } }) {
+  const router = useRouter();
+  const { user, isUserLoading } = useUser();
+  const [dict, setDict] = useState<Dictionary | null>(null);
+  const [adminImage, setAdminImage] = useState<ImagePlaceholder | undefined>(undefined);
+  const [isAuthorized, setIsAuthorized] = useState(false);
+
+  useEffect(() => {
+    getDictionary(lang).then(d => setDict(d));
+    setAdminImage(PlaceHolderImages.find(p => p.id === 'admin-console'));
+  }, [lang]);
+
+  useEffect(() => {
+    if (!isUserLoading) {
+      if (user && user.email && adminEmails.includes(user.email)) {
+        setIsAuthorized(true);
+      } else {
+        router.replace(`/${lang}/dashboard`);
+      }
+    }
+  }, [user, isUserLoading, router, lang]);
+
+  if (!isAuthorized || !dict) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loader2 className="h-12 w-12 animate-spin text-accent" />
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-4 sm:p-8">
@@ -32,14 +64,6 @@ export default async function AdminPage({ params: { lang } }: { params: { lang: 
       </div>
       
       <div className="space-y-8">
-        {/* The FileLister component is temporarily disabled to isolate a server-side rendering issue. */}
-        {/*
-        <div className="grid md:grid-cols-2 gap-8">
-            <FileLister title={dict.admin.introFiles} path="/intros" icon={File} noFilesFoundText={dict.admin.noFiles} />
-            <FileLister title={dict.admin.playlistFiles} path="/playlists" icon={Music} noFilesFoundText={dict.admin.noFiles} />
-        </div>
-        <Separator />
-        */}
         <NewsManager dictionary={dict.admin} lang={lang} />
         <Separator />
         <FormationManager dictionary={dict.admin} lang={lang} />

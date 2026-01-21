@@ -95,6 +95,18 @@
         "deleteSessionTypeConfirmTitle": "Are you sure?",
         "deleteSessionTypeConfirmDescription": "This will permanently delete this session type and all its associated slots. This action cannot be undone.",
         "manageSlots": "Manage Slots",
+        "manageSlotsTitle": "Manage Time Slots",
+        "addSlot": "Add Time Slot",
+        "addSlotFor": "Add a new time slot for session: {sessionName}",
+        "startTime": "Start Time",
+        "endTime": "End Time",
+        "addSlotButton": "Add",
+        "existingSlots": "Existing Slots",
+        "existingSlotsFor": "List of scheduled slots for: {sessionName}",
+        "deleteSlotConfirmTitle": "Delete this time slot?",
+        "deleteSlotConfirmDescription": "This action is irreversible and will delete the time slot.",
+        "noSlotsForSession": "No slots scheduled for this session yet.",
+        "delete": "Delete",
         "form": {
             "nameEn": "Name (EN)",
             "nameFr": "Name (FR)",
@@ -138,7 +150,9 @@
             "sessionTypeAdded": "Session type added successfully!",
             "sessionTypeUpdated": "Session type updated successfully!",
             "sessionTypeDeleted": "Session type deleted successfully!",
-            "translationSuccess": "Translation complete!"
+            "translationSuccess": "Translation complete!",
+            "slotAdded": "Time slot added successfully!",
+            "slotDeleted": "Time slot deleted successfully!"
         },
         "error": {
             "generic": "An error occurred. Please try again.",
