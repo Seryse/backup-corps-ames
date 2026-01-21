@@ -50,8 +50,8 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
             <CalendarDays className="h-10 w-10 text-accent" />
             <h1 className="text-4xl font-headline">{dict?.title || 'Agenda'}</h1>
         </div>
-        <div className="grid md:grid-cols-3 gap-8">
-            <div className="md:col-span-2">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
                 <Card>
                     <CardContent className="p-0 sm:p-4 flex justify-center">
                         <Calendar

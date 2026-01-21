@@ -139,6 +139,94 @@
         }
       },
       "required": ["original", "translated", "timestamp"]
+    },
+    "SessionType": {
+      "title": "Session Type",
+      "type": "object",
+      "description": "Represents a type of session that can be booked.",
+      "properties": {
+        "name": {
+          "type": "object",
+          "description": "Localized name of the session type.",
+          "properties": {
+            "en": { "type": "string" },
+            "fr": { "type": "string" },
+            "es": { "type": "string" }
+          },
+          "required": ["en", "fr", "es"]
+        },
+        "description": {
+          "type": "object",
+          "description": "Localized description of the session type.",
+          "properties": {
+            "en": { "type": "string" },
+            "fr": { "type": "string" },
+            "es": { "type": "string" }
+          },
+          "required": ["en", "fr", "es"]
+        },
+        "sessionModel": {
+          "type": "string",
+          "enum": ["private", "small_group", "large_group"],
+          "description": "Defines the capacity of the session."
+        },
+        "maxParticipants": {
+          "type": "number",
+          "description": "Maximum number of participants. 1 for private, up to 5 for small_group, etc."
+        },
+        "price": {
+          "type": "number",
+          "description": "Price in smallest currency unit."
+        },
+        "currency": {
+          "type": "string",
+          "description": "Currency code (e.g., eur)."
+        },
+        "tokenProductId": {
+          "type": "string",
+          "description": "Identifier for the access token product for this session type."
+        }
+      },
+      "required": ["name", "description", "sessionModel", "maxParticipants", "price", "currency", "tokenProductId"]
+    },
+    "TimeSlot": {
+      "title": "Time Slot",
+      "type": "object",
+      "description": "Represents an available time slot for a session.",
+      "properties": {
+        "sessionTypeId": {
+          "type": "string",
+          "description": "Reference to SessionType."
+        },
+        "startTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The start time of the session."
+        },
+        "endTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The end time of the session."
+        },
+        "bookedParticipantsCount": {
+          "type": "number",
+          "description": "Number of participants already booked for this slot."
+        }
+      },
+      "required": ["sessionTypeId", "startTime", "endTime", "bookedParticipantsCount"]
+    },
+    "Booking": {
+      "title": "Booking",
+      "type": "object",
+      "description": "Represents a user's booking for a specific time slot.",
+      "properties": {
+        "userId": { "type": "string" },
+        "timeSlotId": { "type": "string" },
+        "sessionTypeId": { "type": "string" },
+        "bookingTime": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["confirmed", "pending", "cancelled"] }
+      },
+      "required": ["userId", "timeSlotId", "sessionTypeId", "bookingTime", "status"]
     }
   },
   "auth": {
@@ -171,6 +259,18 @@
         "$ref": "#/entities/Subtitle"
       },
       "description": "Stores the current subtitle for a live session. 'sessionId' is a unique identifier for the session, e.g., 'current_session'."
+    },
+    "/sessionTypes/{sessionTypeId}": {
+      "schema": { "$ref": "#/entities/SessionType" },
+      "description": "Stores all available types of sessions."
+    },
+    "/timeSlots/{timeSlotId}": {
+      "schema": { "$ref": "#/entities/TimeSlot" },
+      "description": "Stores all available time slots for all sessions."
+    },
+    "/users/{userId}/bookings/{bookingId}": {
+      "schema": { "$ref": "#/entities/Booking" },
+      "description": "Stores a user's session bookings."
     }
   }
 }

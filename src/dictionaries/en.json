@@ -84,6 +84,13 @@
         "deleteArticle": "Delete Article",
         "deleteArticleConfirmTitle": "Are you sure?",
         "deleteArticleConfirmDescription": "This action cannot be undone. This will permanently delete the article.",
+        "manageSessionTypes": "Manage Session Types",
+        "addSessionType": "Add Session Type",
+        "editSessionType": "Edit Session Type",
+        "deleteSessionType": "Delete Session Type",
+        "deleteSessionTypeConfirmTitle": "Are you sure?",
+        "deleteSessionTypeConfirmDescription": "This will permanently delete this session type and all its associated slots. This action cannot be undone.",
+        "manageSlots": "Manage Slots",
         "form": {
             "nameEn": "Name (EN)",
             "nameFr": "Name (FR)",
@@ -102,7 +109,15 @@
             "contentFr": "Content (FR)",
             "contentEs": "Content (ES)",
             "cancel": "Cancel",
-            "save": "Save"
+            "save": "Save",
+            "sessionModel": "Session Model",
+            "selectSessionModel": "Select a model",
+            "maxParticipants": "Max Participants",
+            "sessionModelOptions": {
+                "private": "Private",
+                "small_group": "Small Group",
+                "large_group": "Large Group"
+            }
         },
         "success": {
             "formationAdded": "Formation added successfully!",
@@ -110,7 +125,10 @@
             "formationDeleted": "Formation deleted successfully!",
             "articleAdded": "Article added successfully!",
             "articleUpdated": "Article updated successfully!",
-            "articleDeleted": "Article deleted successfully!"
+            "articleDeleted": "Article deleted successfully!",
+            "sessionTypeAdded": "Session type added successfully!",
+            "sessionTypeUpdated": "Session type updated successfully!",
+            "sessionTypeDeleted": "Session type deleted successfully!"
         },
         "error": {
             "generic": "An error occurred. Please try again."

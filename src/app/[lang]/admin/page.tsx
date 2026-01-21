@@ -10,6 +10,7 @@ import { Locale } from '@/i18n-config';
 import FormationManager from '@/components/admin/formation-manager';
 import { Separator } from '@/components/ui/separator';
 import NewsManager from '@/components/admin/news-manager';
+import SessionTypeManager from '@/components/admin/session-type-manager';
 
 async function listFiles(path: string) {
   try {
@@ -85,6 +86,8 @@ export default async function AdminPage({ params: { lang } }: { params: { lang: 
         <NewsManager dictionary={dict.admin} lang={lang} />
         <Separator />
         <FormationManager dictionary={dict.admin} lang={lang} />
+        <Separator />
+        <SessionTypeManager dictionary={dict.admin} lang={lang} />
       </div>
     </div>
   );

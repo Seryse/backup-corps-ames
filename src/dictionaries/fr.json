@@ -84,6 +84,13 @@
         "deleteArticle": "Supprimer l'Article",
         "deleteArticleConfirmTitle": "Êtes-vous sûr ?",
         "deleteArticleConfirmDescription": "Cette action est irréversible. L'article sera supprimé définitivement.",
+        "manageSessionTypes": "Gérer les Types de Séance",
+        "addSessionType": "Ajouter un Type de Séance",
+        "editSessionType": "Modifier le Type de Séance",
+        "deleteSessionType": "Supprimer le Type de Séance",
+        "deleteSessionTypeConfirmTitle": "Êtes-vous sûr ?",
+        "deleteSessionTypeConfirmDescription": "Cela supprimera définitivement ce type de séance et tous ses créneaux associés. Cette action est irréversible.",
+        "manageSlots": "Gérer les créneaux",
         "form": {
             "nameEn": "Nom (EN)",
             "nameFr": "Nom (FR)",
@@ -102,7 +109,15 @@
             "contentFr": "Contenu (FR)",
             "contentEs": "Contenu (ES)",
             "cancel": "Annuler",
-            "save": "Enregistrer"
+            "save": "Enregistrer",
+            "sessionModel": "Modèle de séance",
+            "selectSessionModel": "Sélectionner un modèle",
+            "maxParticipants": "Participants Max",
+            "sessionModelOptions": {
+                "private": "Privée",
+                "small_group": "Petit Groupe",
+                "large_group": "Grand Groupe"
+            }
         },
         "success": {
             "formationAdded": "Formation ajoutée avec succès !",
@@ -110,7 +125,10 @@
             "formationDeleted": "Formation supprimée avec succès !",
             "articleAdded": "Article ajouté avec succès !",
             "articleUpdated": "Article mis à jour avec succès !",
-            "articleDeleted": "Article supprimé avec succès !"
+            "articleDeleted": "Article supprimé avec succès !",
+            "sessionTypeAdded": "Type de séance ajouté avec succès !",
+            "sessionTypeUpdated": "Type de séance mis à jour avec succès !",
+            "sessionTypeDeleted": "Type de séance supprimé avec succès !"
         },
         "error": {
             "generic": "Une erreur est survenue. Veuillez réessayer."

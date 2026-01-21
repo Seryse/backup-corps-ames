@@ -84,6 +84,13 @@
         "deleteArticle": "Eliminar Artículo",
         "deleteArticleConfirmTitle": "¿Estás seguro?",
         "deleteArticleConfirmDescription": "Esta acción no se puede deshacer. Esto eliminará permanentemente el artículo.",
+        "manageSessionTypes": "Gestionar Tipos de Sesión",
+        "addSessionType": "Añadir Tipo de Sesión",
+        "editSessionType": "Editar Tipo de Sesión",
+        "deleteSessionType": "Eliminar Tipo de Sesión",
+        "deleteSessionTypeConfirmTitle": "¿Estás seguro?",
+        "deleteSessionTypeConfirmDescription": "Esto eliminará permanentemente este tipo de sesión y todos sus horarios asociados. Esta acción no se puede deshacer.",
+        "manageSlots": "Gestionar Horarios",
         "form": {
             "nameEn": "Nombre (EN)",
             "nameFr": "Nombre (FR)",
@@ -102,7 +109,15 @@
             "contentFr": "Contenido (FR)",
             "contentEs": "Contenido (ES)",
             "cancel": "Cancelar",
-            "save": "Guardar"
+            "save": "Guardar",
+            "sessionModel": "Modelo de Sesión",
+            "selectSessionModel": "Selecciona un modelo",
+            "maxParticipants": "Participantes Máx",
+            "sessionModelOptions": {
+                "private": "Privada",
+                "small_group": "Grupo Pequeño",
+                "large_group": "Grupo Grande"
+            }
         },
         "success": {
             "formationAdded": "¡Formación añadida con éxito!",
@@ -110,7 +125,10 @@
             "formationDeleted": "¡Formación eliminada con éxito!",
             "articleAdded": "¡Artículo añadido con éxito!",
             "articleUpdated": "¡Artículo actualizado con éxito!",
-            "articleDeleted": "¡Artículo eliminado con éxito!"
+            "articleDeleted": "¡Artículo eliminado con éxito!",
+            "sessionTypeAdded": "¡Tipo de sesión añadido con éxito!",
+            "sessionTypeUpdated": "¡Tipo de sesión actualizado con éxito!",
+            "sessionTypeDeleted": "¡Tipo de sesión eliminado con éxito!"
         },
         "error": {
             "generic": "Ocurrió un error. Por favor, inténtalo de nuevo."
