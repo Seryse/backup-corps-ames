@@ -3,7 +3,7 @@
 import { db } from '@/firebase/server';
 import { doc, getDoc, writeBatch, collection, serverTimestamp, getDocs, query, limit } from 'firebase/firestore';
 import type { CartItem } from '@/components/providers/cart-provider';
-import type { TranslateTextInput } from '@/ai/flows/translate-text';
+import type { TranslateTextInput } from '@/ai/types';
 
 // This function now checks if the user has purchased at least one formation.
 export async function checkSessionAccess(userId: string): Promise<boolean> {

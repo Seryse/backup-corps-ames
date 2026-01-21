@@ -4,23 +4,15 @@
  * @fileOverview A utility flow to translate text from French to English and Spanish.
  *
  * - translateText: A function that takes a French text and returns its English and Spanish translations.
- * - TranslateTextInput: The input type for the translateText function.
- * - TranslateTextOutput: The output type for the translateText function.
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
-
-export const TranslateTextInputSchema = z.object({
-  text: z.string().describe('The French text to be translated.'),
-});
-export type TranslateTextInput = z.infer<typeof TranslateTextInputSchema>;
-
-export const TranslateTextOutputSchema = z.object({
-  en: z.string().describe('The English translation.'),
-  es: z.string().describe('The Spanish translation.'),
-});
-export type TranslateTextOutput = z.infer<typeof TranslateTextOutputSchema>;
+import {
+  TranslateTextInputSchema,
+  TranslateTextOutputSchema,
+  type TranslateTextInput,
+  type TranslateTextOutput,
+} from '@/ai/types';
 
 export async function translateText(input: TranslateTextInput): Promise<TranslateTextOutput> {
   if (!input.text.trim()) {
