@@ -70,7 +70,7 @@
         "in_progress": "Session in progress",
         "connect": "Connect",
         "accessDenied": "Access Denied",
-        "accessDeniedMessage": "You must purchase at least one training to access this area.",
+        "accessDeniedMessage": "You don't have permission to view this session or the link is invalid.",
         "backToDashboard": "Back to Home",
         "welcome_message": "Welcome to the Live Session!",
         "forum_coming_soon": "The session will begin shortly.",
