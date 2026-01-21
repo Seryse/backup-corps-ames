@@ -17,7 +17,6 @@ import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 import { Progress } from '../ui/progress';
 import type { NewsArticle } from './news-manager';
-// import { translateText } from '@/ai/flows/translate-text';
 
 interface NewsFormProps {
   articleToEdit?: NewsArticle;
@@ -68,27 +67,28 @@ export default function NewsForm({ articleToEdit, onClose, dictionary }: NewsFor
   });
 
   const handleTranslate = async (fieldName: 'title' | 'content') => {
-    // const frenchText = getValues(`${fieldName}.fr`);
-    // if (!frenchText) {
-    //     toast({
-    //         variant: "destructive",
-    //         title: "Rien à traduire",
-    //         description: `Veuillez d'abord remplir le champ en français.`,
-    //     });
-    //     return;
-    // }
-    // setIsTranslating(fieldName);
-    // try {
-    //     const result = await translateText({ text: frenchText });
-    //     setValue(`${fieldName}.en`, result.en);
-    //     setValue(`${fieldName}.es`, result.es);
-    //     toast({ title: "Traduction terminée !" });
-    // } catch (error) {
-    //     console.error("Translation failed:", error);
-    //     toast({ variant: "destructive", title: "Erreur de traduction" });
-    // } finally {
-    //     setIsTranslating(null);
-    // }
+    const frenchText = getValues(`${fieldName}.fr`);
+    if (!frenchText) {
+        toast({
+            variant: "destructive",
+            title: dictionary.form.nothingToTranslateTitle,
+            description: dictionary.form.nothingToTranslateDescription,
+        });
+        return;
+    }
+    setIsTranslating(fieldName);
+    try {
+        const { translateText } = await import('@/ai/flows/translate-text');
+        const result = await translateText({ text: frenchText });
+        setValue(`${fieldName}.en`, result.en);
+        setValue(`${fieldName}.es`, result.es);
+        toast({ title: dictionary.success.translationSuccess });
+    } catch (error) {
+        console.error("Translation failed:", error);
+        toast({ variant: "destructive", title: dictionary.form.translationError });
+    } finally {
+        setIsTranslating(null);
+    }
   };
 
   const onSubmit = async (data: NewsFormData) => {
@@ -177,7 +177,7 @@ export default function NewsForm({ articleToEdit, onClose, dictionary }: NewsFor
             <Label htmlFor="title.fr">{dictionary.form.titleFr}</Label>
             <Button variant="ghost" size="icon" type="button" onClick={() => handleTranslate('title')} disabled={isTranslating === 'title'} className="h-7 w-7">
               {isTranslating === 'title' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Languages className="h-4 w-4" />}
-              <span className="sr-only">Traduire depuis le français</span>
+              <span className="sr-only">{dictionary.form.translate}</span>
             </Button>
           </div>
           <Input id="title.fr" {...register('title.fr')} />
@@ -195,7 +195,7 @@ export default function NewsForm({ articleToEdit, onClose, dictionary }: NewsFor
           <Label htmlFor="content.fr">{dictionary.form.contentFr}</Label>
           <Button variant="ghost" size="icon" type="button" onClick={() => handleTranslate('content')} disabled={isTranslating === 'content'} className="h-7 w-7">
             {isTranslating === 'content' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Languages className="h-4 w-4" />}
-            <span className="sr-only">Traduire depuis le français</span>
+            <span className="sr-only">{dictionary.form.translate}</span>
           </Button>
         </div>
         <Textarea id="content.fr" {...register('content.fr')} rows={5} />

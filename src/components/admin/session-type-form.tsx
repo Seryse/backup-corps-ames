@@ -16,7 +16,6 @@ import { useState } from 'react';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-// import { translateText } from '@/ai/flows/translate-text';
 
 interface SessionTypeFormProps {
   sessionTypeToEdit?: SessionType;
@@ -85,27 +84,28 @@ export default function SessionTypeForm({ sessionTypeToEdit, onClose, dictionary
   const sessionModel = watch('sessionModel');
   
   const handleTranslate = async (fieldName: 'name' | 'description') => {
-    // const frenchText = getValues(`${fieldName}.fr`);
-    // if (!frenchText) {
-    //     toast({
-    //         variant: "destructive",
-    //         title: "Rien à traduire",
-    //         description: `Veuillez d'abord remplir le champ en français.`,
-    //     });
-    //     return;
-    // }
-    // setIsTranslating(fieldName);
-    // try {
-    //     const result = await translateText({ text: frenchText });
-    //     setValue(`${fieldName}.en`, result.en);
-    //     setValue(`${fieldName}.es`, result.es);
-    //     toast({ title: "Traduction terminée !" });
-    // } catch (error) {
-    //     console.error("Translation failed:", error);
-    //     toast({ variant: "destructive", title: "Erreur de traduction" });
-    // } finally {
-    //     setIsTranslating(null);
-    // }
+    const frenchText = getValues(`${fieldName}.fr`);
+    if (!frenchText) {
+        toast({
+            variant: "destructive",
+            title: dictionary.form.nothingToTranslateTitle,
+            description: dictionary.form.nothingToTranslateDescription,
+        });
+        return;
+    }
+    setIsTranslating(fieldName);
+    try {
+        const { translateText } = await import('@/ai/flows/translate-text');
+        const result = await translateText({ text: frenchText });
+        setValue(`${fieldName}.en`, result.en);
+        setValue(`${fieldName}.es`, result.es);
+        toast({ title: dictionary.success.translationSuccess });
+    } catch (error) {
+        console.error("Translation failed:", error);
+        toast({ variant: "destructive", title: dictionary.form.translationError });
+    } finally {
+        setIsTranslating(null);
+    }
   };
   
   const onSubmit = async (data: SessionTypeFormData) => {
@@ -157,7 +157,7 @@ export default function SessionTypeForm({ sessionTypeToEdit, onClose, dictionary
             <Label htmlFor="name.fr">{dictionary.form.nameFr}</Label>
             <Button variant="ghost" size="icon" type="button" onClick={() => handleTranslate('name')} disabled={isTranslating === 'name'} className="h-7 w-7">
                 {isTranslating === 'name' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Languages className="h-4 w-4" />}
-                <span className="sr-only">Traduire depuis le français</span>
+                <span className="sr-only">{dictionary.form.translate}</span>
             </Button>
           </div>
           <Input id="name.fr" {...register('name.fr')} />
@@ -175,7 +175,7 @@ export default function SessionTypeForm({ sessionTypeToEdit, onClose, dictionary
             <Label htmlFor="description.fr">{dictionary.form.descriptionFr}</Label>
             <Button variant="ghost" size="icon" type="button" onClick={() => handleTranslate('description')} disabled={isTranslating === 'description'} className="h-7 w-7">
                 {isTranslating === 'description' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Languages className="h-4 w-4" />}
-                <span className="sr-only">Traduire depuis le français</span>
+                <span className="sr-only">{dictionary.form.translate}</span>
             </Button>
         </div>
         <Textarea id="description.fr" {...register('description.fr')} />

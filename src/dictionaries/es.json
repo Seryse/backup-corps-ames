@@ -117,7 +117,12 @@
                 "private": "Privada",
                 "small_group": "Grupo Pequeño",
                 "large_group": "Grupo Grande"
-            }
+            },
+            "translate": "Traducir del francés",
+            "translating": "Traduciendo...",
+            "nothingToTranslateTitle": "Nada que traducir",
+            "nothingToTranslateDescription": "Por favor, rellene primero el campo en francés.",
+            "translationError": "Error de Traducción"
         },
         "success": {
             "formationAdded": "¡Formación añadida con éxito!",
@@ -128,7 +133,8 @@
             "articleDeleted": "¡Artículo eliminado con éxito!",
             "sessionTypeAdded": "¡Tipo de sesión añadido con éxito!",
             "sessionTypeUpdated": "¡Tipo de sesión actualizado con éxito!",
-            "sessionTypeDeleted": "¡Tipo de sesión eliminado con éxito!"
+            "sessionTypeDeleted": "¡Tipo de sesión eliminado con éxito!",
+            "translationSuccess": "¡Traducción completa!"
         },
         "error": {
             "generic": "Ocurrió un error. Por favor, inténtalo de nuevo."

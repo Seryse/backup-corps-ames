@@ -117,7 +117,12 @@
                 "private": "Private",
                 "small_group": "Small Group",
                 "large_group": "Large Group"
-            }
+            },
+            "translate": "Translate from French",
+            "translating": "Translating...",
+            "nothingToTranslateTitle": "Nothing to translate",
+            "nothingToTranslateDescription": "Please fill in the French field first.",
+            "translationError": "Translation Error"
         },
         "success": {
             "formationAdded": "Formation added successfully!",
@@ -128,7 +133,8 @@
             "articleDeleted": "Article deleted successfully!",
             "sessionTypeAdded": "Session type added successfully!",
             "sessionTypeUpdated": "Session type updated successfully!",
-            "sessionTypeDeleted": "Session type deleted successfully!"
+            "sessionTypeDeleted": "Session type deleted successfully!",
+            "translationSuccess": "Translation complete!"
         },
         "error": {
             "generic": "An error occurred. Please try again."

@@ -117,7 +117,12 @@
                 "private": "Privée",
                 "small_group": "Petit Groupe",
                 "large_group": "Grand Groupe"
-            }
+            },
+            "translate": "Traduire depuis le français",
+            "translating": "Traduction en cours...",
+            "nothingToTranslateTitle": "Rien à traduire",
+            "nothingToTranslateDescription": "Veuillez d'abord remplir le champ en français.",
+            "translationError": "Erreur de traduction"
         },
         "success": {
             "formationAdded": "Formation ajoutée avec succès !",
@@ -128,7 +133,8 @@
             "articleDeleted": "Article supprimé avec succès !",
             "sessionTypeAdded": "Type de séance ajouté avec succès !",
             "sessionTypeUpdated": "Type de séance mis à jour avec succès !",
-            "sessionTypeDeleted": "Type de séance supprimé avec succès !"
+            "sessionTypeDeleted": "Type de séance supprimé avec succès !",
+            "translationSuccess": "Traduction terminée !"
         },
         "error": {
             "generic": "Une erreur est survenue. Veuillez réessayer."
