@@ -162,7 +162,7 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
                 <Card>
-                    <CardContent className="p-0 flex justify-center">
+                    <CardContent className="p-0">
                         <Calendar
                             mode="single"
                             selected={date}
