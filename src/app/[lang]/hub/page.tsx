@@ -1,24 +1,24 @@
 import { getDictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { MessageSquare } from 'lucide-react';
+import { Users } from 'lucide-react';
 
-export default async function SessionPage({ params: { lang } }: { params: { lang: Locale } }) {
+export default async function HubPage({ params: { lang } }: { params: { lang: Locale } }) {
   const dict = await getDictionary(lang);
 
   return (
     <div className="container mx-auto p-4 sm:p-8">
         <div className="flex items-center gap-4 mb-8">
-            <MessageSquare className="h-10 w-10 text-accent" />
-            <h1 className="text-4xl font-headline">{dict.session.title}</h1>
+            <Users className="h-10 w-10 text-accent" />
+            <h1 className="text-4xl font-headline">{dict.header.hub}</h1>
         </div>
         <Card>
             <CardHeader>
-                <CardTitle>Session en direct</CardTitle>
+                <CardTitle>Bienvenue dans le Hub Communautaire</CardTitle>
             </CardHeader>
             <CardContent>
                 <p className="text-muted-foreground">
-                    Les sessions live achetées via l'agenda apparaîtront ici. Cette fonctionnalité est en cours de construction.
+                    L'espace de discussion et de partage sera bientôt disponible ici.
                 </p>
             </CardContent>
         </Card>

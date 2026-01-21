@@ -7,7 +7,7 @@ import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebas
 import { collection, query, orderBy, Query } from 'firebase/firestore';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Loader2, GraduationCap, Tv } from 'lucide-react';
+import { Loader2, GraduationCap, Tv, Users } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { format } from 'date-fns';
@@ -99,8 +99,8 @@ export default function TrainingsPage({ params: { lang } }: { params: { lang: Lo
                             </CardContent>
                              <CardFooter className="bg-muted/50 p-4">
                                 <Button asChild className="w-full">
-                                    <Link href={`/${lang}/session`}>
-                                        <Tv className="mr-2 h-4 w-4" />
+                                    <Link href={`/${lang}/hub`}>
+                                        <Users className="mr-2 h-4 w-4" />
                                         {dict.trainings.access_hub}
                                     </Link>
                                 </Button>
