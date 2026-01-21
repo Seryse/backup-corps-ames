@@ -23,6 +23,9 @@ export default function AudioEngine({ introUrl, triggerIntro, playlistUrl }: Aud
           const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
           audioContextRef.current = ctx;
           masterGainRef.current = ctx.createGain();
+          // Boost the volume to counteract Apple's ducking effect.
+          // A value of 2.5 (250%) should compensate for system-level volume reduction.
+          masterGainRef.current.gain.value = 2.5;
           masterGainRef.current.connect(ctx.destination);
         } catch (e) {
           console.error("Failed to create AudioContext:", e);
