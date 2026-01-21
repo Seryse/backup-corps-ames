@@ -184,7 +184,6 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
                             tileDisabled={({date}) => date < new Date(new Date().setHours(0,0,0,0))}
                             tileContent={({ date, view }) => <DayContent date={date} view={view} />}
                             activeStartDate={activeDate}
-                            onActiveStartDateChange={({ activeStartDate }) => activeStartDate && setActiveDate(activeStartDate)}
                             view="month"
                             onViewChange={() => {}}
                             prevLabel={null}
