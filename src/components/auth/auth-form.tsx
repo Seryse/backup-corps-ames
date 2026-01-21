@@ -9,8 +9,6 @@ import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
-  linkWithCredential,
-  fetchSignInMethodsForEmail,
 } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -63,66 +61,54 @@ export function AuthForm({ mode, dictionary, lang }: AuthFormProps) {
     resolver: zodResolver(formSchema),
   });
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = (data: FormData) => {
     setIsLoading(true);
-    try {
-      if (mode === "signup") {
-        await createUserWithEmailAndPassword(auth, data.email, data.password);
-      } else {
-        await signInWithEmailAndPassword(auth, data.email, data.password);
-      }
-      router.push(`/${lang}/dashboard`);
-    } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Authentication Error",
-        description: error.message,
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    const promise = mode === "signup"
+        ? createUserWithEmailAndPassword(auth, data.email, data.password)
+        : signInWithEmailAndPassword(auth, data.email, data.password);
+
+    promise
+        .then(() => {
+            router.push(`/${lang}/dashboard`);
+        })
+        .catch((error: any) => {
+            toast({
+                variant: "destructive",
+                title: dictionary.loginErrorTitle || "Authentication Error",
+                description: error.message,
+            });
+        })
+        .finally(() => {
+            setIsLoading(false);
+        });
   };
 
-  const handleGoogleSignIn = async () => {
+  const handleGoogleSignIn = () => {
     setIsLoading(true);
     const provider = new GoogleAuthProvider();
-    try {
-        const result = await signInWithPopup(auth, provider);
-        // This will handle both sign in and account merging.
-        // If a user with the same email exists, Firebase will prompt to link accounts.
-        router.push(`/${lang}/dashboard`);
-    } catch (error: any) {
-        if (error.code === 'auth/account-exists-with-different-credential') {
-            // Manually handle account linking
-            const pendingCred = GoogleAuthProvider.credentialFromError(error);
-            if (!pendingCred) {
-                toast({ variant: "destructive", title: "Linking Error", description: "Could not get credential from Google." });
-                setIsLoading(false);
-                return;
+    
+    signInWithPopup(auth, provider)
+        .then(() => {
+            router.push(`/${lang}/dashboard`);
+        })
+        .catch((error: any) => {
+            if (error.code === 'auth/account-exists-with-different-credential') {
+                 toast({
+                    variant: "destructive",
+                    title: "Compte existant",
+                    description: "Un compte existe déjà avec cet e-mail. Veuillez vous connecter avec votre méthode d'origine.",
+                });
+            } else {
+                toast({
+                    variant: "destructive",
+                    title: "Google Sign-In Error",
+                    description: error.message,
+                });
             }
-            const email = error.customData.email;
-            
-            // Get sign-in methods for this email.
-            const methods = await fetchSignInMethodsForEmail(auth, email);
-            
-            if (methods[0] === 'password') {
-                const password = prompt('Please provide the password for your existing account.');
-                if(password){
-                    try {
-                        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                        await linkWithCredential(userCredential.user, pendingCred);
-                        router.push(`/${lang}/dashboard`);
-                    } catch(linkError: any) {
-                        toast({ variant: "destructive", title: "Linking Error", description: linkError.message });
-                    }
-                }
-            }
-        } else {
-            toast({ variant: "destructive", title: "Google Sign-In Error", description: error.message });
-        }
-    } finally {
-        setIsLoading(false);
-    }
+        })
+        .finally(() => {
+            setIsLoading(false);
+        });
   };
 
   return (
