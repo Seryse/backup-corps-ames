@@ -16,19 +16,22 @@ export function FormationCard({ formation, dict, lang }: { formation: Formation,
     const { toast } = useToast();
 
     const isAlreadyInCart = items.some(item => item.id === formation.id);
+    
+    const localizedName = formation.name[lang] || formation.name.en;
+    const localizedDescription = formation.description[lang] || formation.description.en;
 
     const handleAddToCart = () => {
         if (isAlreadyInCart) {
             toast({
                 title: dict.alreadyInCart,
-                description: `${formation.name} ${dict.alreadyInCartDescription}`,
+                description: `${localizedName} ${dict.alreadyInCartDescription}`,
             });
             return;
         }
         addToCart(formation);
         toast({
             title: dict.formationAdded,
-            description: `${formation.name} ${dict.addedToCart}`,
+            description: `${localizedName} ${dict.addedToCart}`,
         });
     }
     
@@ -48,9 +51,9 @@ export function FormationCard({ formation, dict, lang }: { formation: Formation,
                 )}
             </CardHeader>
             <CardContent className="flex-1 p-4">
-                <h3 className="text-xl font-headline font-semibold tracking-tight">{formation.name}</h3>
+                <h3 className="text-xl font-headline font-semibold tracking-tight">{localizedName}</h3>
                 <p className="mt-2 text-sm text-muted-foreground">
-                    {formation.description}
+                    {localizedDescription}
                 </p>
             </CardContent>
             <CardFooter className="p-4 flex justify-between items-center bg-muted/50">

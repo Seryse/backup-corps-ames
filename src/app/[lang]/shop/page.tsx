@@ -1,53 +1,30 @@
 'use client';
 
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getDictionary, Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
 import { ShoppingBag, Loader2 } from 'lucide-react';
 import type { Formation } from '@/components/providers/cart-provider';
 import { FormationCard } from '@/components/shop/formation-card';
-
-// This is a temporary list of formations for display purposes.
-// We will connect this to Firestore in the next step.
-const staticFormations: Formation[] = [
-  {
-    id: 'reiki-1',
-    name: 'Reiki Niveau 1',
-    description: 'Initiation au premier degré de Reiki, pour apprendre à canaliser l\'énergie universelle pour soi-même.',
-    price: 15000,
-    currency: 'eur',
-    imageId: 'reiki-formation',
-    tokenProductId: 'prod_reiki1'
-  },
-  {
-    id: 'divination-mastery',
-    name: 'Maîtrise de la Divination',
-    description: 'Explorez différents arts divinatoires comme le tarot, les oracles et la géomancie.',
-    price: 22000,
-    currency: 'eur',
-    imageId: 'divination-mastery',
-    tokenProductId: 'prod_divination'
-  },
-  {
-    id: 'rune-crafting',
-    name: 'Fabrication de Runes',
-    description: 'Apprenez à fabriquer et à consacrer votre propre jeu de runes pour la divination et la magie.',
-    price: 18000,
-    currency: 'eur',
-    imageId: 'rune-crafting',
-    tokenProductId: 'prod_runes'
-  }
-];
-
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { collection, Query } from 'firebase/firestore';
 
 export default function ShopPage({ params: { lang } }: { params: { lang: Locale } }) {
   const [dict, setDict] = useState<Dictionary['shop'] | null>(null);
+  const firestore = useFirestore();
+
+  const formationsQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return collection(firestore, 'formations') as Query<Formation>;
+  }, [firestore]);
+
+  const { data: formations, isLoading } = useCollection<Formation>(formationsQuery);
 
   useEffect(() => {
     getDictionary(lang).then(d => setDict(d.shop));
   }, [lang]);
   
-  if (!dict) {
+  if (isLoading || !dict) {
     return (
       <div className="flex h-[50vh] flex-col items-center justify-center bg-background">
         <Loader2 className="h-12 w-12 animate-spin text-accent" />
@@ -63,9 +40,9 @@ export default function ShopPage({ params: { lang } }: { params: { lang: Locale 
             <h1 className="text-4xl font-headline">{dict.title}</h1>
         </div>
         
-        {staticFormations && staticFormations.length > 0 ? (
+        {formations && formations.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {staticFormations.map(formation => (
+                {formations.map(formation => (
                     <FormationCard key={formation.id} formation={formation} dict={dict} lang={lang} />
                 ))}
             </div>

@@ -2,11 +2,18 @@
 
 import { createContext, useContext, useState, ReactNode, useMemo } from 'react';
 
+// Define a type for localized strings
+export type LocalizedString = {
+  en: string;
+  fr: string;
+  es: string;
+};
+
 // Define the shape of a formation in the cart
 export type Formation = {
   id: string;
-  name: string;
-  description: string;
+  name: LocalizedString;
+  description: LocalizedString;
   price: number;
   currency: string;
   imageId: string;
