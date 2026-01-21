@@ -5,7 +5,7 @@ import { Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, ShoppingBag, CalendarDays, GraduationCap, PanelsTopLeft, Tv, Shield } from 'lucide-react';
+import { Menu, ShoppingBag, CalendarDays, GraduationCap, Home, Tv, Shield } from 'lucide-react';
 import { CartNav } from './cart-nav';
 
 const LotusIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -33,7 +33,7 @@ const LotusIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 export default function Header({ dictionary, lang }: { dictionary: Dictionary['header'], lang: Locale }) {
   const navLinks = [
-      { href: `/${lang}/dashboard`, label: dictionary.dashboard, icon: PanelsTopLeft },
+      { href: `/${lang}/dashboard`, label: dictionary.home, icon: Home },
       { href: `/${lang}/shop`, label: dictionary.shop, icon: ShoppingBag },
       { href: `/${lang}/agenda`, label: dictionary.agenda, icon: CalendarDays },
       { href: `/${lang}/trainings`, label: dictionary.trainings, icon: GraduationCap },

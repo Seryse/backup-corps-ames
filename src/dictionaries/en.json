@@ -1,5 +1,6 @@
 {
     "header": {
+        "home": "Home",
         "dashboard": "Dashboard",
         "session": "Session",
         "admin": "Admin",
@@ -46,17 +47,19 @@
             "auth/generic": "An authentication error occurred. Please try again."
         }
     },
-    "dashboard": {
-        "title": "Welcome to your Dashboard",
-        "description": "Here you can manage your sessions and your profile. Ready for your next journey?",
-        "startSession": "Go to Session"
+    "home": {
+        "title": "Welcome Home",
+        "description": "Discover the latest news and updates from our community.",
+        "latestNews": "Latest News",
+        "noNews": "No news yet",
+        "noNewsDescription": "Check back later for updates."
     },
     "session": {
         "title": "Live Session",
         "loading": "Preparing the session...",
         "accessDenied": "Access Denied",
         "accessDeniedMessage": "Your session is not active or paid. Please check your dashboard.",
-        "backToDashboard": "Back to Dashboard",
+        "backToDashboard": "Back to Home",
         "adminControls": "Admin Controls",
         "startIntro": "Start Intro",
         "subtitles": "Subtitles",
@@ -75,6 +78,12 @@
         "deleteFormation": "Delete Formation",
         "deleteFormationConfirmTitle": "Are you sure?",
         "deleteFormationConfirmDescription": "This action cannot be undone. This will permanently delete the formation.",
+        "manageNews": "Manage News",
+        "addArticle": "Add Article",
+        "editArticle": "Edit Article",
+        "deleteArticle": "Delete Article",
+        "deleteArticleConfirmTitle": "Are you sure?",
+        "deleteArticleConfirmDescription": "This action cannot be undone. This will permanently delete the article.",
         "form": {
             "nameEn": "Name (EN)",
             "nameFr": "Name (FR)",
@@ -86,13 +95,22 @@
             "currency": "Currency (e.g., eur, usd)",
             "image": "Image",
             "tokenProductId": "Token Product ID",
+            "titleEn": "Title (EN)",
+            "titleFr": "Title (FR)",
+            "titleEs": "Title (ES)",
+            "contentEn": "Content (EN)",
+            "contentFr": "Content (FR)",
+            "contentEs": "Content (ES)",
             "cancel": "Cancel",
             "save": "Save"
         },
         "success": {
             "formationAdded": "Formation added successfully!",
             "formationUpdated": "Formation updated successfully!",
-            "formationDeleted": "Formation deleted successfully!"
+            "formationDeleted": "Formation deleted successfully!",
+            "articleAdded": "Article added successfully!",
+            "articleUpdated": "Article updated successfully!",
+            "articleDeleted": "Article deleted successfully!"
         },
         "error": {
             "generic": "An error occurred. Please try again."
@@ -119,7 +137,7 @@
         "proceedToPayment": "Proceed to Payment",
         "processingPayment": "Processing payment...",
         "paymentSuccessTitle": "Payment Successful!",
-        "paymentSuccessDescription": "You now have access to your new formations. Redirecting to dashboard...",
+        "paymentSuccessDescription": "You now have access to your new formations. Redirecting to home...",
         "paymentErrorTitle": "Payment Failed",
         "paymentErrorDescription": "There was an issue processing your payment. Please try again."
     },

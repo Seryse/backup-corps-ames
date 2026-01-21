@@ -9,6 +9,7 @@ import { File, Music } from 'lucide-react';
 import { Locale } from '@/i18n-config';
 import FormationManager from '@/components/admin/formation-manager';
 import { Separator } from '@/components/ui/separator';
+import NewsManager from '@/components/admin/news-manager';
 
 async function listFiles(path: string) {
   try {
@@ -80,6 +81,8 @@ export default async function AdminPage({ params: { lang } }: { params: { lang: 
             <FileList title={dict.admin.introFiles} path="/intros" icon={File} />
             <FileList title={dict.admin.playlistFiles} path="/playlists" icon={Music} />
         </div>
+        <Separator />
+        <NewsManager dictionary={dict.admin} lang={lang} />
         <Separator />
         <FormationManager dictionary={dict.admin} lang={lang} />
       </div>

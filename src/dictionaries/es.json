@@ -1,5 +1,6 @@
 {
     "header": {
+        "home": "Inicio",
         "dashboard": "Panel",
         "session": "Sesión",
         "admin": "Admin",
@@ -46,17 +47,19 @@
             "auth/generic": "Se produjo un error de autenticación. Por favor, inténtelo de nuevo."
         }
     },
-    "dashboard": {
-        "title": "Bienvenido a tu Panel",
-        "description": "Aquí puedes gestionar tus sesiones y tu perfil. ¿Listo para tu próximo viaje?",
-        "startSession": "Ir a la Sesión"
+    "home": {
+        "title": "Bienvenido a Casa",
+        "description": "Descubre las últimas noticias y actualizaciones de nuestra comunidad.",
+        "latestNews": "Últimas Noticias",
+        "noNews": "Aún no hay noticias",
+        "noNewsDescription": "Vuelve más tarde para ver las actualizaciones."
     },
     "session": {
         "title": "Sesión en Vivo",
         "loading": "Preparando la sesión...",
         "accessDenied": "Acceso Denegado",
         "accessDeniedMessage": "Tu sesión no está activa o pagada. Por favor, comprueba tu panel.",
-        "backToDashboard": "Volver al Panel",
+        "backToDashboard": "Volver a Inicio",
         "adminControls": "Controles de Admin",
         "startIntro": "Iniciar Intro",
         "subtitles": "Subtítulos",
@@ -75,6 +78,12 @@
         "deleteFormation": "Eliminar Formación",
         "deleteFormationConfirmTitle": "¿Estás seguro?",
         "deleteFormationConfirmDescription": "Esta acción no se puede deshacer. Esto eliminará permanentemente la formación.",
+        "manageNews": "Gestionar Noticias",
+        "addArticle": "Añadir Artículo",
+        "editArticle": "Editar Artículo",
+        "deleteArticle": "Eliminar Artículo",
+        "deleteArticleConfirmTitle": "¿Estás seguro?",
+        "deleteArticleConfirmDescription": "Esta acción no se puede deshacer. Esto eliminará permanentemente el artículo.",
         "form": {
             "nameEn": "Nombre (EN)",
             "nameFr": "Nombre (FR)",
@@ -86,13 +95,22 @@
             "currency": "Moneda (e.g., eur, usd)",
             "image": "Imagen",
             "tokenProductId": "ID de Producto Token",
+            "titleEn": "Título (EN)",
+            "titleFr": "Título (FR)",
+            "titleEs": "Título (ES)",
+            "contentEn": "Contenido (EN)",
+            "contentFr": "Contenido (FR)",
+            "contentEs": "Contenido (ES)",
             "cancel": "Cancelar",
             "save": "Guardar"
         },
         "success": {
             "formationAdded": "¡Formación añadida con éxito!",
             "formationUpdated": "¡Formación actualizada con éxito!",
-            "formationDeleted": "¡Formación eliminada con éxito!"
+            "formationDeleted": "¡Formación eliminada con éxito!",
+            "articleAdded": "¡Artículo añadido con éxito!",
+            "articleUpdated": "¡Artículo actualizado con éxito!",
+            "articleDeleted": "¡Artículo eliminado con éxito!"
         },
         "error": {
             "generic": "Ocurrió un error. Por favor, inténtalo de nuevo."
@@ -119,7 +137,7 @@
         "proceedToPayment": "Proceder al Pago",
         "processingPayment": "Procesando pago...",
         "paymentSuccessTitle": "¡Pago Exitoso!",
-        "paymentSuccessDescription": "Ahora tienes acceso a tus nuevas formaciones. Redirigiendo al panel...",
+        "paymentSuccessDescription": "Ahora tienes acceso a tus nuevas formaciones. Redirigiendo a inicio...",
         "paymentErrorTitle": "Pago Fallido",
         "paymentErrorDescription": "Hubo un problema al procesar tu pago. Por favor, inténtalo de nuevo."
     },

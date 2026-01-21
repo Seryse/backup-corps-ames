@@ -1,5 +1,6 @@
 {
     "header": {
+        "home": "Accueil",
         "dashboard": "Tableau de bord",
         "session": "Session",
         "admin": "Admin",
@@ -46,17 +47,19 @@
             "auth/generic": "Une erreur d'authentification est survenue. Veuillez réessayer."
         }
     },
-    "dashboard": {
-        "title": "Bienvenue sur votre Tableau de Bord",
-        "description": "Ici, vous pouvez gérer vos sessions et votre profil. Prêt pour votre prochain voyage ?",
-        "startSession": "Aller à la Session"
+    "home": {
+        "title": "Bienvenue",
+        "description": "Découvrez les dernières actualités et mises à jour de notre communauté.",
+        "latestNews": "Dernières Actualités",
+        "noNews": "Aucune actualité pour le moment",
+        "noNewsDescription": "Revenez plus tard pour les mises à jour."
     },
     "session": {
         "title": "Session en Direct",
         "loading": "Préparation de la session...",
         "accessDenied": "Accès Refusé",
         "accessDeniedMessage": "Votre session n'est pas active ou payée. Veuillez vérifier votre tableau de bord.",
-        "backToDashboard": "Retour au Tableau de Bord",
+        "backToDashboard": "Retour à l'Accueil",
         "adminControls": "Contrôles Admin",
         "startIntro": "Lancer l'Intro",
         "subtitles": "Sous-titres",
@@ -75,6 +78,12 @@
         "deleteFormation": "Supprimer la Formation",
         "deleteFormationConfirmTitle": "Êtes-vous sûr ?",
         "deleteFormationConfirmDescription": "Cette action est irréversible. La formation sera supprimée définitivement.",
+        "manageNews": "Gérer les Actualités",
+        "addArticle": "Ajouter un Article",
+        "editArticle": "Modifier l'Article",
+        "deleteArticle": "Supprimer l'Article",
+        "deleteArticleConfirmTitle": "Êtes-vous sûr ?",
+        "deleteArticleConfirmDescription": "Cette action est irréversible. L'article sera supprimé définitivement.",
         "form": {
             "nameEn": "Nom (EN)",
             "nameFr": "Nom (FR)",
@@ -86,13 +95,22 @@
             "currency": "Devise (ex: eur, usd)",
             "image": "Image",
             "tokenProductId": "ID du Produit Token",
+            "titleEn": "Titre (EN)",
+            "titleFr": "Titre (FR)",
+            "titleEs": "Titre (ES)",
+            "contentEn": "Contenu (EN)",
+            "contentFr": "Contenu (FR)",
+            "contentEs": "Contenu (ES)",
             "cancel": "Annuler",
             "save": "Enregistrer"
         },
         "success": {
             "formationAdded": "Formation ajoutée avec succès !",
             "formationUpdated": "Formation mise à jour avec succès !",
-            "formationDeleted": "Formation supprimée avec succès !"
+            "formationDeleted": "Formation supprimée avec succès !",
+            "articleAdded": "Article ajouté avec succès !",
+            "articleUpdated": "Article mis à jour avec succès !",
+            "articleDeleted": "Article supprimé avec succès !"
         },
         "error": {
             "generic": "Une erreur est survenue. Veuillez réessayer."
@@ -119,7 +137,7 @@
         "proceedToPayment": "Passer au paiement",
         "processingPayment": "Traitement du paiement...",
         "paymentSuccessTitle": "Paiement Réussi !",
-        "paymentSuccessDescription": "Vous avez maintenant accès à vos nouvelles formations. Redirection vers le tableau de bord...",
+        "paymentSuccessDescription": "Vous avez maintenant accès à vos nouvelles formations. Redirection vers l'accueil...",
         "paymentErrorTitle": "Échec du Paiement",
         "paymentErrorDescription": "Un problème est survenu lors du traitement de votre paiement. Veuillez réessayer."
     },

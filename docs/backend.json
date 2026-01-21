@@ -81,6 +81,44 @@
         "accessToken",
         "enrollmentDate"
       ]
+    },
+    "NewsArticle": {
+      "title": "News Article",
+      "type": "object",
+      "description": "Represents a single news article or blog post.",
+      "properties": {
+        "title": {
+          "type": "object",
+          "description": "Localized title of the article.",
+          "properties": {
+            "en": { "type": "string" },
+            "fr": { "type": "string" },
+            "es": { "type": "string" }
+          },
+          "required": ["en", "fr", "es"]
+        },
+        "content": {
+          "type": "object",
+          "description": "Localized content of the article.",
+          "properties": {
+            "en": { "type": "string" },
+            "fr": { "type": "string" },
+            "es": { "type": "string" }
+          },
+          "required": ["en", "fr", "es"]
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL of the article's image, hosted on Firebase Storage.",
+          "format": "uri"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Date when the article was created.",
+          "format": "date-time"
+        }
+      },
+      "required": ["title", "content", "imageUrl", "createdAt"]
     }
   },
   "auth": {
@@ -101,6 +139,12 @@
         "$ref": "#/entities/UserFormation"
       },
       "description": "Represents a user's enrollment in a specific formation and their access token. This subcollection uses path-based ownership for simplified security rules."
+    },
+    "/news/{newsId}": {
+      "schema": {
+        "$ref": "#/entities/NewsArticle"
+      },
+      "description": "Stores all news articles."
     }
   }
 }
