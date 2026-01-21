@@ -12,10 +12,19 @@ import { useToast } from '@/hooks/use-toast';
 
 export function FormationCard({ formation, dict, lang }: { formation: Formation, dict: Dictionary['shop'], lang: Locale }) {
     const formationImage = PlaceHolderImages.find(p => p.id === formation.imageId);
-    const { addToCart } = useCart();
+    const { addToCart, items } = useCart();
     const { toast } = useToast();
 
+    const isAlreadyInCart = items.some(item => item.id === formation.id);
+
     const handleAddToCart = () => {
+        if (isAlreadyInCart) {
+            toast({
+                title: "Déjà dans le panier",
+                description: `${formation.name} est déjà dans votre panier.`,
+            });
+            return;
+        }
         addToCart(formation);
         toast({
             title: dict.formationAdded,
@@ -48,9 +57,9 @@ export function FormationCard({ formation, dict, lang }: { formation: Formation,
                 <p className="text-lg font-semibold text-accent-foreground">
                     {new Intl.NumberFormat(lang, { style: 'currency', currency: formation.currency }).format(formation.price / 100)}
                 </p>
-                <Button size="sm" onClick={handleAddToCart}>
+                <Button size="sm" onClick={handleAddToCart} disabled={isAlreadyInCart}>
                     <PlusCircle className="mr-2 h-4 w-4" />
-                    {dict.addToCart}
+                    {isAlreadyInCart ? "Déjà ajouté" : dict.addToCart}
                 </Button>
             </CardFooter>
         </Card>

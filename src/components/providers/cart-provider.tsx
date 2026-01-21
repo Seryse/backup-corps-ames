@@ -2,23 +2,24 @@
 
 import { createContext, useContext, useState, ReactNode, useMemo } from 'react';
 
-// Define the shape of a product in the cart
-export type Product = {
+// Define the shape of a formation in the cart
+export type Formation = {
   id: string;
   name: string;
   description: string;
   price: number;
   currency: string;
   imageId: string;
+  tokenProductId?: string; // Add this for token generation later
 };
 
-export type CartItem = Product & {
+export type CartItem = Formation & {
   quantity: number;
 };
 
 interface CartContextType {
   items: CartItem[];
-  addToCart: (product: Product) => void;
+  addToCart: (formation: Formation) => void;
   // We can add more functions later: removeFromCart, clearCart, etc.
   itemCount: number;
 }
@@ -28,17 +29,14 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
 
-  const addToCart = (product: Product) => {
+  const addToCart = (formation: Formation) => {
     setItems(prevItems => {
-      const existingItem = prevItems.find(item => item.id === product.id);
+      const existingItem = prevItems.find(item => item.id === formation.id);
       if (existingItem) {
-        // For formations, we probably don't want to increase quantity, but let's keep it for now
-        // We can adjust this logic later.
-        return prevItems.map(item =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-        );
+        // For formations, we probably don't want to increase quantity, let's prevent re-adding.
+        return prevItems;
       }
-      return [...prevItems, { ...product, quantity: 1 }];
+      return [...prevItems, { ...formation, quantity: 1 }];
     });
   };
 
