@@ -78,7 +78,7 @@ export default function TrainingsPage({ params: { lang } }: { params: { lang: Lo
                 {mergedFormations.map(mf => {
                     if (!mf.details) return null;
                     const details = mf.details;
-                    const localizedName = details.name?.[lang] || details.name?.en || '...';
+                    const localizedName = details.name?.[lang] || details.name?.en || 'Formation sans nom';
                     const localizedDescription = details.description?.[lang] || details.description?.en || '...';
                     const enrollmentDate = mf.enrollmentDate?.toDate();
 

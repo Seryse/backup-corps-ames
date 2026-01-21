@@ -111,7 +111,7 @@ export default function NewsManager({ dictionary, lang }: NewsManagerProps) {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {articles?.map((article) => {
-            const localizedTitle = article.title?.[lang] || article.title?.en || '...';
+            const localizedTitle = article.title?.[lang] || article.title?.en || 'Article sans titre';
             const localizedContent = article.content?.[lang] || article.content?.en || '...';
             const articleDate = article.createdAt?.toDate();
             return (

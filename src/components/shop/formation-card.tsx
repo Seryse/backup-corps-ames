@@ -15,7 +15,7 @@ export function FormationCard({ formation, dict, lang }: { formation: Formation,
 
     const isAlreadyInCart = items.some(item => item.id === formation.id);
     
-    const localizedName = formation.name?.[lang] || formation.name?.en || '...';
+    const localizedName = formation.name?.[lang] || formation.name?.en || 'Formation sans nom';
     const localizedDescription = formation.description?.[lang] || formation.description?.en || '...';
 
     const handleAddToCart = () => {

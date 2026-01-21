@@ -17,7 +17,7 @@ import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 import { Progress } from '../ui/progress';
 import type { NewsArticle } from './news-manager';
-import { translateText } from '@/ai/flows/translate-text';
+// import { translateText } from '@/ai/flows/translate-text';
 
 interface NewsFormProps {
   articleToEdit?: NewsArticle;
@@ -68,27 +68,27 @@ export default function NewsForm({ articleToEdit, onClose, dictionary }: NewsFor
   });
 
   const handleTranslate = async (fieldName: 'title' | 'content') => {
-    const frenchText = getValues(`${fieldName}.fr`);
-    if (!frenchText) {
-        toast({
-            variant: "destructive",
-            title: "Rien à traduire",
-            description: `Veuillez d'abord remplir le champ en français.`,
-        });
-        return;
-    }
-    setIsTranslating(fieldName);
-    try {
-        const result = await translateText({ text: frenchText });
-        setValue(`${fieldName}.en`, result.en);
-        setValue(`${fieldName}.es`, result.es);
-        toast({ title: "Traduction terminée !" });
-    } catch (error) {
-        console.error("Translation failed:", error);
-        toast({ variant: "destructive", title: "Erreur de traduction" });
-    } finally {
-        setIsTranslating(null);
-    }
+    // const frenchText = getValues(`${fieldName}.fr`);
+    // if (!frenchText) {
+    //     toast({
+    //         variant: "destructive",
+    //         title: "Rien à traduire",
+    //         description: `Veuillez d'abord remplir le champ en français.`,
+    //     });
+    //     return;
+    // }
+    // setIsTranslating(fieldName);
+    // try {
+    //     const result = await translateText({ text: frenchText });
+    //     setValue(`${fieldName}.en`, result.en);
+    //     setValue(`${fieldName}.es`, result.es);
+    //     toast({ title: "Traduction terminée !" });
+    // } catch (error) {
+    //     console.error("Translation failed:", error);
+    //     toast({ variant: "destructive", title: "Erreur de traduction" });
+    // } finally {
+    //     setIsTranslating(null);
+    // }
   };
 
   const onSubmit = async (data: NewsFormData) => {
