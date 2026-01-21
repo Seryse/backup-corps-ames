@@ -39,7 +39,10 @@
             "auth/weak-password": "La contraseña debe tener al menos 6 caracteres.",
             "auth/user-not-found": "No se encontró ninguna cuenta con esta dirección de correo electrónico.",
             "auth/wrong-password": "Contraseña incorrecta.",
-            "auth/account-exists-with-different-credential": "Ya existe una cuenta con este correo electrónico. Inicie sesión con su método original.",
+            "auth/account-exists-with-different-credential": "Ya existe una cuenta con este correo electrónico a través de otro método (p. ej., correo electrónico/contraseña). Utilice ese método.",
+            "auth/popup-closed-by-user": "La ventana de inicio de sesión ha sido cerrada. Por favor, inténtelo de nuevo.",
+            "auth/popup-blocked": "La ventana de inicio de sesión ha sido bloqueada por el navegador. Por favor, permita las ventanas emergentes para este sitio e inténtelo de nuevo.",
+            "auth/unauthorized-domain": "Este sitio no está autorizado para la autenticación de Google. Póngase en contacto con el administrador.",
             "auth/generic": "Se produjo un error de autenticación. Por favor, inténtelo de nuevo."
         }
     },

@@ -39,7 +39,10 @@
             "auth/weak-password": "Password should be at least 6 characters.",
             "auth/user-not-found": "No account found with this email address.",
             "auth/wrong-password": "Incorrect password.",
-            "auth/account-exists-with-different-credential": "An account with this email already exists. Please sign in with your original method.",
+            "auth/account-exists-with-different-credential": "An account with this email already exists via another method (e.g. Email/Password). Please use that method.",
+            "auth/popup-closed-by-user": "The sign-in window was closed. Please try again.",
+            "auth/popup-blocked": "The sign-in window was blocked by the browser. Please allow popups for this site and try again.",
+            "auth/unauthorized-domain": "This site is not authorized for Google authentication. Please contact the administrator.",
             "auth/generic": "An authentication error occurred. Please try again."
         }
     },
