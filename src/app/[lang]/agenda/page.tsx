@@ -162,12 +162,12 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
                 <Card>
-                    <CardContent className="p-0 sm:p-4">
+                    <CardContent className="p-0 sm:p-4 flex justify-center">
                         <Calendar
                             mode="single"
                             selected={date}
                             onSelect={handleDateSelect}
-                            className="rounded-md w-full"
+                            className="rounded-md"
                             disabled={(d) => d < new Date(new Date().setHours(0,0,0,0))}
                             locale={dateFnsLocale}
                             components={{ DayContent }}
@@ -211,8 +211,8 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
                                     <div className="mt-6 border-t pt-4 space-y-4">
                                         <h3 className="font-headline text-lg flex items-center gap-2"><Info className="h-5 w-5 text-accent"/>{dict.sessionDetails}</h3>
                                         <div className="p-4 bg-muted/50 rounded-lg space-y-2">
-                                            <h4 className="font-semibold">{selectedSessionType.name[lang]}</h4>
-                                            <p className="text-sm text-muted-foreground">{selectedSessionType.description[lang]}</p>
+                                            <h4 className="font-semibold">{selectedSessionType.name?.[lang] || selectedSessionType.name?.en}</h4>
+                                            <p className="text-sm text-muted-foreground">{selectedSessionType.description?.[lang] || selectedSessionType.description?.en}</p>
                                             <div className="flex justify-between items-center text-sm">
                                                 <div className="flex items-center gap-1.5 text-muted-foreground">
                                                     <User className="h-4 w-4" />
@@ -241,5 +241,3 @@ export default function AgendaPage({ params: { lang } }: { params: { lang: Local
     </div>
   );
 }
-
-    
