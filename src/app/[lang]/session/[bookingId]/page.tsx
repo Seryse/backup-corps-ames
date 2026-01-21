@@ -155,9 +155,9 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
                 height: '100%',
                 border: '0',
             },
-            // Admin is the host with audio, clients are participants without audio by default.
-            // All participants have video enabled.
-            audioSource: isAdminView,
+            // Admin is the host, clients are participants. All have video.
+            // No one has audio enabled by default to start.
+            audioSource: false,
             videoSource: true,
             subscribeToTracksAutomatically: true,
         });
@@ -184,7 +184,7 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
         });
 
         try {
-            await callObject.join({ url: roomUrl });
+            await callObject.join({ url: roomUrl, token: booking.visioToken });
         } catch (error) {
             console.error("Failed to join Daily.co call:", error);
         }
