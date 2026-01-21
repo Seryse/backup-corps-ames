@@ -2,7 +2,7 @@ import { getDictionary } from '@/lib/dictionaries';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import Image from 'next/image';
 import { list, getDownloadURL } from 'firebase/storage';
-import { storage } from '@/lib/firebase';
+import { storage } from '@/firebase/server';
 import { ref } from 'firebase/storage';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { File, Music } from 'lucide-react';

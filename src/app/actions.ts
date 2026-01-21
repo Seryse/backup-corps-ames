@@ -1,6 +1,6 @@
 'use server'
 
-import { db } from '@/lib/firebase';
+import { db } from '@/firebase/server';
 import { doc, getDoc } from 'firebase/firestore';
 
 // This is a simplified check. In a real app, you'd have more robust logic.

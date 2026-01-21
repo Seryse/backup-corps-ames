@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react';
-import { useAuth } from '@/hooks/use-auth';
+import { useUser } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { getDictionary, Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
@@ -15,7 +15,7 @@ import RealtimeSubtitles from '@/components/session/realtime-subtitles';
 const ADMIN_UID = 'REPLACE_WITH_YOUR_ADMIN_UID';
 
 export default function SessionPage({ params: { lang } }: { params: { lang: Locale } }) {
-  const { user, loading: authLoading } = useAuth();
+  const { user, isUserLoading } = useUser();
   const router = useRouter();
   const [dict, setDict] = useState<Dictionary['session'] | null>(null);
   const [accessGranted, setAccessGranted] = useState<boolean | null>(null);
@@ -25,7 +25,7 @@ export default function SessionPage({ params: { lang } }: { params: { lang: Loca
   }, [lang]);
 
   useEffect(() => {
-    if (authLoading) return;
+    if (isUserLoading) return;
     if (!user) {
       router.push(`/${lang}/login`);
       return;
@@ -41,9 +41,9 @@ export default function SessionPage({ params: { lang } }: { params: { lang: Loca
         }
       })
       .catch(() => setAccessGranted(false));
-  }, [user, authLoading, router, lang]);
+  }, [user, isUserLoading, router, lang]);
 
-  if (accessGranted === null || !dict) {
+  if (accessGranted === null || !dict || isUserLoading) {
     return (
       <div className="flex h-screen flex-col items-center justify-center bg-background">
         <Loader2 className="h-12 w-12 animate-spin text-accent" />

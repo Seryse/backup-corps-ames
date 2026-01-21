@@ -10,11 +10,11 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   linkWithCredential,
-  EmailAuthProvider,
+  fetchSignInMethodsForEmail,
 } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { auth } from "@/lib/firebase";
+import { useAuth } from "@/firebase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -29,7 +29,6 @@ import {
 } from "@/components/ui/card";
 import { Dictionary } from "@/lib/dictionaries";
 import { Locale } from "@/i18n-config";
-import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 
 interface AuthFormProps {
@@ -53,6 +52,7 @@ const GoogleIcon = () => (
 
 export function AuthForm({ mode, dictionary, lang }: AuthFormProps) {
   const router = useRouter();
+  const auth = useAuth();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const {
@@ -95,12 +95,17 @@ export function AuthForm({ mode, dictionary, lang }: AuthFormProps) {
         if (error.code === 'auth/account-exists-with-different-credential') {
             // Manually handle account linking
             const pendingCred = GoogleAuthProvider.credentialFromError(error);
+            if (!pendingCred) {
+                toast({ variant: "destructive", title: "Linking Error", description: "Could not get credential from Google." });
+                setIsLoading(false);
+                return;
+            }
             const email = error.customData.email;
             
             // Get sign-in methods for this email.
             const methods = await fetchSignInMethodsForEmail(auth, email);
             
-            if (methods[0] === 'password' && pendingCred) {
+            if (methods[0] === 'password') {
                 const password = prompt('Please provide the password for your existing account.');
                 if(password){
                     try {

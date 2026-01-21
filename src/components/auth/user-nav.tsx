@@ -15,22 +15,27 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useAuth } from "@/hooks/use-auth"
-import { auth } from "@/lib/firebase"
+import { useUser, useAuth } from "@/firebase"
 import { signOut } from "firebase/auth"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Dictionary } from "@/lib/dictionaries"
 import { Locale } from "@/i18n-config"
+import { Skeleton } from "../ui/skeleton"
 
 export function UserNav({ dictionary, lang }: { dictionary: Dictionary['header'], lang: Locale }) {
-  const { user } = useAuth();
+  const { user, isUserLoading } = useUser();
+  const auth = useAuth();
   const router = useRouter();
 
   const handleSignOut = async () => {
     await signOut(auth);
     router.push(`/${lang}`);
   };
+
+  if (isUserLoading) {
+    return <Skeleton className="h-10 w-10 rounded-full" />
+  }
 
   if (!user) {
     return (

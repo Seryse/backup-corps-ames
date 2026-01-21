@@ -3,35 +3,39 @@
     "Formation": {
       "title": "Formation",
       "type": "object",
-      "description": "Represents a training course or program offered (e.g., Reiki Level 1, Divination Mastery).",
+      "description": "Represents a training course or program offered.",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the Formation entity."
-        },
         "name": {
-          "type": "string",
-          "description": "Name of the formation (e.g., Reiki Level 1)."
+          "type": "object",
+          "description": "Localized name of the formation.",
+          "properties": {
+            "en": { "type": "string" },
+            "fr": { "type": "string" },
+            "es": { "type": "string" }
+          },
+          "required": ["en", "fr", "es"]
         },
         "description": {
-          "type": "string",
-          "description": "Detailed description of the formation content and objectives."
-        },
-        "language": {
-          "type": "string",
-          "description": "Language in which the formation is delivered (e.g., French, English, Spanish)."
+          "type": "object",
+          "description": "Localized detailed description of the formation.",
+          "properties": {
+            "en": { "type": "string" },
+            "fr": { "type": "string" },
+            "es": { "type": "string" }
+          },
+          "required": ["en", "fr", "es"]
         },
         "tokenProductId": {
           "type": "string",
-          "description": "The identifier in the product catalog or store of the token for accessing the formation."
+          "description": "Identifier for the access token product."
         },
         "price": {
           "type": "number",
-          "description": "Price of the formation."
+          "description": "Price of the formation in the smallest currency unit (e.g., cents)."
         },
         "currency": {
           "type": "string",
-          "description": "Currency for the price (e.g., EUR, USD)."
+          "description": "Currency for the price (e.g., eur, usd)."
         },
         "imageId": {
           "type": "string",
@@ -39,10 +43,8 @@
         }
       },
       "required": [
-        "id",
         "name",
         "description",
-        "language",
         "tokenProductId",
         "price",
         "currency",
@@ -54,10 +56,6 @@
       "type": "object",
       "description": "Represents a user's enrollment in a specific formation and their access token.",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the UserFormation entity."
-        },
         "userId": {
           "type": "string",
           "description": "Reference to User. (Relationship: User 1:N UserFormation)"
@@ -77,7 +75,6 @@
         }
       },
       "required": [
-        "id",
         "userId",
         "formationId",
         "accessToken",
@@ -88,7 +85,7 @@
   "auth": {
     "providers": [
       "password",
-      "anonymous"
+      "google.com"
     ]
   },
   "firestore": {
@@ -98,11 +95,11 @@
       },
       "description": "Stores information about each formation. 'formationId' is the unique identifier for the formation."
     },
-    "/users/{userId}/formations/{formationId}": {
+    "/users/{userId}/formations/{userFormationId}": {
       "schema": {
         "$ref": "#/entities/UserFormation"
       },
-      "description": "Represents a user's enrollment in a specific formation and their access token. This subcollection uses path-based ownership for simplified security rules. Includes 'accessToken' for accessing formation content."
+      "description": "Represents a user's enrollment in a specific formation and their access token. This subcollection uses path-based ownership for simplified security rules."
     }
   }
 }

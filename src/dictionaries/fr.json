@@ -62,7 +62,9 @@
         "description": "Découvrez nos produits",
         "addToCart": "Ajouter au panier",
         "productAdded": "Produit Ajouté",
-        "addedToCart": "a été ajouté à votre panier."
+        "addedToCart": "a été ajouté à votre panier.",
+        "loading": "Chargement des formations...",
+        "noFormations": "Aucune formation n'est disponible pour le moment."
     },
     "agenda": {
         "title": "Agenda",

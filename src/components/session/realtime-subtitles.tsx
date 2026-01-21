@@ -7,7 +7,7 @@ import { Mic, MicOff, Languages } from 'lucide-react';
 import { Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
 import { realTimeSubtitlesWithTranslation } from '@/ai/flows/real-time-subtitles-translation';
-import { db } from '@/lib/firebase';
+import { useFirestore } from '@/firebase';
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 
 interface RealtimeSubtitlesProps {
@@ -28,18 +28,21 @@ export default function RealtimeSubtitles({ dictionary, lang, isAdmin }: Realtim
     const [isListening, setIsListening] = useState(false);
     const [subtitle, setSubtitle] = useState<SubtitleData | null>(null);
     const recognitionRef = useRef<any>(null);
+    const firestore = useFirestore();
 
     // Listen for subtitles from Firestore
     useEffect(() => {
-        const unsub = onSnapshot(doc(db, "subtitles", SESSION_ID), (doc) => {
+        if (!firestore) return;
+        const unsub = onSnapshot(doc(firestore, "subtitles", SESSION_ID), (doc) => {
             if (doc.exists()) {
                 setSubtitle(doc.data() as SubtitleData);
             }
         });
         return () => unsub();
-    }, []);
+    }, [firestore]);
 
     const handleTranscript = useCallback(async (transcript: string) => {
+        if (!firestore) return;
         try {
             const translationResult = await realTimeSubtitlesWithTranslation({
                 text: transcript,
@@ -51,11 +54,11 @@ export default function RealtimeSubtitles({ dictionary, lang, isAdmin }: Realtim
                 timestamp: Date.now(),
             };
             // Update Firestore
-            await setDoc(doc(db, "subtitles", SESSION_ID), newSubtitle);
+            await setDoc(doc(firestore, "subtitles", SESSION_ID), newSubtitle);
         } catch (error) {
             console.error("Translation error:", error);
         }
-    }, [lang]);
+    }, [lang, firestore]);
 
     const startListening = () => {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;

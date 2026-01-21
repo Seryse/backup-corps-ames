@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
 import { Toaster } from "@/components/ui/toaster";
-import { AuthProvider } from '@/components/providers/auth-provider';
 import Header from '@/components/layout/header';
 import { getDictionary } from '@/lib/dictionaries';
 import { Locale, i18n } from '@/i18n-config';
 import { CartProvider } from '@/components/providers/cart-provider';
+import { FirebaseClientProvider } from '@/firebase';
 
 export async function generateStaticParams() {
   return i18n.locales.map((locale) => ({ lang: locale }))
@@ -32,7 +32,7 @@ export default async function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;700&family=PT+Sans:wght@400;700&family+Source+Code+Pro&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased min-h-screen flex flex-col">
-        <AuthProvider>
+        <FirebaseClientProvider>
           <CartProvider>
             <Header dictionary={dictionary.header} lang={params.lang} />
             <main className="flex-1">
@@ -40,7 +40,7 @@ export default async function RootLayout({
             </main>
             <Toaster />
           </CartProvider>
-        </AuthProvider>
+        </FirebaseClientProvider>
       </body>
     </html>
   );

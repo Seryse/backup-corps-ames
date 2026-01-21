@@ -62,7 +62,9 @@
         "description": "Discover our products",
         "addToCart": "Add to Cart",
         "productAdded": "Product Added",
-        "addedToCart": "has been added to your cart."
+        "addedToCart": "has been added to your cart.",
+        "loading": "Loading formations...",
+        "noFormations": "No formations available at the moment."
     },
     "agenda": {
         "title": "Agenda",
