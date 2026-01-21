@@ -151,7 +151,7 @@ export default function FormationManager({ dictionary, lang }: FormationManagerP
       )}
 
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-        <DialogContent className="sm:max-w-2xl">
+        <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
               {formationToEdit ? dictionary.editFormation : dictionary.addFormation}
