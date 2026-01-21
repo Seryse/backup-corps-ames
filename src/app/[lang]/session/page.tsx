@@ -17,8 +17,9 @@ export default function SessionPage({ params: { lang } }: { params: { lang: Loca
   const [dict, setDict] = useState<Dictionary | null>(null);
   const [accessGranted, setAccessGranted] = useState<boolean | null>(null);
   
-  // Hardcoded admin UID for now. In a real app, this would use custom claims.
-  const isAdmin = user?.uid === '5cKGxV6aYXYx1cM3s1aXN3z3X2E3';
+  // TEMPORARY: Grant admin rights to any logged-in user for testing purposes.
+  // In a real app, this would use custom claims.
+  const isAdmin = true;
 
   useEffect(() => {
     getDictionary(lang).then(d => setDict(d));
@@ -91,7 +92,7 @@ export default function SessionPage({ params: { lang } }: { params: { lang: Loca
             </div>
 
             <div className="space-y-8">
-                 <RealtimeSubtitles dictionary={dict.session} lang={lang} isAdmin={isAdmin} />
+                 <RealtimeSubtitles dictionary={dict?.session} lang={lang} isAdmin={isAdmin} />
             </div>
         </div>
     </div>
