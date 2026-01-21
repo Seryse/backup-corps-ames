@@ -3,11 +3,11 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import Image from 'next/image';
 import { File, Music } from 'lucide-react';
 import { Locale } from '@/i18n-config';
-import FormationManager from '@/components/admin/formation-manager';
+// import FormationManager from '@/components/admin/formation-manager';
 import { Separator } from '@/components/ui/separator';
-import NewsManager from '@/components/admin/news-manager';
-import SessionTypeManager from '@/components/admin/session-type-manager';
-import FileLister from '@/components/admin/file-lister';
+// import NewsManager from '@/components/admin/news-manager';
+// import SessionTypeManager from '@/components/admin/session-type-manager';
+// import FileLister from '@/components/admin/file-lister';
 
 export default async function AdminPage({ params: { lang } }: { params: { lang: Locale } }) {
   const dict = await getDictionary(lang);
@@ -32,6 +32,8 @@ export default async function AdminPage({ params: { lang } }: { params: { lang: 
       </div>
       
       <div className="space-y-8">
+        <p>Debugging: Admin page content placeholder. If you see this, the page shell is working.</p>
+        {/*
         <div className="grid md:grid-cols-2 gap-8">
             <FileLister title={dict.admin.introFiles} path="/intros" icon={File} noFilesFoundText={dict.admin.noFiles} />
             <FileLister title={dict.admin.playlistFiles} path="/playlists" icon={Music} noFilesFoundText={dict.admin.noFiles} />
@@ -42,6 +44,7 @@ export default async function AdminPage({ params: { lang } }: { params: { lang: 
         <FormationManager dictionary={dict.admin} lang={lang} />
         <Separator />
         <SessionTypeManager dictionary={dict.admin} lang={lang} />
+        */}
       </div>
     </div>
   );
