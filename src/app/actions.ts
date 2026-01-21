@@ -3,6 +3,7 @@
 import { db } from '@/firebase/server';
 import { doc, getDoc, writeBatch, collection, serverTimestamp, getDocs, query, limit } from 'firebase/firestore';
 import type { CartItem } from '@/components/providers/cart-provider';
+import type { TranslateTextInput } from '@/ai/flows/translate-text';
 
 // This function now checks if the user has purchased at least one formation.
 export async function checkSessionAccess(userId: string): Promise<boolean> {
@@ -53,4 +54,11 @@ export async function processCheckout(userId: string, items: CartItem[]): Promis
         console.error("Error processing checkout:", error);
         return { success: false };
     }
+}
+
+export async function translateTextAction(input: TranslateTextInput) {
+  // Dynamically import the flow to ensure it's not bundled on the client
+  // and only loaded when the action is executed.
+  const { translateText } = await import('@/ai/flows/translate-text');
+  return await translateText(input);
 }

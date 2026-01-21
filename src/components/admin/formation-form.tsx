@@ -17,6 +17,7 @@ import { useState } from 'react';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 import { Progress } from '../ui/progress';
+import { translateTextAction } from '@/app/actions';
 
 interface FormationFormProps {
   formationToEdit?: Formation;
@@ -85,14 +86,13 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
     }
     setIsTranslating(fieldName);
     try {
-        const { translateText } = await import('@/ai/flows/translate-text');
-        const result = await translateText({ text: frenchText });
+        const result = await translateTextAction({ text: frenchText });
         setValue(`${fieldName}.en`, result.en);
         setValue(`${fieldName}.es`, result.es);
         toast({ title: dictionary.success.translationSuccess });
     } catch (error) {
         console.error("Translation failed:", error);
-        toast({ variant: "destructive", title: dictionary.form.translationError });
+        toast({ variant: "destructive", title: dictionary.form.translationError, description: (error as Error).message });
     } finally {
         setIsTranslating(null);
     }
