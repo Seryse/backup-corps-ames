@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, doc, deleteDoc, query, orderBy, Query } from 'firebase/firestore';
 import Image from 'next/image';
@@ -18,7 +19,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import NewsForm from './news-form';
 import { Loader2, PlusCircle, Trash2, Edit, ImageOff, Rss } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { errorEmitter } from '@/firebase/error-emitter';
@@ -27,6 +27,11 @@ import { Locale } from '@/i18n-config';
 import type { LocalizedString } from '@/components/providers/cart-provider';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
+
+const NewsForm = dynamic(() => import('./news-form'), {
+  loading: () => <div className="flex h-64 items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>,
+});
+
 
 export type NewsArticle = {
     id: string;

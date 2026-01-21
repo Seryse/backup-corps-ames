@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, doc, deleteDoc, Query } from 'firebase/firestore';
 import type { Formation } from '@/components/providers/cart-provider';
@@ -19,12 +20,16 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import FormationForm from './formation-form';
 import { BookOpenCheck, Loader2, PlusCircle, Trash2, Edit, ImageOff } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 import { Locale } from '@/i18n-config';
+
+const FormationForm = dynamic(() => import('./formation-form'), {
+  loading: () => <div className="flex h-64 items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>,
+});
+
 
 interface FormationManagerProps {
   dictionary: any;

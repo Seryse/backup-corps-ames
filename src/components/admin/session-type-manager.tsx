@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, doc, deleteDoc, Query } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
@@ -17,7 +18,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import SessionTypeForm from './session-type-form';
 import { CalendarClock, Loader2, PlusCircle, Trash2, Edit } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { errorEmitter } from '@/firebase/error-emitter';
@@ -25,6 +25,10 @@ import { FirestorePermissionError } from '@/firebase/errors';
 import { Locale } from '@/i18n-config';
 import type { LocalizedString } from '@/components/providers/cart-provider';
 import { Badge } from '../ui/badge';
+
+const SessionTypeForm = dynamic(() => import('./session-type-form'), {
+  loading: () => <div className="flex h-64 items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>,
+});
 
 export type SessionType = {
     id: string;
