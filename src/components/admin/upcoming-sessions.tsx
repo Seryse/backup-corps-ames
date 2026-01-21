@@ -152,7 +152,7 @@ export default function UpcomingSessions({ lang, dictionary }: { lang: Locale, d
                   </CardContent>
                   <CardContent>
                     <Button asChild className="w-full" disabled={!isConnectable}>
-                       <Link href={`/${lang}/session/${booking.id}?token=${booking.visioToken}`}>
+                       <Link href={`/${lang}/session/${booking.id}?token=${booking.visioToken}&uid=${booking.userId}`}>
                          <LinkIcon className="mr-2 h-4 w-4" />
                          {dictionary.admin.joinCall}
                        </Link>

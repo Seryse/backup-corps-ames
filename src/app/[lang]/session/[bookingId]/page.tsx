@@ -37,7 +37,7 @@ interface LiveSession {
 // Simplified Daily.co call object
 type DailyCall = any;
 
-const adminUids = ['HvsOFzrOwFTHWTBVBextpZtV5I53'];
+const adminEmails = ['seryse@live.be', 'jael@live.fr', 'selvura@gmail.com'];
 
 export default function LiveSessionPage({ params }: { params: Promise<{ lang: Locale, bookingId: string }> }) {
   const { lang, bookingId } = use(params);
@@ -57,17 +57,25 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
   const dailyRef = useRef<DailyCall | null>(null);
   const [remoteAudioStream, setRemoteAudioStream] = useState<MediaStream | null>(null);
 
-  // This is a workaround for the fact that an admin might not be the booking owner.
-  // In a real app, you'd likely have a separate way for admins to look up user bookings.
-  const [bookingOwnerId, setBookingOwnerId] = useState<string | null>(null);
+  // --- Data Fetching ---
+    const bookingRef = useMemoFirebase(() => {
+        if (!firestore || !user || isUserLoading) return null;
 
-  const bookingRef = useMemoFirebase(() => {
-    // We need a userId to look up the booking.
-    // If we're an admin, we don't know it yet. If we are a user, it's our own UID.
-    const userIdForBooking = isAdminView ? bookingOwnerId : user?.uid;
-    if (!firestore || !userIdForBooking) return null;
-    return doc(firestore, 'users', userIdForBooking, 'bookings', bookingId) as DocumentReference<Booking>;
-  }, [firestore, user, bookingId, isAdminView, bookingOwnerId]);
+        let userIdForBooking: string | null = null;
+        const isUserAdmin = user.email && adminEmails.includes(user.email);
+        
+        if (isUserAdmin) {
+            // For an admin, get the booker's UID from the URL.
+            userIdForBooking = searchParams.get('uid');
+        } else {
+            // For a regular user, it's their own UID.
+            userIdForBooking = user.uid;
+        }
+        
+        if (!userIdForBooking) return null;
+        
+        return doc(firestore, 'users', userIdForBooking, 'bookings', bookingId) as DocumentReference<Booking>;
+    }, [firestore, user, isUserLoading, bookingId, searchParams]);
 
   const { data: booking, isLoading: isLoadingBooking } = useDoc<Booking>(bookingRef);
 
@@ -85,42 +93,43 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
   }, [lang]);
 
   useEffect(() => {
-    if (isUserLoading) return;
+    // This effect determines the final authorization status
+    if (isUserLoading || isLoadingBooking) {
+      setAuthStatus('pending');
+      return;
+    }
+
     if (!user) {
       setAuthStatus('unauthorized');
       return;
     }
-
-    const isUserAdmin = adminUids.includes(user.uid);
+    
+    const isUserAdmin = user.email && adminEmails.includes(user.email);
     setIsAdminView(isUserAdmin);
 
-    if(isUserAdmin){
-        // For an admin, we can't know the user ID from the booking easily.
-        // This is a simplification: we'll assume the admin can join any session.
-        // A production app would need a more secure way to look up the session & user.
+    if (isUserAdmin) {
+      // Admin is authorized if the booking document was successfully loaded via the uid in the URL
+      if (booking) {
         setAuthStatus('authorized');
+      } else {
+        setAuthStatus('unauthorized');
+      }
     } else {
-        // For a regular user, we know their ID, so we can set it to fetch the booking.
-        setBookingOwnerId(user.uid);
+      // Regular user authorization check: must own booking and have valid token
+      if (booking && booking.userId === user.uid && booking.visioToken === token) {
+        setAuthStatus('authorized');
+      } else {
+        setAuthStatus('unauthorized');
+      }
     }
-  }, [user, isUserLoading]);
-  
-  useEffect(()=>{
-    if(isAdminView || authStatus === 'authorized') return; // Admin is already authorized.
-    if(isLoadingBooking || isUserLoading) return;
-    
-    if(booking && user && booking.userId === user.uid && booking.visioToken === token){
-      setAuthStatus('authorized');
-    } else if (!isLoadingBooking) {
-      setAuthStatus('unauthorized');
-    }
-  },[booking, isLoadingBooking, isUserLoading, token, user, isAdminView, authStatus])
+  }, [user, isUserLoading, booking, isLoadingBooking, token]);
+
 
   useEffect(() => {
       // If admin, ensure the session document exists when authorized
-      if (isAdminView && authStatus === 'authorized' && firestore) {
+      if (isAdminView && authStatus === 'authorized' && firestore && user) {
           const sessionRef = doc(firestore, 'sessions', bookingId);
-          setDoc(sessionRef, { hostId: user?.uid, bookingId }, { merge: true });
+          setDoc(sessionRef, { hostId: user.uid, bookingId }, { merge: true });
       }
   },[isAdminView, authStatus, firestore, bookingId, user])
 
@@ -171,8 +180,11 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
             }
         });
 
-        // Use the visioToken from the booking for secure access
-        await callObject.join({ url: roomUrl, token: booking.visioToken });
+        try {
+            await callObject.join({ url: roomUrl });
+        } catch (error) {
+            console.error("Failed to join Daily.co call:", error);
+        }
     };
 
     setupCall();
