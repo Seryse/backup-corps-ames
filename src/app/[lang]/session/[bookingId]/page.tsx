@@ -26,6 +26,14 @@ type Booking = {
     visioToken: string;
 };
 
+// This should match the LiveSession entity in backend.json
+interface LiveSession {
+    id: string;
+    triggerIntro?: boolean;
+    activePlaylistUrl?: string;
+    hostId: string;
+}
+
 // Simplified Daily.co call object
 type DailyCall = any;
 
@@ -61,6 +69,14 @@ export default function LiveSessionPage({ params: { lang, bookingId } }: { param
   }, [firestore, user, bookingId, isAdminView, bookingOwnerId]);
 
   const { data: booking, isLoading: isLoadingBooking } = useDoc<Booking>(bookingRef);
+
+  const sessionRef = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return doc(firestore, 'sessions', bookingId) as DocumentReference<LiveSession>;
+  }, [firestore, bookingId]);
+
+  const { data: sessionState } = useDoc<LiveSession>(sessionRef);
+
 
   // --- Authorization and Session Setup ---
   useEffect(() => {
@@ -109,15 +125,15 @@ export default function LiveSessionPage({ params: { lang, bookingId } }: { param
 
   // --- Daily.co SDK Integration ---
   useEffect(() => {
-    if (authStatus !== 'authorized' || !callFrameRef.current || dailyRef.current) return;
+    if (authStatus !== 'authorized' || !callFrameRef.current || dailyRef.current || !booking) return;
 
     const setupCall = async () => {
         const DailyIframe = (await import('@daily-co/daily-js')).default;
         
-        // TODO: Replace with your actual Daily.co room URL
+        // This URL must be replaced with your actual Daily.co room URL
         const roomUrl = "https://your-domain.daily.co/your-room";
 
-        const call = DailyIframe.createFrame(callFrameRef.current!, {
+        const callObject = DailyIframe.createFrame(callFrameRef.current!, {
             showLeaveButton: true,
             iframeStyle: {
                 position: 'absolute',
@@ -127,26 +143,23 @@ export default function LiveSessionPage({ params: { lang, bookingId } }: { param
                 height: '100%',
                 border: '0',
             },
-            // IMPORTANT: Disable default audio handling to manage it via AudioEngine.
             audioSource: false, 
             subscribeToTracksAutomatically: true,
         });
         
-        dailyRef.current = call;
+        dailyRef.current = callObject;
 
-        // --- Event Listeners ---
-        // Capture the admin's audio track when it starts. The admin is the meeting 'owner'.
-        call.on('track-started', (event) => {
+        callObject.on('track-started', (event) => {
             if (event.track.kind === 'audio' && event.participant.owner) {
                 console.log("Admin audio track started, creating stream for AudioEngine.");
                 const stream = new MediaStream([event.track]);
-                setRemoteAudioStream(stream); // This stream is passed to the AudioEngine component
+                setRemoteAudioStream(stream); 
             }
         });
 
-        call.on('left-meeting', () => {
+        callObject.on('left-meeting', () => {
             console.log('Left meeting');
-            call.destroy();
+            callObject.destroy();
             dailyRef.current = null;
             if (!isAdminView) {
                 setTestimonialModalOpen(true);
@@ -155,8 +168,8 @@ export default function LiveSessionPage({ params: { lang, bookingId } }: { param
             }
         });
 
-        // TODO: The visioToken should be a Daily.co meeting token for secure access
-        await call.join({ url: roomUrl });
+        // Use the visioToken from the booking for secure access
+        await callObject.join({ url: roomUrl, token: booking.visioToken });
     };
 
     setupCall();
@@ -165,7 +178,7 @@ export default function LiveSessionPage({ params: { lang, bookingId } }: { param
         dailyRef.current?.destroy();
         dailyRef.current = null;
     }
-  }, [authStatus, isAdminView, lang, router]);
+  }, [authStatus, isAdminView, lang, router, booking]);
 
   const handleTriggerIntro = () => updateSessionState(bookingId, { triggerIntro: true });
   const handleStopAudio = () => { /* Logic to stop playlist via session state */ };
@@ -201,7 +214,11 @@ export default function LiveSessionPage({ params: { lang, bookingId } }: { param
     
     return (
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {!isAdminView && <AudioEngine sessionId={bookingId} remoteAudioStream={remoteAudioStream} lang={lang} />}
+        {!isAdminView && <AudioEngine 
+            remoteStream={remoteAudioStream}
+            introUrl={`https://firebasestorage.googleapis.com/v0/b/corps-et-ames-adc60.appspot.com/o/intros%2Fintro_${lang}.mp3?alt=media`}
+            triggerIntro={sessionState?.triggerIntro}
+        />}
 
         <div className="lg:col-span-2">
             <Card className="h-full">
