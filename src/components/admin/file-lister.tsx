@@ -4,14 +4,15 @@ import { useState, useEffect } from 'react';
 import { list, getDownloadURL, ref } from 'firebase/storage';
 import { useStorage } from '@/firebase';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Loader2, Play } from 'lucide-react';
 
 interface FileItem {
     name: string;
     url: string;
 }
 
-export default function FileLister({ title, path, icon: Icon, noFilesFoundText }: { title: string, path: string, icon: React.ElementType, noFilesFoundText: string }) {
+export default function FileLister({ title, path, icon: Icon, noFilesFoundText, onFileClick }: { title: string, path: string, icon: React.ElementType, noFilesFoundText: string, onFileClick?: (url: string) => void }) {
     const storage = useStorage();
     const [files, setFiles] = useState<FileItem[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -64,10 +65,17 @@ export default function FileLister({ title, path, icon: Icon, noFilesFoundText }
                 <ul className="space-y-2">
                     {files.map(file => (
                         <li key={file.name} className="flex items-center justify-between p-2 rounded-md hover:bg-muted/50">
-                            <span className="font-mono text-sm">{file.name}</span>
-                            <a href={file.url} target="_blank" rel="noopener noreferrer" className="text-sm text-accent-foreground underline">
-                                Listen
-                            </a>
+                            <span className="font-mono text-sm truncate pr-2">{file.name}</span>
+                            {onFileClick ? (
+                                <Button variant="outline" size="sm" onClick={() => onFileClick(file.url)}>
+                                    <Play className="mr-2 h-4 w-4" />
+                                    Play
+                                </Button>
+                            ) : (
+                                <a href={file.url} target="_blank" rel="noopener noreferrer" className="text-sm text-accent-foreground underline">
+                                    Listen
+                                </a>
+                            )}
                         </li>
                     ))}
                 </ul>

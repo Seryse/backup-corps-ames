@@ -5,70 +5,93 @@ import React, { useEffect, useRef } from 'react';
 interface AudioEngineProps {
   introUrl: string | undefined;
   triggerIntro: boolean | undefined;
+  playlistUrl: string | undefined;
 }
 
-export default function AudioEngine({ introUrl, triggerIntro }: AudioEngineProps) {
+export default function AudioEngine({ introUrl, triggerIntro, playlistUrl }: AudioEngineProps) {
   const audioContextRef = useRef<AudioContext | null>(null);
   const introSourceRef = useRef<AudioBufferSourceNode | null>(null);
+  const playlistSourceRef = useRef<AudioBufferSourceNode | null>(null);
   const masterGainRef = useRef<GainNode | null>(null);
-  const introPlayedRef = useRef(false); // To ensure intro plays only once
+  const introPlayedRef = useRef(false);
 
+  // Initialize AudioContext on first user interaction or prop change
   useEffect(() => {
-    // 1. Initialisation du contexte au premier clic/interaction (best practice)
-    if (!audioContextRef.current) {
-      try {
-        audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
-        masterGainRef.current = audioContextRef.current.createGain();
-        masterGainRef.current.connect(audioContextRef.current.destination);
-      } catch (e) {
-        console.error("Failed to create AudioContext:", e);
-        return;
+    const initAudioContext = () => {
+      if (!audioContextRef.current) {
+        try {
+          const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+          audioContextRef.current = ctx;
+          masterGainRef.current = ctx.createGain();
+          masterGainRef.current.connect(ctx.destination);
+        } catch (e) {
+          console.error("Failed to create AudioContext:", e);
+        }
       }
-    }
+      // Ensure context is running to prevent ducking
+      if (audioContextRef.current && audioContextRef.current.state === 'suspended') {
+        audioContextRef.current.resume();
+      }
+    };
+    initAudioContext();
+  }, [triggerIntro, playlistUrl]);
 
+  const playAudio = async (url: string, sourceRef: React.MutableRefObject<AudioBufferSourceNode | null>) => {
     const ctx = audioContextRef.current;
-    if (!ctx) return;
+    if (!ctx || !masterGainRef.current) return;
 
-    // Anti-Ducking : On s'assure que le contexte est actif
-    if (ctx.state === 'suspended') {
-      ctx.resume();
+    if (sourceRef.current) {
+      try { sourceRef.current.stop(); } catch (e) {}
+      sourceRef.current = null;
     }
     
-    // 2. Gestion de l'Intro Locale
-    if (triggerIntro && introUrl && !introPlayedRef.current) {
-      introPlayedRef.current = true; // Play only once
-      playIntro(introUrl);
-    }
+    try {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`Failed to fetch audio: ${response.statusText}`);
+      const arrayBuffer = await response.arrayBuffer();
+      const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
 
-    async function playIntro(url: string) {
-        if (!ctx || !masterGainRef.current) return;
-        try {
-            const response = await fetch(url);
-            if (!response.ok) throw new Error(`Failed to fetch intro audio: ${response.statusText}`);
+      const source = ctx.createBufferSource();
+      source.buffer = audioBuffer;
+      source.connect(masterGainRef.current);
+      source.start(0);
+      sourceRef.current = source;
 
-            const arrayBuffer = await response.arrayBuffer();
-            const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
-
-            // Si une intro joue déjà, on l'arrête
-            if (introSourceRef.current) {
-                introSourceRef.current.stop();
-            }
-
-            const source = ctx.createBufferSource();
-            source.buffer = audioBuffer;
-            source.connect(masterGainRef.current);
-            source.start(0);
-            introSourceRef.current = source;
-
-            source.onended = () => {
-                introSourceRef.current = null;
-            }
-        } catch(error) {
-            console.error("[AudioEngine] Error playing intro:", error);
+      source.onended = () => {
+        if (sourceRef.current === source) {
+            sourceRef.current = null;
         }
+      }
+    } catch(error) {
+        console.error("[AudioEngine] Error playing audio from URL:", url, error);
     }
+  };
 
+  useEffect(() => {
+    if (triggerIntro && introUrl && !introPlayedRef.current) {
+      introPlayedRef.current = true;
+      if (playlistSourceRef.current) {
+        try { playlistSourceRef.current.stop(); } catch(e) {}
+        playlistSourceRef.current = null;
+      }
+      playAudio(introUrl, introSourceRef);
+    }
   }, [triggerIntro, introUrl]);
 
-  return null; // Ce composant gère le son en arrière-plan
-};
+  useEffect(() => {
+    if (playlistUrl) {
+      if (introSourceRef.current) {
+        try { introSourceRef.current.stop(); } catch(e) {}
+        introSourceRef.current = null;
+      }
+      playAudio(playlistUrl, playlistSourceRef);
+    } else {
+        if (playlistSourceRef.current) {
+            try { playlistSourceRef.current.stop(); } catch(e) {}
+            playlistSourceRef.current = null;
+        }
+    }
+  }, [playlistUrl]);
+
+  return null;
+}

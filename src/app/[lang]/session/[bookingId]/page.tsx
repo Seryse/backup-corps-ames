@@ -46,7 +46,6 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
   const firestore = useFirestore();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const token = searchParams.get('token');
 
   const [isAdminView, setIsAdminView] = useState(false);
   const [authStatus, setAuthStatus] = useState<'pending' | 'authorized' | 'unauthorized'>('pending');
@@ -65,10 +64,8 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
         const isUserAdmin = user.email && adminEmails.includes(user.email);
         
         if (isUserAdmin) {
-            // For an admin, get the booker's UID from the URL.
             userIdForBooking = searchParams.get('uid');
         } else {
-            // For a regular user, it's their own UID.
             userIdForBooking = user.uid;
         }
         
@@ -79,10 +76,8 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
 
   const { data: booking, isLoading: isLoadingBooking } = useDoc<Booking>(bookingRef);
 
-  // Create stable variables from the booking object to use in dependency arrays
   const bookingExists = !!booking;
   const bookingUserId = booking?.userId;
-  const bookingVisioToken = booking?.visioToken;
 
   const sessionRef = useMemoFirebase(() => {
     if (!firestore) return null;
@@ -98,7 +93,6 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
   }, [lang]);
 
   useEffect(() => {
-    // This effect determines the final authorization status
     if (isUserLoading || isLoadingBooking) {
       setAuthStatus('pending');
       return;
@@ -113,25 +107,22 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
     setIsAdminView(isUserAdmin);
 
     if (isUserAdmin) {
-      // Admin is authorized if the booking document was successfully loaded via the uid in the URL
       if (bookingExists) {
         setAuthStatus('authorized');
       } else {
         setAuthStatus('unauthorized');
       }
     } else {
-      // Regular user authorization check: must own booking and have valid token
-      if (bookingExists && bookingUserId === user.uid && bookingVisioToken === token) {
+      if (bookingExists && bookingUserId === user.uid) {
         setAuthStatus('authorized');
       } else {
         setAuthStatus('unauthorized');
       }
     }
-  }, [user, isUserLoading, isLoadingBooking, token, bookingExists, bookingUserId, bookingVisioToken]);
+  }, [user, isUserLoading, isLoadingBooking, bookingExists, bookingUserId]);
 
 
   useEffect(() => {
-      // If admin, ensure the session document exists when authorized
       if (isAdminView && authStatus === 'authorized' && firestore && user) {
           const sessionRef = doc(firestore, 'sessions', bookingId);
           setDoc(sessionRef, { hostId: user.uid, bookingId }, { merge: true });
@@ -140,13 +131,14 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
 
   // --- Daily.co SDK Integration ---
   useEffect(() => {
-    if (authStatus !== 'authorized' || !callFrameRef.current || dailyRef.current || !bookingExists || hasJoinedRef.current) return;
+    if (authStatus !== 'authorized' || !callFrameRef.current || hasJoinedRef.current) return;
 
     const setupCall = async () => {
         const roomUrl = "https://corps-et-ames.daily.co/corps-et-ames";
         const DailyIframe = (await import('@daily-co/daily-js')).default;
         
         const dailyOptions: any = {
+            url: roomUrl,
             showLeaveButton: true,
             iframeStyle: {
                 position: 'absolute',
@@ -157,23 +149,18 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
                 border: '0',
             },
             videoSource: true,
+            // Admin sends audio, client does not. Client receives audio from the call regardless.
+            audioSource: isAdminView,
         };
-
-        if (isAdminView) {
-            // Admin needs to broadcast audio.
-            dailyOptions.audioSource = true;
-        } else {
-            // Client should not send audio, they only listen.
-            dailyOptions.audioSource = false;
-        }
 
         const callObject = DailyIframe.createFrame(callFrameRef.current!, dailyOptions);
         
         dailyRef.current = callObject;
 
         callObject.on('left-meeting', () => {
-            console.log('Left meeting');
-            // No need to call destroy() here, it's handled by the 'left-meeting' event itself
+            if(dailyRef.current) {
+                dailyRef.current.destroy();
+            }
             dailyRef.current = null;
             hasJoinedRef.current = false;
             if (!isAdminView) {
@@ -184,7 +171,8 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
         });
 
         try {
-            await callObject.join({ url: roomUrl });
+            // Only attempt to join AFTER event listeners are set up
+            await callObject.join();
             hasJoinedRef.current = true; // Lock to prevent re-joining AFTER successful join
         } catch (error) {
             console.error("Failed to join Daily.co call:", error);
@@ -199,6 +187,7 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
 
     setupCall();
     
+    // Cleanup function
     return () => {
         if (dailyRef.current) {
             dailyRef.current.destroy();
@@ -206,13 +195,10 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
         }
         hasJoinedRef.current = false;
     }
-  }, [authStatus, isAdminView, lang, router, bookingExists, token, bookingVisioToken, bookingUserId]);
+  }, [authStatus, isAdminView, lang, router]);
 
-  const handleTriggerIntro = () => updateSessionState(bookingId, { triggerIntro: true });
-  const handleStopAudio = () => { /* Logic to stop playlist via session state */ };
-  const handleMuteAll = () => {
-      console.log("Mute All clicked - implementation pending via Daily.co SDK.");
-  };
+  const handleTriggerIntro = () => updateSessionState(bookingId, { triggerIntro: true, activePlaylistUrl: '' });
+  const handlePlaylistSelect = (url: string) => updateSessionState(bookingId, { activePlaylistUrl: url, triggerIntro: false });
 
   const renderContent = () => {
     if (authStatus === 'pending' || !dict) {
@@ -245,6 +231,7 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
         {!isAdminView && <AudioEngine 
             introUrl={`https://firebasestorage.googleapis.com/v0/b/corps-et-ames-adc60.appspot.com/o/intros%2Fintro_${lang}.mp3?alt=media`}
             triggerIntro={sessionState?.triggerIntro}
+            playlistUrl={sessionState?.activePlaylistUrl}
         />}
 
         <div className="lg:col-span-2">
@@ -267,15 +254,18 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
                 <Card>
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2 text-xl font-headline">
-                            <Mic className="h-5 w-5"/> Admin Controls
+                            <Music className="h-5 w-5"/> Audio Controls
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <Button onClick={handleTriggerIntro} variant="outline" className="w-full"><Play className="mr-2"/> Play Intro</Button>
-                        <Button onClick={handleMuteAll} variant="outline" className="w-full"><VolumeX className="mr-2"/> Mute All</Button>
-                        <FileLister title="Intros" path="/intros" icon={Play} noFilesFoundText="No intro files found." />
-                        <FileLister title="Playlists" path="/playlists" icon={Music} noFilesFoundText="No playlists found." />
-                        {/* TODO: Clicking a playlist file should call updateSessionState with the file URL */}
+                        <FileLister 
+                            title="Playlists" 
+                            path="/playlists" 
+                            icon={Music} 
+                            noFilesFoundText="No playlists found."
+                            onFileClick={handlePlaylistSelect}
+                        />
                     </CardContent>
                 </Card>
             )}
