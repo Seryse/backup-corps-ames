@@ -62,15 +62,7 @@
         "description": "Descubre nuestros productos",
         "addToCart": "Añadir al carrito",
         "productAdded": "Producto Añadido",
-        "addedToCart": "ha sido añadido a tu cesta.",
-        "products": {
-            "meditationStoneName": "Piedras de Meditación",
-            "meditationStoneDescription": "Set de 7 piedras para equilibrar los chakras.",
-            "essentialOilName": "Aceite Esencial",
-            "essentialOilDescription": "Botella de 10ml de aceite esencial de lavanda pura.",
-            "yogaMatName": "Esterilla de Yoga Ecológica",
-            "yogaMatDescription": "Esterilla de yoga de corcho natural y caucho."
-        }
+        "addedToCart": "ha sido añadido a tu cesta."
     },
     "agenda": {
         "title": "Agenda",

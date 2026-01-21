@@ -19,7 +19,7 @@ export function ProductCard({ product, dict, lang }: { product: Product, dict: D
         addToCart(product);
         toast({
             title: dict.productAdded,
-            description: `${dict.products[product.nameKey]} ${dict.addedToCart}`,
+            description: `${product.name} ${dict.addedToCart}`,
         });
     }
     
@@ -39,9 +39,9 @@ export function ProductCard({ product, dict, lang }: { product: Product, dict: D
                 )}
             </CardHeader>
             <CardContent className="flex-1 p-4">
-                <h3 className="text-xl font-headline font-semibold tracking-tight">{dict.products[product.nameKey]}</h3>
+                <h3 className="text-xl font-headline font-semibold tracking-tight">{product.name}</h3>
                 <p className="mt-2 text-sm text-muted-foreground">
-                    {dict.products[product.descriptionKey]}
+                    {product.description}
                 </p>
             </CardContent>
             <CardFooter className="p-4 flex justify-between items-center bg-muted/50">

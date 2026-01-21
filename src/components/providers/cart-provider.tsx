@@ -1,14 +1,12 @@
 'use client';
 
 import { createContext, useContext, useState, ReactNode, useMemo } from 'react';
-import { useToast } from "@/hooks/use-toast";
-import { Dictionary } from '@/lib/dictionaries';
 
 // Define the shape of a product in the cart
 export type Product = {
   id: string;
-  nameKey: keyof Dictionary['shop']['products'];
-  descriptionKey: keyof Dictionary['shop']['products'];
+  name: string;
+  description: string;
   price: number;
   currency: string;
   imageId: string;
@@ -29,12 +27,13 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
-  const { toast } = useToast();
 
   const addToCart = (product: Product) => {
     setItems(prevItems => {
       const existingItem = prevItems.find(item => item.id === product.id);
       if (existingItem) {
+        // For formations, we probably don't want to increase quantity, but let's keep it for now
+        // We can adjust this logic later.
         return prevItems.map(item =>
           item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
         );

@@ -62,15 +62,7 @@
         "description": "Discover our products",
         "addToCart": "Add to Cart",
         "productAdded": "Product Added",
-        "addedToCart": "has been added to your cart.",
-        "products": {
-            "meditationStoneName": "Meditation Stones",
-            "meditationStoneDescription": "Set of 7 chakra balancing stones.",
-            "essentialOilName": "Essential Oil",
-            "essentialOilDescription": "10ml bottle of pure lavender essential oil.",
-            "yogaMatName": "Eco-friendly Yoga Mat",
-            "yogaMatDescription": "Natural cork and rubber yoga mat."
-        }
+        "addedToCart": "has been added to your cart."
     },
     "agenda": {
         "title": "Agenda",

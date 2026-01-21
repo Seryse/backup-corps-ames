@@ -5,9 +5,9 @@ import type { Product } from '@/components/providers/cart-provider';
 import { ProductCard } from '@/components/shop/product-card';
 
 const products: Product[] = [
-    { id: '1', nameKey: 'meditationStoneName', descriptionKey: 'meditationStoneDescription', price: 25, currency: 'EUR', imageId: 'product-meditation-stone'},
-    { id: '2', nameKey: 'essentialOilName', descriptionKey: 'essentialOilDescription', price: 15, currency: 'EUR', imageId: 'product-essential-oil' },
-    { id: '3', nameKey: 'yogaMatName', descriptionKey: 'yogaMatDescription', price: 40, currency: 'EUR', imageId: 'product-yoga-mat' },
+    { id: 'formation-reiki-1', name: 'Reiki Level 1', description: 'Unlock your potential as a healer. This course covers the basics of Reiki energy healing.', price: 150, currency: 'EUR', imageId: 'reiki-formation'},
+    { id: 'formation-divination', name: 'Divination Mastery', description: 'Learn the ancient art of divination using various tools like tarot, runes, and pendulums.', price: 200, currency: 'EUR', imageId: 'divination-mastery' },
+    { id: 'formation-runes', name: 'Rune Crafting & Reading', description: 'Discover how to create your own set of runes and interpret their meanings.', price: 120, currency: 'EUR', imageId: 'rune-crafting' },
 ];
 
 export default async function ShopPage({ params: { lang } }: { params: { lang: Locale } }) {

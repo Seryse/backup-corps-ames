@@ -24,6 +24,18 @@
         "tokenProductId": {
           "type": "string",
           "description": "The identifier in the product catalog or store of the token for accessing the formation."
+        },
+        "price": {
+          "type": "number",
+          "description": "Price of the formation."
+        },
+        "currency": {
+          "type": "string",
+          "description": "Currency for the price (e.g., EUR, USD)."
+        },
+        "imageId": {
+          "type": "string",
+          "description": "ID for the placeholder image of the formation."
         }
       },
       "required": [
@@ -31,7 +43,10 @@
         "name",
         "description",
         "language",
-        "tokenProductId"
+        "tokenProductId",
+        "price",
+        "currency",
+        "imageId"
       ]
     },
     "UserFormation": {
