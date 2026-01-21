@@ -154,6 +154,7 @@
         "access_token": "Votre Jeton d'Accès",
         "token_info": "Utilisez ce jeton pour accéder au hub dédié à cette formation.",
         "enrolled_on": "Inscrit le",
-        "token_copied": "Jeton copié dans le presse-papiers !"
+        "token_copied": "Jeton copié dans le presse-papiers !",
+        "access_hub": "Accéder au Hub"
     }
 }

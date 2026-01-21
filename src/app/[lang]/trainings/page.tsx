@@ -7,19 +7,12 @@ import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebas
 import { collection, query, orderBy, Query } from 'firebase/firestore';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Loader2, GraduationCap, Copy, Info } from 'lucide-react';
+import { Loader2, GraduationCap, Tv } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { useToast } from '@/hooks/use-toast';
 import type { Formation } from '@/components/providers/cart-provider';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 type UserFormation = {
     id: string;
@@ -33,7 +26,6 @@ export default function TrainingsPage({ params: { lang } }: { params: { lang: Lo
   const [dict, setDict] = useState<Dictionary | null>(null);
   const { user, isUserLoading } = useUser();
   const firestore = useFirestore();
-  const { toast } = useToast();
 
   const userFormationsQuery = useMemoFirebase(() => {
     if (!firestore || !user) return null;
@@ -51,13 +43,6 @@ export default function TrainingsPage({ params: { lang } }: { params: { lang: Lo
   useEffect(() => {
     getDictionary(lang).then(d => setDict(d));
   }, [lang]);
-
-  const handleCopy = (text: string) => {
-    navigator.clipboard.writeText(text);
-    toast({
-      title: dict?.trainings.token_copied,
-    });
-  };
 
   const isLoading = isUserLoading || isLoadingUserFormations || isLoadingAllFormations || !dict;
 
@@ -112,26 +97,13 @@ export default function TrainingsPage({ params: { lang } }: { params: { lang: Lo
                             <CardContent className="flex-grow">
                                 <p className="text-sm text-muted-foreground">{details.description[lang] || details.description.en}</p>
                             </CardContent>
-                            <CardFooter className="flex flex-col items-start gap-3 bg-muted/50 p-4">
-                                <div className="flex justify-between items-center w-full">
-                                    <h4 className="font-semibold text-sm">{dict.trainings.access_token}</h4>
-                                    <TooltipProvider>
-                                        <Tooltip>
-                                            <TooltipTrigger>
-                                                <Info className="h-4 w-4 text-muted-foreground cursor-help" />
-                                            </TooltipTrigger>
-                                            <TooltipContent>
-                                                <p>{dict.trainings.token_info}</p>
-                                            </TooltipContent>
-                                        </Tooltip>
-                                    </TooltipProvider>
-                                </div>
-                                <div className="w-full flex items-center gap-2 bg-background p-2 rounded-md border">
-                                    <p className="font-mono text-xs truncate flex-1">{mf.accessToken}</p>
-                                    <Button size="icon" variant="ghost" onClick={() => handleCopy(mf.accessToken)}>
-                                        <Copy className="h-4 w-4" />
-                                    </Button>
-                                </div>
+                             <CardFooter className="bg-muted/50 p-4">
+                                <Button asChild className="w-full">
+                                    <Link href={`/${lang}/session`}>
+                                        <Tv className="mr-2 h-4 w-4" />
+                                        {dict.trainings.access_hub}
+                                    </Link>
+                                </Button>
                             </CardFooter>
                         </Card>
                     )

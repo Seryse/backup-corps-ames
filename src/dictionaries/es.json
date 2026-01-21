@@ -154,6 +154,7 @@
         "access_token": "Tu Token de Acceso",
         "token_info": "Usa este token para acceder al hub dedicado para esta formación.",
         "enrolled_on": "Inscrito el",
-        "token_copied": "¡Token copiado al portapapeles!"
+        "token_copied": "¡Token copiado al portapapeles!",
+        "access_hub": "Acceder al Hub"
     }
 }

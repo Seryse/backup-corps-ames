@@ -154,6 +154,7 @@
         "access_token": "Your Access Token",
         "token_info": "Use this token to access the dedicated hub for this training.",
         "enrolled_on": "Enrolled on",
-        "token_copied": "Token copied to clipboard!"
+        "token_copied": "Token copied to clipboard!",
+        "access_hub": "Access Hub"
     }
 }
