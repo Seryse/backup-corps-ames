@@ -63,7 +63,6 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
           price: 0,
           currency: 'eur',
           tokenProductId: '',
-          imageUrl: '',
         },
   });
 
@@ -79,8 +78,7 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
     }
     setIsTranslating(fieldName);
     try {
-        const { translateText } = await import('@/ai/flows/translate-text');
-        const result = await translateText({ text: frenchText });
+        const result = await translateTextAction({ text: frenchText });
         setValue(`${fieldName}.en`, result.en);
         setValue(`${fieldName}.es`, result.es);
         toast({ title: dictionary.success.translationSuccess });
@@ -103,7 +101,7 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
       price: Math.round(data.price * 100),
       currency: data.currency,
       tokenProductId: data.tokenProductId,
-      imageUrl: formationToEdit?.imageUrl || 'https://placehold.co/600x400/E6E6FA/333333?text=Image',
+      imageUrl: data.imageUrl || 'https://placehold.co/600x400/E6E6FA/333333?text=Image',
     };
 
     const firestorePromise = formationToEdit?.id

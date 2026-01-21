@@ -56,7 +56,6 @@ export default function NewsForm({ articleToEdit, onClose, dictionary }: NewsFor
       : {
           title: { en: '', fr: '', es: '' },
           content: { en: '', fr: '', es: '' },
-          imageUrl: '',
         },
   });
 
@@ -72,8 +71,7 @@ export default function NewsForm({ articleToEdit, onClose, dictionary }: NewsFor
     }
     setIsTranslating(fieldName);
     try {
-        const { translateText } = await import('@/ai/flows/translate-text');
-        const result = await translateText({ text: frenchText });
+        const result = await translateTextAction({ text: frenchText });
         setValue(`${fieldName}.en`, result.en);
         setValue(`${fieldName}.es`, result.es);
         toast({ title: dictionary.success.translationSuccess });
@@ -92,7 +90,7 @@ export default function NewsForm({ articleToEdit, onClose, dictionary }: NewsFor
     const articleData = {
         title: data.title,
         content: data.content,
-        imageUrl: articleToEdit?.imageUrl || 'https://placehold.co/600x400/E6E6FA/333333?text=Image',
+        imageUrl: data.imageUrl || 'https://placehold.co/600x400/E6E6FA/333333?text=Image',
         createdAt: articleToEdit?.createdAt || serverTimestamp(),
     };
 
