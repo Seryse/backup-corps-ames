@@ -185,6 +185,11 @@
         "tokenProductId": {
           "type": "string",
           "description": "Identifier for the access token product for this session type."
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL of the session type's image, hosted on Firebase Storage.",
+          "format": "uri"
         }
       },
       "required": ["name", "description", "sessionModel", "maxParticipants", "price", "currency", "tokenProductId"]

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, doc, deleteDoc, Query } from 'firebase/firestore';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -18,7 +19,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { CalendarClock, Loader2, PlusCircle, Trash2, Edit } from 'lucide-react';
+import { CalendarClock, Loader2, PlusCircle, Trash2, Edit, ImageOff } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
@@ -39,6 +40,7 @@ export type SessionType = {
     price: number;
     currency: string;
     tokenProductId: string;
+    imageUrl?: string;
 };
 
 interface SessionTypeManagerProps {
@@ -120,7 +122,19 @@ export default function SessionTypeManager({ dictionary, lang }: SessionTypeMana
             return (
               <Card key={st.id} className="flex flex-col">
                 <CardHeader>
-                  <CardTitle>{localizedName}</CardTitle>
+                  <div className="relative aspect-video bg-muted rounded-t-lg flex items-center justify-center">
+                    {st.imageUrl ? (
+                      <Image
+                        src={st.imageUrl}
+                        alt={localizedName}
+                        fill
+                        className="object-cover rounded-t-lg"
+                      />
+                    ) : (
+                      <ImageOff className="h-12 w-12 text-muted-foreground" />
+                    )}
+                  </div>
+                  <CardTitle className="pt-4">{localizedName}</CardTitle>
                   <CardDescription>
                      <Badge variant="secondary">{getModelLabel(st.sessionModel)}</Badge>
                   </CardDescription>

@@ -53,7 +53,11 @@
         "description": "Découvrez les dernières actualités et mises à jour de notre communauté.",
         "latestNews": "Dernières Actualités",
         "noNews": "Aucune actualité pour le moment",
-        "noNewsDescription": "Revenez plus tard pour les mises à jour."
+        "noNewsDescription": "Revenez plus tard pour les mises à jour.",
+        "ourFormations": "Nos Formations",
+        "discoverFormations": "Les découvrir",
+        "ourSessions": "Nos Séances",
+        "bookASession": "Réserver une séance"
     },
     "session": {
         "title": "Session en Direct",

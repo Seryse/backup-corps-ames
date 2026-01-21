@@ -7,8 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { useFirestore } from '@/firebase';
+import { useFirestore, useStorage } from '@/firebase';
 import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import type { SessionType } from './session-type-manager';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Languages } from 'lucide-react';
@@ -36,6 +37,7 @@ const sessionTypeSchema = z.object({
   tokenProductId: z.string().min(1, 'Token Product ID is required'),
   sessionModel: z.enum(['private', 'small_group', 'large_group']),
   maxParticipants: z.coerce.number().int().min(1, 'Must have at least 1 participant'),
+  imageFile: z.any().optional(),
 }).refine(data => {
     if (data.sessionModel === 'private') {
         return data.maxParticipants === 1;
@@ -50,6 +52,7 @@ type SessionTypeFormData = z.infer<typeof sessionTypeSchema>;
 
 export default function SessionTypeForm({ sessionTypeToEdit, onClose, dictionary }: SessionTypeFormProps) {
   const firestore = useFirestore();
+  const storage = useStorage();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [isTranslating, setIsTranslating] = useState<null | 'name' | 'description'>(null);
@@ -107,28 +110,55 @@ export default function SessionTypeForm({ sessionTypeToEdit, onClose, dictionary
   };
   
   const onSubmit = (data: SessionTypeFormData) => {
-    if (!firestore) return;
+    if (!firestore || !storage) return;
     setIsLoading(true);
 
-    const sessionTypeData = {
-      ...data,
-      price: Math.round(data.price * 100), // Convert to cents
+    const processAndSubmit = async () => {
+        let imageUrl = sessionTypeToEdit?.imageUrl;
+        const file = data.imageFile?.[0];
+
+        if (file) {
+            const storageRef = ref(storage, `sessionTypes/${Date.now()}_${file.name}`);
+            const uploadTask = await uploadBytes(storageRef, file);
+            imageUrl = await getDownloadURL(uploadTask.ref);
+        }
+
+        const sessionTypeData = {
+          name: data.name,
+          description: data.description,
+          price: Math.round(data.price * 100),
+          currency: data.currency,
+          tokenProductId: data.tokenProductId,
+          sessionModel: data.sessionModel,
+          maxParticipants: data.maxParticipants,
+          imageUrl: imageUrl || 'https://placehold.co/600x400/E6E6FA/333333?text=Image',
+        };
+
+        if (sessionTypeToEdit?.id) {
+            await setDoc(doc(firestore, 'sessionTypes', sessionTypeToEdit.id), sessionTypeData);
+        } else {
+            await addDoc(collection(firestore, 'sessionTypes'), sessionTypeData);
+        }
     };
 
-    const firestorePromise = sessionTypeToEdit?.id
-        ? setDoc(doc(firestore, 'sessionTypes', sessionTypeToEdit.id), sessionTypeData)
-        : addDoc(collection(firestore, 'sessionTypes'), sessionTypeData);
-
-    firestorePromise.then(() => {
+    processAndSubmit().then(() => {
         toast({ title: sessionTypeToEdit ? dictionary.success.sessionTypeUpdated : dictionary.success.sessionTypeAdded });
         onClose();
     }).catch(e => {
         console.error("Form submission error:", e);
-        toast({
-            variant: "destructive",
-            title: dictionary.error.generic,
-            description: e.message || "An unexpected error occurred.",
-        });
+        if (e.code === 'storage/unauthorized') {
+             toast({
+                variant: "destructive",
+                title: dictionary.error.storageUnauthorizedTitle,
+                description: dictionary.error.storageUnauthorized,
+            });
+        } else {
+            toast({
+                variant: "destructive",
+                title: dictionary.error.generic,
+                description: e.message || "An unexpected error occurred.",
+            });
+        }
     }).finally(() => {
         setIsLoading(false);
     });
@@ -229,6 +259,17 @@ export default function SessionTypeForm({ sessionTypeToEdit, onClose, dictionary
             <Input id="maxParticipants" type="number" {...register('maxParticipants')} readOnly={sessionModel === 'private'} />
             {errors.maxParticipants && <p className="text-sm text-destructive">{errors.maxParticipants.message}</p>}
         </div>
+      </div>
+
+      <div>
+          <Label htmlFor="imageFile">{dictionary.form.image}</Label>
+          <Input id="imageFile" type="file" accept="image/*" {...register('imageFile')} />
+          {sessionTypeToEdit?.imageUrl && (
+            <div className="mt-4">
+                <p className="text-sm font-medium">Image Actuelle:</p>
+                <img src={sessionTypeToEdit.imageUrl} alt="Current session type" className="mt-2 h-20 w-20 object-cover rounded-md" />
+            </div>
+          )}
       </div>
 
       <div className="flex justify-end gap-2">

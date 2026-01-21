@@ -53,7 +53,11 @@
         "description": "Discover the latest news and updates from our community.",
         "latestNews": "Latest News",
         "noNews": "No news yet",
-        "noNewsDescription": "Check back later for updates."
+        "noNewsDescription": "Check back later for updates.",
+        "ourFormations": "Our Formations",
+        "discoverFormations": "Discover them",
+        "ourSessions": "Our Sessions",
+        "bookASession": "Book a session"
     },
     "session": {
         "title": "Live Session",

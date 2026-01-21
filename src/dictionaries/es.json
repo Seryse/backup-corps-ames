@@ -53,7 +53,11 @@
         "description": "Descubre las últimas noticias y actualizaciones de nuestra comunidad.",
         "latestNews": "Últimas Noticias",
         "noNews": "Aún no hay noticias",
-        "noNewsDescription": "Vuelve más tarde para ver las actualizaciones."
+        "noNewsDescription": "Vuelve más tarde para ver las actualizaciones.",
+        "ourFormations": "Nuestras Formaciones",
+        "discoverFormations": "Descúbrelas",
+        "ourSessions": "Nuestras Sesiones",
+        "bookASession": "Reservar una sesión"
     },
     "session": {
         "title": "Sesión en Vivo",
