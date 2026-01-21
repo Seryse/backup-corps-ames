@@ -127,25 +127,20 @@ export default function LiveSessionPage({ params: { lang, bookingId } }: { param
                 height: '100%',
                 border: '0',
             },
+            // IMPORTANT: Disable default audio handling to manage it via AudioEngine.
+            audioSource: false, 
+            subscribeToTracksAutomatically: true,
         });
         
         dailyRef.current = call;
 
         // --- Event Listeners ---
-        call.on('participant-joined', (event) => {
-            console.log('Participant joined:', event);
-            if (!event.participant.local) { // It's a remote participant (the admin)
-                if (event.participant.audioTrack) {
-                    const stream = new MediaStream([event.participant.audioTrack]);
-                    setRemoteAudioStream(stream);
-                }
-            }
-        });
-        
+        // Capture the admin's audio track when it starts. The admin is the meeting 'owner'.
         call.on('track-started', (event) => {
-            if (event.participant && !event.participant.local && event.track.kind === 'audio') {
-                 const stream = new MediaStream([event.track]);
-                 setRemoteAudioStream(stream);
+            if (event.track.kind === 'audio' && event.participant.owner) {
+                console.log("Admin audio track started, creating stream for AudioEngine.");
+                const stream = new MediaStream([event.track]);
+                setRemoteAudioStream(stream); // This stream is passed to the AudioEngine component
             }
         });
 
