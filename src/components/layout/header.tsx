@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { UserNav } from '@/components/auth/user-nav';
 import LanguageSwitcher from './language-switcher';
 import { Dictionary } from '@/lib/dictionaries';
@@ -7,29 +8,6 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Menu, ShoppingBag, CalendarDays, GraduationCap, Home, MessageSquare, Shield, Users } from 'lucide-react';
 import { CartNav } from './cart-nav';
-
-const LotusIcon = (props: React.SVGProps<SVGSVGElement>) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <path d="M8.5 18c4.25-1.5 5.5-5.5 5.5-5.5s1.25 4 5.5 5.5" />
-      <path d="M12 12.5a3.5 3.5 0 1 0-7 0" />
-      <path d="M12 12.5a3.5 3.5 0 1 1 7 0" />
-      <path d="M12 18v-5.5" />
-      <path d="M8 8.83C8.42 7.06 9.56 6 12 6s3.58 1.06 4 2.83" />
-      <path d="M12 2v4" />
-    </svg>
-);
-
 
 export default function Header({ dictionary, lang }: { dictionary: Dictionary['header'], lang: Locale }) {
   const navLinks = [
@@ -46,7 +24,7 @@ export default function Header({ dictionary, lang }: { dictionary: Dictionary['h
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 max-w-screen-2xl items-center">
         <Link href={`/${lang}`} className="mr-6 flex items-center space-x-2">
-            <LotusIcon className="h-6 w-6 text-accent-foreground" />
+            <Image src="/logo.svg" alt="Corps et Âmes logo" width={24} height={24} className="h-6 w-6" />
             <span className="font-bold font-headline text-lg">Corps et Âmes</span>
         </Link>
         
