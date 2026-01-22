@@ -241,7 +241,7 @@
     },
     "dashboard_page": {
         "title": "Mi Panel",
-        "subtitle": "Bienvenido de nuevo, {email}",
+        "subtitle": "Hola, {name}",
         "account": {
             "title": "Mi Cuenta",
             "description": "Gestiona tu perfil, contraseña y configuración de idioma."
@@ -269,9 +269,12 @@
         "profile": {
             "title": "Información del Perfil",
             "description": "Mantén tus datos personales actualizados.",
-            "name_label": "Nombre completo",
+            "name_label": "Nombre / Apodo",
             "email_label": "Dirección de correo electrónico (no se puede cambiar)",
-            "save_button": "Guardar Cambios"
+            "save_button": "Guardar Cambios",
+            "picture_title": "Foto de perfil",
+            "picture_description": "Cambia tu avatar.",
+            "change_picture_button": "Cambiar foto"
         },
         "password": {
             "title": "Cambiar Contraseña",
@@ -284,9 +287,14 @@
             "title": "Idioma",
             "description": "Elige tu idioma preferido para la aplicación."
         },
+        "profile_crop": {
+            "title": "Editar foto de perfil",
+            "save_button": "Guardar"
+        },
         "success": {
             "profile_updated": "¡Perfil actualizado con éxito!",
-            "password_updated": "¡Contraseña actualizada con éxito!"
+            "password_updated": "¡Contraseña actualizada con éxito!",
+            "avatar_updated": "¡Foto de perfil actualizada con éxito!"
         },
         "errors": {
             "update_failed": "Error en la Actualización",

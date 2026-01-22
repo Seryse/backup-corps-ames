@@ -241,7 +241,7 @@
     },
     "dashboard_page": {
         "title": "Mon Tableau de Bord",
-        "subtitle": "Bon retour, {email}",
+        "subtitle": "Bonjour, {name}",
         "account": {
             "title": "Mon Compte",
             "description": "Gérez votre profil, mot de passe et préférences de langue."
@@ -269,9 +269,12 @@
         "profile": {
             "title": "Informations du Profil",
             "description": "Maintenez vos coordonnées à jour.",
-            "name_label": "Nom complet",
+            "name_label": "Nom / Pseudo",
             "email_label": "Adresse e-mail (ne peut être modifiée)",
-            "save_button": "Enregistrer les modifications"
+            "save_button": "Enregistrer les modifications",
+            "picture_title": "Photo de profil",
+            "picture_description": "Changez votre avatar.",
+            "change_picture_button": "Changer la photo"
         },
         "password": {
             "title": "Changer le mot de passe",
@@ -284,9 +287,14 @@
             "title": "Langue",
             "description": "Choisissez votre langue préférée pour l'application."
         },
+        "profile_crop": {
+            "title": "Modifier la photo de profil",
+            "save_button": "Enregistrer"
+        },
         "success": {
             "profile_updated": "Profil mis à jour avec succès !",
-            "password_updated": "Mot de passe mis à jour avec succès !"
+            "password_updated": "Mot de passe mis à jour avec succès !",
+            "avatar_updated": "Photo de profil mise à jour avec succès !"
         },
         "errors": {
             "update_failed": "Échec de la mise à jour",

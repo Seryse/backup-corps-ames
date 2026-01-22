@@ -1,29 +1,45 @@
 'use client';
 
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect, use, useRef, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { getDictionary, Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
-import { useUser, useAuth } from '@/firebase';
+import { useUser, useAuth, useStorage } from '@/firebase';
 import { updateProfile, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth';
+import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardDescription } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Slider } from '@/components/ui/slider';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, User, KeyRound, Languages } from 'lucide-react';
+import { Loader2, User, KeyRound, Languages, Camera } from 'lucide-react';
 import LanguageSwitcher from '@/components/layout/language-switcher';
+import Cropper, { Area } from 'react-easy-crop';
+import { getCroppedImg } from '@/lib/crop-image';
 
 export default function AccountPage({ params }: { params: Promise<{ lang: Locale }> }) {
   const { lang } = use(params);
   const [dict, setDict] = useState<Dictionary | null>(null);
   const { user, isUserLoading } = useUser();
   const auth = useAuth();
+  const storage = useStorage();
   const { toast } = useToast();
+  
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
   const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
+
+  // State for image cropping
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     getDictionary(lang).then(setDict);
@@ -95,6 +111,43 @@ export default function AccountPage({ params }: { params: Promise<{ lang: Locale
     }
   };
 
+  // --- Image Crop Logic ---
+  const onCropComplete = useCallback((_croppedArea: Area, croppedAreaPixels: Area) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  }, []);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.addEventListener('load', () => setImageSrc(reader.result?.toString() || ''));
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const saveCroppedImage = async () => {
+    if (!imageSrc || !croppedAreaPixels || !user) return;
+    setIsUploading(true);
+    try {
+      const croppedImageBlob = await getCroppedImg(imageSrc, croppedAreaPixels);
+      if (!croppedImageBlob) throw new Error('Could not crop image.');
+
+      const avatarRef = storageRef(storage, `avatars/${user.uid}`);
+      await uploadBytes(avatarRef, croppedImageBlob);
+      const downloadURL = await getDownloadURL(avatarRef);
+      
+      await updateProfile(user, { photoURL: downloadURL });
+
+      toast({ title: accountDict.success.avatar_updated });
+      setImageSrc(null); // Close modal
+    } catch (e: any) {
+      console.error(e);
+      toast({ variant: 'destructive', title: accountDict.errors.update_failed, description: e.message });
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
 
   return (
     <div className="container mx-auto p-4 sm:p-8 max-w-4xl">
@@ -128,6 +181,34 @@ export default function AccountPage({ params }: { params: Promise<{ lang: Locale
               </Button>
             </CardFooter>
           </form>
+        </Card>
+
+        {/* Avatar Card */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2"><Camera className="h-5 w-5"/>{accountDict.profile.picture_title}</CardTitle>
+            <CardDescription>{accountDict.profile.picture_description}</CardDescription>
+          </CardHeader>
+          <CardContent className="flex items-center gap-6">
+            <Avatar className="h-24 w-24">
+              <AvatarImage src={user.photoURL || ''} alt={user.displayName || 'User avatar'} />
+              <AvatarFallback className="text-3xl">
+                {user.displayName?.[0] || user.email?.[0]}
+              </AvatarFallback>
+            </Avatar>
+            <div>
+              <Button onClick={() => fileInputRef.current?.click()}>
+                {accountDict.profile.change_picture_button}
+              </Button>
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                className="hidden"
+                accept="image/png, image/jpeg, image/webp"
+              />
+            </div>
+          </CardContent>
         </Card>
 
         {/* Change Password Card */}
@@ -171,6 +252,48 @@ export default function AccountPage({ params }: { params: Promise<{ lang: Locale
             </CardContent>
         </Card>
       </div>
+      
+      {/* --- Image Cropping Dialog --- */}
+      <Dialog open={!!imageSrc} onOpenChange={(open) => !open && setImageSrc(null)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{accountDict.profile_crop.title}</DialogTitle>
+          </DialogHeader>
+          <div className="relative h-80 bg-muted mt-4">
+            {imageSrc && (
+              <Cropper
+                image={imageSrc}
+                crop={crop}
+                zoom={zoom}
+                aspect={1}
+                onCropChange={setCrop}
+                onZoomChange={setZoom}
+                onCropComplete={onCropComplete}
+                cropShape="round"
+              />
+            )}
+          </div>
+          <div className="space-y-2 mt-4">
+            <Label>Zoom</Label>
+            <Slider
+              value={[zoom]}
+              min={1}
+              max={3}
+              step={0.1}
+              onValueChange={(val) => setZoom(val[0])}
+            />
+          </div>
+          <DialogFooter className="mt-4">
+            <Button variant="outline" onClick={() => setImageSrc(null)} disabled={isUploading}>
+              {dict.admin.form.cancel}
+            </Button>
+            <Button onClick={saveCroppedImage} disabled={isUploading}>
+              {isUploading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {accountDict.profile_crop.save_button}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

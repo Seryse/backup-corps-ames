@@ -241,7 +241,7 @@
     },
     "dashboard_page": {
         "title": "My Dashboard",
-        "subtitle": "Welcome back, {email}",
+        "subtitle": "Hello, {name}",
         "account": {
             "title": "My Account",
             "description": "Manage your profile, password, and language settings."
@@ -269,9 +269,12 @@
         "profile": {
             "title": "Profile Information",
             "description": "Keep your personal details up to date.",
-            "name_label": "Full Name",
+            "name_label": "Name / Nickname",
             "email_label": "Email Address (cannot be changed)",
-            "save_button": "Save Changes"
+            "save_button": "Save Changes",
+            "picture_title": "Profile Picture",
+            "picture_description": "Change your avatar.",
+            "change_picture_button": "Change Picture"
         },
         "password": {
             "title": "Change Password",
@@ -284,9 +287,14 @@
             "title": "Language",
             "description": "Choose your preferred language for the application."
         },
+        "profile_crop": {
+            "title": "Edit Profile Picture",
+            "save_button": "Save"
+        },
         "success": {
             "profile_updated": "Profile updated successfully!",
-            "password_updated": "Password updated successfully!"
+            "password_updated": "Password updated successfully!",
+            "avatar_updated": "Profile picture updated successfully!"
         },
         "errors": {
             "update_failed": "Update Failed",
