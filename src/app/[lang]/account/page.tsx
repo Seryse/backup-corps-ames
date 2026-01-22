@@ -20,7 +20,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, User, KeyRound, Languages, Camera } from 'lucide-react';
 import LanguageSwitcher from '@/components/layout/language-switcher';
 import Cropper, { Area } from 'react-easy-crop';
-import { getCroppedImg } from '@/lib/crop-image';
+import getCroppedImg from '@/lib/crop-image';
 
 export default function AccountPage({ params }: { params: Promise<{ lang: Locale }> }) {
   const { lang } = use(params);
