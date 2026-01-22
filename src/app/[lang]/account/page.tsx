@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -16,8 +16,8 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, User, KeyRound, Languages } from 'lucide-react';
 import LanguageSwitcher from '@/components/layout/language-switcher';
 
-export default function AccountPage({ params }: { params: { lang: Locale } }) {
-  const { lang } = params;
+export default function AccountPage({ params }: { params: Promise<{ lang: Locale }> }) {
+  const { lang } = use(params);
   const [dict, setDict] = useState<Dictionary | null>(null);
   const { user, isUserLoading } = useUser();
   const auth = useAuth();

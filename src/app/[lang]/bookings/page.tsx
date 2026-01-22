@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, use } from 'react';
 import { getDictionary, Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
 import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
@@ -36,8 +36,8 @@ type MergedBooking = Booking & {
     timeSlot: TimeSlot;
 };
 
-export default function BookingsPage({ params }: { params: { lang: Locale } }) {
-  const { lang } = params;
+export default function BookingsPage({ params }: { params: Promise<{ lang: Locale }> }) {
+  const { lang } = use(params);
   const [dict, setDict] = useState<Dictionary | null>(null);
   const { user, isUserLoading } = useUser();
   const firestore = useFirestore();

@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import Link from 'next/link';
 import { getDictionary, Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
@@ -9,8 +9,8 @@ import { useUser } from '@/firebase';
 import { Loader2 } from 'lucide-react';
 import { adminEmails } from '@/lib/config';
 
-export default function DashboardPage({ params }: { params: { lang: Locale } }) {
-  const { lang } = params;
+export default function DashboardPage({ params }: { params: Promise<{ lang: Locale }> }) {
+  const { lang } = use(params);
   const [dict, setDict] = useState<Dictionary | null>(null);
   const { user, isUserLoading } = useUser();
 
