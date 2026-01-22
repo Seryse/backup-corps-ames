@@ -3,6 +3,7 @@
         "home": "Home",
         "dashboard": "Dashboard",
         "session": "Live Session",
+        "bookings": "My Bookings",
         "admin": "Admin",
         "login": "Login",
         "logout": "Logout",
@@ -237,5 +238,68 @@
         "enrolled_on": "Enrolled on",
         "token_copied": "Token copied to clipboard!",
         "access_hub": "Access Hub"
+    },
+    "dashboard_page": {
+        "title": "My Dashboard",
+        "subtitle": "Welcome back, {email}",
+        "account": {
+            "title": "My Account",
+            "description": "Manage your profile, password, and language settings."
+        },
+        "trainings": {
+            "title": "My Trainings",
+            "description": "Access all your purchased training courses."
+        },
+        "bookings": {
+            "title": "My Appointments",
+            "description": "View your upcoming and past sessions."
+        },
+        "hub": {
+            "title": "Community Hub",
+            "description": "Join discussion forums for your trainings and sessions."
+        }
+    },
+    "account_page": {
+        "title": "My Account",
+        "subtitle": "Update your personal information and security settings.",
+        "profile": {
+            "title": "Profile Information",
+            "description": "Keep your personal details up to date.",
+            "name_label": "Full Name",
+            "email_label": "Email Address (cannot be changed)",
+            "save_button": "Save Changes"
+        },
+        "password": {
+            "title": "Change Password",
+            "description": "For security, you will need to enter your current password.",
+            "current_password_label": "Current Password",
+            "new_password_label": "New Password",
+            "save_button": "Update Password"
+        },
+        "language": {
+            "title": "Language",
+            "description": "Choose your preferred language for the application."
+        },
+        "success": {
+            "profile_updated": "Profile updated successfully!",
+            "password_updated": "Password updated successfully!"
+        },
+        "errors": {
+            "update_failed": "Update Failed",
+            "name_required": "Name is required.",
+            "password_min_length": "Password must be at least 6 characters.",
+            "password_must_be_different": "New password must be different from the current one.",
+            "wrong_current_password": "The current password you entered is incorrect."
+        }
+    },
+    "bookings_page": {
+        "title": "My Appointments",
+        "subtitle": "Here is the list of all your booked sessions.",
+        "upcoming_title": "Upcoming Sessions",
+        "past_title": "Past Sessions",
+        "no_upcoming": "You have no upcoming appointments.",
+        "no_past": "You have no past appointments.",
+        "book_now": "Book a new session",
+        "join_button": "Join Session"
     }
 }

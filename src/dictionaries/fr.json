@@ -3,6 +3,7 @@
         "home": "Accueil",
         "dashboard": "Tableau de bord",
         "session": "Session Live",
+        "bookings": "Mes RDV",
         "admin": "Admin",
         "login": "Connexion",
         "logout": "Déconnexion",
@@ -237,5 +238,68 @@
         "enrolled_on": "Inscrit le",
         "token_copied": "Jeton copié dans le presse-papiers !",
         "access_hub": "Accéder au Hub"
+    },
+    "dashboard_page": {
+        "title": "Mon Tableau de Bord",
+        "subtitle": "Bon retour, {email}",
+        "account": {
+            "title": "Mon Compte",
+            "description": "Gérez votre profil, mot de passe et préférences de langue."
+        },
+        "trainings": {
+            "title": "Mes Formations",
+            "description": "Accédez à toutes les formations que vous avez achetées."
+        },
+        "bookings": {
+            "title": "Mes Rendez-vous",
+            "description": "Consultez vos séances à venir et passées."
+        },
+        "hub": {
+            "title": "Hub Communautaire",
+            "description": "Rejoignez les forums de discussion pour vos formations et séances."
+        }
+    },
+    "account_page": {
+        "title": "Mon Compte",
+        "subtitle": "Mettez à jour vos informations personnelles et paramètres de sécurité.",
+        "profile": {
+            "title": "Informations du Profil",
+            "description": "Maintenez vos coordonnées à jour.",
+            "name_label": "Nom complet",
+            "email_label": "Adresse e-mail (ne peut être modifiée)",
+            "save_button": "Enregistrer les modifications"
+        },
+        "password": {
+            "title": "Changer le mot de passe",
+            "description": "Pour des raisons de sécurité, vous devrez saisir votre mot de passe actuel.",
+            "current_password_label": "Mot de passe actuel",
+            "new_password_label": "Nouveau mot de passe",
+            "save_button": "Mettre à jour le mot de passe"
+        },
+        "language": {
+            "title": "Langue",
+            "description": "Choisissez votre langue préférée pour l'application."
+        },
+        "success": {
+            "profile_updated": "Profil mis à jour avec succès !",
+            "password_updated": "Mot de passe mis à jour avec succès !"
+        },
+        "errors": {
+            "update_failed": "Échec de la mise à jour",
+            "name_required": "Le nom est requis.",
+            "password_min_length": "Le mot de passe doit contenir au moins 6 caractères.",
+            "password_must_be_different": "Le nouveau mot de passe doit être différent de l'actuel.",
+            "wrong_current_password": "Le mot de passe actuel que vous avez saisi est incorrect."
+        }
+    },
+    "bookings_page": {
+        "title": "Mes Rendez-vous",
+        "subtitle": "Voici la liste de toutes vos séances réservées.",
+        "upcoming_title": "Séances à venir",
+        "past_title": "Séances passées",
+        "no_upcoming": "Vous n'avez aucun rendez-vous à venir.",
+        "no_past": "Vous n'avez aucun rendez-vous passé.",
+        "book_now": "Réserver une nouvelle séance",
+        "join_button": "Rejoindre la séance"
     }
 }

@@ -8,7 +8,7 @@ import { Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, ShoppingBag, CalendarDays, GraduationCap, Home, MessageSquare, Shield, Users } from 'lucide-react';
+import { Menu, ShoppingBag, CalendarDays, GraduationCap, Home, Shield, Users, CalendarCheck } from 'lucide-react';
 import { CartNav } from './cart-nav';
 
 export default function Header({ dictionary, lang }: { dictionary: Dictionary['header'], lang: Locale }) {
@@ -18,7 +18,7 @@ export default function Header({ dictionary, lang }: { dictionary: Dictionary['h
       { href: `/${lang}/agenda`, label: dictionary.agenda, icon: CalendarDays },
       { href: `/${lang}/trainings`, label: dictionary.trainings, icon: GraduationCap },
       { href: `/${lang}/hub`, label: dictionary.hub, icon: Users },
-      { href: `/${lang}/session`, label: dictionary.session, icon: MessageSquare },
+      { href: `/${lang}/bookings`, label: dictionary.bookings, icon: CalendarCheck },
       { href: `/${lang}/admin`, label: dictionary.admin, icon: Shield },
   ]
   

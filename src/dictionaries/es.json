@@ -3,6 +3,7 @@
         "home": "Inicio",
         "dashboard": "Panel",
         "session": "Sesión en Vivo",
+        "bookings": "Mis Citas",
         "admin": "Admin",
         "login": "Iniciar Sesión",
         "logout": "Cerrar Sesión",
@@ -237,5 +238,68 @@
         "enrolled_on": "Inscrito el",
         "token_copied": "¡Token copiado al portapapeles!",
         "access_hub": "Acceder al Hub"
+    },
+    "dashboard_page": {
+        "title": "Mi Panel",
+        "subtitle": "Bienvenido de nuevo, {email}",
+        "account": {
+            "title": "Mi Cuenta",
+            "description": "Gestiona tu perfil, contraseña y configuración de idioma."
+        },
+        "trainings": {
+            "title": "Mis Formaciones",
+            "description": "Accede a todos los cursos de formación que has comprado."
+        },
+        "bookings": {
+            "title": "Mis Citas",
+            "description": "Consulta tus sesiones futuras y pasadas."
+        },
+        "hub": {
+            "title": "Hub Comunitario",
+            "description": "Únete a los foros de discusión de tus formaciones y sesiones."
+        }
+    },
+    "account_page": {
+        "title": "Mi Cuenta",
+        "subtitle": "Actualiza tu información personal y configuración de seguridad.",
+        "profile": {
+            "title": "Información del Perfil",
+            "description": "Mantén tus datos personales actualizados.",
+            "name_label": "Nombre completo",
+            "email_label": "Dirección de correo electrónico (no se puede cambiar)",
+            "save_button": "Guardar Cambios"
+        },
+        "password": {
+            "title": "Cambiar Contraseña",
+            "description": "Por seguridad, necesitarás introducir tu contraseña actual.",
+            "current_password_label": "Contraseña Actual",
+            "new_password_label": "Nueva Contraseña",
+            "save_button": "Actualizar Contraseña"
+        },
+        "language": {
+            "title": "Idioma",
+            "description": "Elige tu idioma preferido para la aplicación."
+        },
+        "success": {
+            "profile_updated": "¡Perfil actualizado con éxito!",
+            "password_updated": "¡Contraseña actualizada con éxito!"
+        },
+        "errors": {
+            "update_failed": "Error en la Actualización",
+            "name_required": "El nombre es obligatorio.",
+            "password_min_length": "La contraseña debe tener al menos 6 caracteres.",
+            "password_must_be_different": "La nueva contraseña debe ser diferente a la actual.",
+            "wrong_current_password": "La contraseña actual que has introducido es incorrecta."
+        }
+    },
+    "bookings_page": {
+        "title": "Mis Citas",
+        "subtitle": "Aquí está la lista de todas tus sesiones reservadas.",
+        "upcoming_title": "Próximas Sesiones",
+        "past_title": "Sesiones Pasadas",
+        "no_upcoming": "No tienes próximas citas.",
+        "no_past": "No tienes citas pasadas.",
+        "book_now": "Reservar una nueva sesión",
+        "join_button": "Unirse a la Sesión"
     }
 }
