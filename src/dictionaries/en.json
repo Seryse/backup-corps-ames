@@ -51,6 +51,7 @@
     },
     "home": {
         "title": "Welcome, Beautiful Soul.",
+        "greeting_anonymous": "Hello Beautiful Soul",
         "description": "Discover the latest news and updates from our community.",
         "latestNews": "Latest News",
         "noNews": "No news yet",

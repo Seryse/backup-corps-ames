@@ -69,7 +69,7 @@ export default function DashboardPage({ params }: { params: Promise<{ lang: Loca
     <div className="container mx-auto p-4 sm:p-8">
         <div className="mb-8">
             <h1 className="text-4xl font-headline mb-2">{dashboardDict.title}</h1>
-            <p className="text-lg text-muted-foreground">{dashboardDict.subtitle.replace('{name}', user?.displayName || 'belle âme')}</p>
+            <p className="text-lg text-muted-foreground">{dashboardDict.subtitle.replace('{name}', user?.displayName || 'Belle Âme')}</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {dashboardItems.map((item) => (

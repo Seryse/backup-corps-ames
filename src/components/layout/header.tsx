@@ -20,7 +20,7 @@ export default function Header({ dictionary, lang }: { dictionary: Dictionary['h
   }, []);
   
   const navLinks = [
-      { href: `/${lang}/dashboard`, label: dictionary.home, icon: Home },
+      { href: `/${lang}/home`, label: dictionary.home, icon: Home },
       { href: `/${lang}/shop`, label: dictionary.shop, icon: ShoppingBag },
       { href: `/${lang}/agenda`, label: dictionary.agenda, icon: CalendarDays },
   ]
@@ -28,7 +28,7 @@ export default function Header({ dictionary, lang }: { dictionary: Dictionary['h
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 max-w-screen-2xl items-center">
-        <Link href={`/${lang}`} className="mr-6 flex items-center space-x-2">
+        <Link href={`/${lang}/home`} className="mr-6 flex items-center space-x-2">
             <Image src="/icone.png" alt="Corps et Âmes logo" width={24} height={24} className="h-6 w-6" />
             <span className="font-bold font-headline text-lg">Corps et Âmes</span>
         </Link>

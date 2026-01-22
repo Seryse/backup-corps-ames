@@ -51,6 +51,7 @@
     },
     "home": {
         "title": "Bienvenida, Alma Bella.",
+        "greeting_anonymous": "Hola Alma Hermosa",
         "description": "Descubre las últimas noticias y actualizaciones de nuestra comunidad.",
         "latestNews": "Últimas Noticias",
         "noNews": "Aún no hay noticias",

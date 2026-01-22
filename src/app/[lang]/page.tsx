@@ -1,25 +1,17 @@
 'use client'
 
 import { useEffect, use } from 'react';
-import { useUser } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import { Locale } from '@/i18n-config';
 
 export default function HomeRedirectPage({ params }: { params: Promise<{ lang: Locale }> }) {
   const { lang } = use(params);
-  const { user, isUserLoading } = useUser();
   const router = useRouter();
 
   useEffect(() => {
-    if (isUserLoading) return;
-
-    if (user) {
-      router.replace(`/${lang}/dashboard`);
-    } else {
-      router.replace(`/${lang}/login`);
-    }
-  }, [user, isUserLoading, lang, router]);
+    router.replace(`/${lang}/home`);
+  }, [lang, router]);
 
   return (
     <div className="flex h-screen items-center justify-center">
