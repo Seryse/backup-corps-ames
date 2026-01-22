@@ -36,6 +36,7 @@ export type SessionType = {
     id: string;
     name: LocalizedString;
     description: LocalizedString;
+    pageContent?: LocalizedString;
     sessionModel: 'private' | 'small_group' | 'large_group';
     maxParticipants: number;
     price: number;

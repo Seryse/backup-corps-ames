@@ -28,9 +28,16 @@ const localizedStringSchema = z.object({
   es: z.string().min(1, 'Spanish name is required'),
 });
 
+const optionalLocalizedStringSchema = z.object({
+  en: z.string().optional(),
+  fr: z.string().optional(),
+  es: z.string().optional(),
+});
+
 const formationSchema = z.object({
   name: localizedStringSchema,
   description: localizedStringSchema,
+  pageContent: optionalLocalizedStringSchema,
   price: z.coerce.number().min(0, 'Price must be non-negative'),
   currency: z.string().min(2, 'Currency is required'),
   tokenProductId: z.string().min(1, 'Token Product ID is required'),
@@ -44,7 +51,7 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
   const storage = useStorage();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-  const [isTranslating, setIsTranslating] = useState<null | 'name' | 'description'>(null);
+  const [isTranslating, setIsTranslating] = useState<null | 'name' | 'description' | 'pageContent'>(null);
 
   const {
     register,
@@ -58,17 +65,19 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
       ? {
           ...formationToEdit,
           price: formationToEdit.price / 100, // Convert from cents for display
+          pageContent: formationToEdit.pageContent || { en: '', fr: '', es: '' },
         }
       : {
           name: { en: '', fr: '', es: '' },
           description: { en: '', fr: '', es: '' },
+          pageContent: { en: '', fr: '', es: '' },
           price: 0,
           currency: 'eur',
           tokenProductId: '',
         },
   });
 
-  const handleTranslate = async (fieldName: 'name' | 'description') => {
+  const handleTranslate = async (fieldName: 'name' | 'description' | 'pageContent') => {
     const frenchText = getValues(`${fieldName}.fr`);
     if (!frenchText) {
         toast({
@@ -110,6 +119,7 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
         const formationData = {
           name: data.name,
           description: data.description,
+          pageContent: data.pageContent,
           price: Math.round(data.price * 100),
           currency: data.currency,
           tokenProductId: data.tokenProductId,
@@ -194,6 +204,28 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
         <Label htmlFor="description.es">{dictionary.form.descriptionEs}</Label>
         <Textarea id="description.es" {...register('description.es')} />
         {errors.description?.es && <p className="text-sm text-destructive">{errors.description.es.message}</p>}
+      </div>
+      
+      <div className="space-y-2 border-t pt-4">
+        <h3 className="text-lg font-medium">{dictionary.form.pageContentTitle || 'Page Content'}</h3>
+        <div>
+            <div className="flex items-center justify-between">
+                <Label htmlFor="pageContent.fr">{dictionary.form.pageContentFr || 'Content (FR)'}</Label>
+                <Button variant="ghost" size="icon" type="button" onClick={() => handleTranslate('pageContent')} disabled={isTranslating === 'pageContent'} className="h-7 w-7">
+                    {isTranslating === 'pageContent' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Languages className="h-4 w-4" />}
+                    <span className="sr-only">{dictionary.form.translate}</span>
+                </Button>
+            </div>
+            <Textarea id="pageContent.fr" {...register('pageContent.fr')} rows={10} />
+        </div>
+        <div>
+            <Label htmlFor="pageContent.en">{dictionary.form.pageContentEn || 'Content (EN)'}</Label>
+            <Textarea id="pageContent.en" {...register('pageContent.en')} rows={10} />
+        </div>
+        <div>
+            <Label htmlFor="pageContent.es">{dictionary.form.pageContentEs || 'Content (ES)'}</Label>
+            <Textarea id="pageContent.es" {...register('pageContent.es')} rows={10} />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

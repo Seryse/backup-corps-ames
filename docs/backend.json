@@ -46,6 +46,15 @@
           },
           "required": ["en", "fr", "es"]
         },
+        "pageContent": {
+          "type": "object",
+          "description": "Localized long-form content for the formation's detail page.",
+          "properties": {
+            "en": { "type": "string" },
+            "fr": { "type": "string" },
+            "es": { "type": "string" }
+          }
+        },
         "tokenProductId": {
           "type": "string",
           "description": "Identifier for the access token product."
@@ -185,6 +194,15 @@
             "es": { "type": "string" }
           },
           "required": ["en", "fr", "es"]
+        },
+        "pageContent": {
+          "type": "object",
+          "description": "Localized long-form content for the session type's detail page.",
+          "properties": {
+            "en": { "type": "string" },
+            "fr": { "type": "string" },
+            "es": { "type": "string" }
+          }
         },
         "sessionModel": {
           "type": "string",

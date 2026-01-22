@@ -14,6 +14,7 @@ export type Formation = {
   id: string;
   name: LocalizedString;
   description: LocalizedString;
+  pageContent?: LocalizedString;
   price: number;
   currency: string;
   imageUrl: string;
