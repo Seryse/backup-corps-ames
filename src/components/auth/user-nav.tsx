@@ -22,6 +22,7 @@ import Link from "next/link"
 import { Dictionary } from "@/lib/dictionaries"
 import { Locale } from "@/i18n-config"
 import { Skeleton } from "../ui/skeleton"
+import { adminEmails } from "@/lib/config"
 
 export function UserNav({ dictionary, lang }: { dictionary: Dictionary['header'], lang: Locale }) {
   const { user, isUserLoading } = useUser();
@@ -44,6 +45,8 @@ export function UserNav({ dictionary, lang }: { dictionary: Dictionary['header']
       </Button>
     )
   }
+
+  const isAdmin = user && user.email && adminEmails.includes(user.email);
 
   return (
     <DropdownMenu>
@@ -69,9 +72,11 @@ export function UserNav({ dictionary, lang }: { dictionary: Dictionary['header']
           <DropdownMenuItem asChild>
             <Link href={`/${lang}/dashboard`}>{dictionary.dashboard}</Link>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href={`/${lang}/admin`}>{dictionary.admin}</Link>
-          </DropdownMenuItem>
+          {isAdmin && (
+            <DropdownMenuItem asChild>
+                <Link href={`/${lang}/admin`}>{dictionary.admin}</Link>
+            </DropdownMenuItem>
+          )}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleSignOut}>

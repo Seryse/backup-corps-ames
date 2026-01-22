@@ -257,6 +257,10 @@
         "hub": {
             "title": "Hub Communautaire",
             "description": "Rejoignez les forums de discussion pour vos formations et séances."
+        },
+        "admin": {
+            "title": "Console d'Administration",
+            "description": "Gérer les formations, les actualités et les sessions."
         }
     },
     "account_page": {

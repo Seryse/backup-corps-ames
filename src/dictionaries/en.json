@@ -257,6 +257,10 @@
         "hub": {
             "title": "Community Hub",
             "description": "Join discussion forums for your trainings and sessions."
+        },
+        "admin": {
+            "title": "Admin Console",
+            "description": "Manage formations, news, and sessions."
         }
     },
     "account_page": {

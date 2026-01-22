@@ -4,9 +4,10 @@ import Link from 'next/link';
 import { getDictionary, Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { User, GraduationCap, CalendarCheck, Users, ChevronRight } from 'lucide-react';
+import { User, GraduationCap, CalendarCheck, Users, ChevronRight, Shield } from 'lucide-react';
 import { useUser } from '@/firebase';
 import { Loader2 } from 'lucide-react';
+import { adminEmails } from '@/lib/config';
 
 export default function DashboardPage({ params }: { params: { lang: Locale } }) {
   const { lang } = params;
@@ -26,6 +27,7 @@ export default function DashboardPage({ params }: { params: { lang: Locale } }) 
   }
 
   const dashboardDict = dict.dashboard_page;
+  const isAdmin = user && user.email && adminEmails.includes(user.email);
 
   const dashboardItems = [
     {
@@ -53,6 +55,15 @@ export default function DashboardPage({ params }: { params: { lang: Locale } }) 
       icon: Users,
     },
   ];
+
+  if (isAdmin) {
+    dashboardItems.push({
+        href: `/${lang}/admin`,
+        title: dashboardDict.admin.title,
+        description: dashboardDict.admin.description,
+        icon: Shield,
+    });
+  }
 
   return (
     <div className="container mx-auto p-4 sm:p-8">

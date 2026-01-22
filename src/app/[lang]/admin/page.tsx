@@ -13,8 +13,7 @@ import NewsManager from '@/components/admin/news-manager';
 import SessionTypeManager from '@/components/admin/session-type-manager';
 import { Loader2 } from 'lucide-react';
 import UpcomingSessions from '@/components/admin/upcoming-sessions';
-
-const adminEmails = ['seryse@live.be', 'jael@live.fr', 'selvura@gmail.com'];
+import { adminEmails } from '@/lib/config';
 
 export default function AdminPage({ params }: { params: Promise<{ lang: Locale }> }) {
   const { lang } = use(params);

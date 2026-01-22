@@ -14,6 +14,7 @@ import FileLister from '@/components/admin/file-lister';
 import AudioEngine from '@/components/session/AudioEngine';
 import TestimonialModal from '@/components/session/TestimonialModal';
 import { updateSessionState } from '@/app/actions';
+import { adminEmails } from '@/lib/config';
 
 // From backend.json
 type Booking = {
@@ -37,7 +38,6 @@ interface LiveSession {
 // Simplified Daily.co call object
 type DailyCall = any;
 
-const adminEmails = ['seryse@live.be', 'jael@live.fr', 'selvura@gmail.com'];
 
 export default function LiveSessionPage({ params }: { params: Promise<{ lang: Locale, bookingId: string }> }) {
   const { lang, bookingId } = use(params);
@@ -133,7 +133,11 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
 
   // --- Daily.co SDK Integration ---
   useEffect(() => {
-    if (authStatus !== 'authorized' || !callFrameRef.current || hasJoinedRef.current) return;
+    // Only run if authorized and the call frame is available
+    if (authStatus !== 'authorized' || !callFrameRef.current) return;
+    
+    // If an instance already exists, don't create a new one
+    if (dailyRef.current) return;
 
     const setupCall = async () => {
         const roomUrl = "https://corps-et-ames.daily.co/corps-et-ames";
@@ -150,20 +154,12 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
                 height: '100%',
                 border: '0',
             },
-            videoSource: true,
-            audioSource: isAdminView,
         };
 
         const callObject = DailyIframe.createFrame(callFrameRef.current!, dailyOptions);
-        
         dailyRef.current = callObject;
 
         callObject.on('left-meeting', () => {
-            if(dailyRef.current) {
-                dailyRef.current.destroy();
-            }
-            dailyRef.current = null;
-            hasJoinedRef.current = false;
             if (!isAdminView) {
                 setTestimonialModalOpen(true);
             } else {
@@ -172,16 +168,9 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
         });
 
         try {
-            await callObject.join({ token: visioToken });
-            hasJoinedRef.current = true; // Lock to prevent re-joining AFTER successful join
+            await callObject.join();
         } catch (error) {
             console.error("Failed to join Daily.co call:", error);
-            // On failure, destroy the instance and reset the lock to allow retries
-            if(dailyRef.current) {
-                dailyRef.current.destroy();
-                dailyRef.current = null;
-            }
-            hasJoinedRef.current = false;
         }
     };
 
@@ -193,9 +182,8 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
             dailyRef.current.destroy();
             dailyRef.current = null;
         }
-        hasJoinedRef.current = false;
     }
-  }, [authStatus, isAdminView, lang, router, visioToken]);
+  }, [authStatus, isAdminView, lang, router]);
 
   const handleTriggerIntro = () => updateSessionState(bookingId, { triggerIntro: true, activePlaylistUrl: '' });
   const handlePlaylistSelect = (url: string) => updateSessionState(bookingId, { activePlaylistUrl: url, triggerIntro: false });
@@ -232,6 +220,7 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
             introUrl={`https://firebasestorage.googleapis.com/v0/b/corps-et-ames-adc60.appspot.com/o/intros%2Fintro_${lang}.mp3?alt=media`}
             triggerIntro={sessionState?.triggerIntro}
             playlistUrl={sessionState?.activePlaylistUrl}
+            isAdmin={isAdminView}
         />
 
         <div className="lg:col-span-2">
