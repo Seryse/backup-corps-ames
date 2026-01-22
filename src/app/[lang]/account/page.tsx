@@ -7,7 +7,7 @@ import * as z from 'zod';
 import { getDictionary, Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
 import { useUser, useAuth, useStorage } from '@/firebase';
-import { updateProfile, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth';
+import { updateProfile, updatePassword, reauthenticateWithCredential, EmailAuthProvider, User as FirebaseUser } from 'firebase/auth';
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -22,14 +22,12 @@ import LanguageSwitcher from '@/components/layout/language-switcher';
 import Cropper, { Area } from 'react-easy-crop';
 import getCroppedImg from '@/lib/crop-image';
 
-export default function AccountPage({ params }: { params: Promise<{ lang: Locale }> }) {
-  const { lang } = use(params);
-  const [dict, setDict] = useState<Dictionary | null>(null);
-  const { user, isUserLoading } = useUser();
+// This component holds the state and logic that depends on the user and dictionary being loaded.
+function AccountPageContent({ lang, dict, user }: { lang: Locale, dict: Dictionary, user: FirebaseUser }) {
+  const { toast } = useToast();
   const auth = useAuth();
   const storage = useStorage();
-  const { toast } = useToast();
-  
+
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
   const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
 
@@ -41,18 +39,6 @@ export default function AccountPage({ params }: { params: Promise<{ lang: Locale
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
   const [isUploading, setIsUploading] = useState(false);
 
-  useEffect(() => {
-    getDictionary(lang).then(setDict);
-  }, [lang]);
-  
-  if (isUserLoading || !dict || !user) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <Loader2 className="h-12 w-12 animate-spin text-accent" />
-      </div>
-    );
-  }
-
   const accountDict = dict.account_page;
 
   // --- Profile Form ---
@@ -62,11 +48,10 @@ export default function AccountPage({ params }: { params: Promise<{ lang: Locale
   type ProfileFormData = z.infer<typeof profileSchema>;
   const { register: registerProfile, handleSubmit: handleSubmitProfile, formState: { errors: profileErrors } } = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
-    values: { displayName: user?.displayName || '' },
+    values: { displayName: user.displayName || '' },
   });
 
   const onProfileSubmit = async (data: ProfileFormData) => {
-    if (!user) return;
     setIsUpdatingProfile(true);
     try {
       await updateProfile(user, { displayName: data.displayName });
@@ -83,8 +68,8 @@ export default function AccountPage({ params }: { params: Promise<{ lang: Locale
     currentPassword: z.string().min(6, accountDict.errors.password_min_length),
     newPassword: z.string().min(6, accountDict.errors.password_min_length),
   }).refine((data) => data.currentPassword !== data.newPassword, {
-      message: accountDict.errors.password_must_be_different,
-      path: ["newPassword"],
+    message: accountDict.errors.password_must_be_different,
+    path: ["newPassword"],
   });
   type PasswordFormData = z.infer<typeof passwordSchema>;
   const { register: registerPassword, handleSubmit: handleSubmitPassword, formState: { errors: passwordErrors }, reset: resetPasswordForm } = useForm<PasswordFormData>({
@@ -92,7 +77,7 @@ export default function AccountPage({ params }: { params: Promise<{ lang: Locale
   });
 
   const onPasswordSubmit = async (data: PasswordFormData) => {
-    if (!user || !user.email) return;
+    if (!user.email) return;
     setIsUpdatingPassword(true);
     try {
       const credential = EmailAuthProvider.credential(user.email, data.currentPassword);
@@ -103,7 +88,7 @@ export default function AccountPage({ params }: { params: Promise<{ lang: Locale
     } catch (error: any) {
       let errorMessage = error.message;
       if (error.code === 'auth/wrong-password') {
-          errorMessage = accountDict.errors.wrong_current_password;
+        errorMessage = accountDict.errors.wrong_current_password;
       }
       toast({ variant: 'destructive', title: accountDict.errors.update_failed, description: errorMessage });
     } finally {
@@ -126,7 +111,7 @@ export default function AccountPage({ params }: { params: Promise<{ lang: Locale
   };
 
   const saveCroppedImage = async () => {
-    if (!imageSrc || !croppedAreaPixels || !user) return;
+    if (!imageSrc || !croppedAreaPixels) return;
     setIsUploading(true);
     try {
       const croppedImageBlob = await getCroppedImg(imageSrc, croppedAreaPixels);
@@ -135,7 +120,7 @@ export default function AccountPage({ params }: { params: Promise<{ lang: Locale
       const avatarRef = storageRef(storage, `avatars/${user.uid}`);
       await uploadBytes(avatarRef, croppedImageBlob);
       const downloadURL = await getDownloadURL(avatarRef);
-      
+
       await updateProfile(user, { photoURL: downloadURL });
 
       toast({ title: accountDict.success.avatar_updated });
@@ -147,7 +132,6 @@ export default function AccountPage({ params }: { params: Promise<{ lang: Locale
       setIsUploading(false);
     }
   };
-
 
   return (
     <div className="container mx-auto p-4 sm:p-8 max-w-4xl">
@@ -296,4 +280,25 @@ export default function AccountPage({ params }: { params: Promise<{ lang: Locale
       </Dialog>
     </div>
   );
+}
+
+
+export default function AccountPage({ params }: { params: Promise<{ lang: Locale }> }) {
+  const { lang } = use(params);
+  const [dict, setDict] = useState<Dictionary | null>(null);
+  const { user, isUserLoading } = useUser();
+
+  useEffect(() => {
+    getDictionary(lang).then(setDict);
+  }, [lang]);
+  
+  if (isUserLoading || !dict || !user) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loader2 className="h-12 w-12 animate-spin text-accent" />
+      </div>
+    );
+  }
+
+  return <AccountPageContent lang={lang} dict={dict} user={user} />;
 }
