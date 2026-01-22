@@ -7,7 +7,6 @@ import { db } from '@/firebase/server';
 import { doc, getDoc } from 'firebase/firestore';
 import type { SessionType } from '@/components/admin/session-type-manager';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { CalendarCheck, Users } from 'lucide-react';
 
@@ -22,6 +21,29 @@ async function getSessionType(id: string): Promise<SessionType | null> {
     return { id: docSnap.id, ...docSnap.data() } as SessionType;
 }
 
+function getEmbedUrl(url: string): string | null {
+    if (!url) return null;
+    try {
+        const urlObj = new URL(url);
+        if (urlObj.hostname.includes('youtube.com')) {
+            const videoId = urlObj.searchParams.get('v');
+            return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+        }
+        if (urlObj.hostname.includes('youtu.be')) {
+            const videoId = urlObj.pathname.slice(1);
+            return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+        }
+        if (urlObj.hostname.includes('vimeo.com')) {
+            const videoId = urlObj.pathname.split('/').pop();
+            return videoId ? `https://player.vimeo.com/video/${videoId}` : null;
+        }
+    } catch (error) {
+        console.error("Invalid video URL:", error);
+        return null;
+    }
+    return null;
+}
+
 export default async function SessionTypeDetailPage({ params: { lang, sessionTypeId } }: { params: { lang: Locale, sessionTypeId: string } }) {
     const dict = await getDictionary(lang);
     const sessionType = await getSessionType(sessionTypeId);
@@ -34,11 +56,12 @@ export default async function SessionTypeDetailPage({ params: { lang, sessionTyp
     const localizedDescription = sessionType.description?.[lang] || sessionType.description?.fr;
     const localizedPageContent = sessionType.pageContent?.[lang] || sessionType.pageContent?.fr;
     const modelLabel = dict.admin.form.sessionModelOptions[sessionType.sessionModel] || sessionType.sessionModel;
+    const embedUrl = sessionType.videoUrl ? getEmbedUrl(sessionType.videoUrl) : null;
 
     return (
         <div className="container mx-auto p-4 sm:p-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div className="md:col-span-2">
+                <div className="md:col-span-2 space-y-8">
                     <Card>
                         <CardHeader className="p-0">
                             <div className="relative aspect-video">
@@ -53,35 +76,71 @@ export default async function SessionTypeDetailPage({ params: { lang, sessionTyp
                         <CardContent className="p-6">
                             <h1 className="text-4xl font-headline mb-4">{localizedName}</h1>
                             <p className="text-lg text-muted-foreground">{localizedDescription}</p>
-                            {localizedPageContent && (
-                                <div className="prose dark:prose-invert mt-6 max-w-none" dangerouslySetInnerHTML={{ __html: localizedPageContent.replace(/\n/g, '<br />') }} />
-                            )}
                         </CardContent>
                     </Card>
+
+                    {embedUrl && (
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>{dict.shop.presentationVideo}</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="relative aspect-video">
+                                    <iframe
+                                        src={embedUrl}
+                                        title={dict.shop.presentationVideo}
+                                        frameBorder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                        className="absolute top-0 left-0 w-full h-full rounded-lg"
+                                    ></iframe>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    )}
+
+                    {localizedPageContent && (
+                        <Card>
+                            <CardContent className="p-6">
+                                <div className="prose dark:prose-invert mt-6 max-w-none" dangerouslySetInnerHTML={{ __html: localizedPageContent.replace(/\n/g, '<br />') }} />
+                            </CardContent>
+                        </Card>
+                    )}
+
+                    <div className="text-center py-8">
+                        <Button asChild size="lg" className="w-full h-16 text-xl">
+                           <Link href={`/${lang}/agenda`}>
+                               <CalendarCheck className="mr-2 h-6 w-6" />
+                               {dict.home.bookASession}
+                           </Link>
+                       </Button>
+                   </div>
                 </div>
                 <div className="md:col-span-1">
-                     <Card>
-                        <CardHeader>
-                            <CardTitle className="text-2xl">{localizedName}</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="text-3xl font-bold text-accent">
-                                {new Intl.NumberFormat(lang, { style: 'currency', currency: sessionType.currency }).format(sessionType.price / 100)}
-                            </div>
-                            <div className="flex items-center gap-2 text-muted-foreground">
-                                <Users className="h-5 w-5" />
-                                <span>{modelLabel} ({sessionType.maxParticipants} max)</span>
-                            </div>
-                        </CardContent>
-                        <CardFooter>
-                            <Button asChild className="w-full">
-                                <Link href={`/${lang}/agenda`}>
-                                    <CalendarCheck className="mr-2 h-4 w-4" />
-                                    {dict.home.bookASession}
-                                </Link>
-                            </Button>
-                        </CardFooter>
-                    </Card>
+                     <div className="sticky top-20">
+                         <Card>
+                            <CardHeader>
+                                <CardTitle className="text-2xl">{localizedName}</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div className="text-3xl font-bold text-accent">
+                                    {new Intl.NumberFormat(lang, { style: 'currency', currency: sessionType.currency }).format(sessionType.price / 100)}
+                                </div>
+                                <div className="flex items-center gap-2 text-muted-foreground">
+                                    <Users className="h-5 w-5" />
+                                    <span>{modelLabel} ({sessionType.maxParticipants} max)</span>
+                                </div>
+                            </CardContent>
+                            <CardFooter>
+                                <Button asChild className="w-full">
+                                    <Link href={`/${lang}/agenda`}>
+                                        <CalendarCheck className="mr-2 h-4 w-4" />
+                                        {dict.home.bookASession}
+                                    </Link>
+                                </Button>
+                            </CardFooter>
+                        </Card>
+                     </div>
                 </div>
             </div>
         </div>

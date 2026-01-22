@@ -54,6 +54,7 @@
         "greeting_anonymous": "Bonjour Belle Âme",
         "description": "Découvrez les dernières actualités et mises à jour de notre communauté.",
         "latestNews": "Dernières Actualités",
+        "moreNews": "Plus d'actualités",
         "noNews": "Aucune actualité pour le moment",
         "noNewsDescription": "Revenez plus tard pour les mises à jour.",
         "ourFormations": "Nos Formations",
@@ -141,6 +142,11 @@
             "currency": "Devise (ex: eur, usd)",
             "image": "Image",
             "tokenProductId": "ID du Produit Token",
+            "videoUrl": "URL de la Vidéo (YouTube, Vimeo)",
+            "pageContentTitle": "Contenu de la Page",
+            "pageContentFr": "Contenu (FR)",
+            "pageContentEn": "Contenu (EN)",
+            "pageContentEs": "Contenu (ES)",
             "titleEn": "Titre (EN)",
             "titleFr": "Titre (FR)",
             "titleEs": "Titre (ES)",
@@ -187,13 +193,15 @@
     "shop": {
         "title": "Boutique",
         "addToCart": "Ajouter au panier",
+        "finalCta": "S'inscrire à cette formation",
         "formationAdded": "Formation Ajoutée",
         "addedToCart": "a été ajouté à votre panier.",
         "loading": "Chargement des formations...",
         "noFormations": "Aucune formation n'est disponible pour le moment.",
         "alreadyInCart": "Déjà dans le panier",
         "alreadyInCartDescription": "est déjà dans votre panier.",
-        "inCart": "Dans le panier"
+        "inCart": "Dans le panier",
+        "presentationVideo": "Vidéo de Présentation"
     },
     "checkout": {
         "title": "Paiement",

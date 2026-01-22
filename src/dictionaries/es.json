@@ -54,6 +54,7 @@
         "greeting_anonymous": "Hola Alma Hermosa",
         "description": "Descubre las últimas noticias y actualizaciones de nuestra comunidad.",
         "latestNews": "Últimas Noticias",
+        "moreNews": "Más noticias",
         "noNews": "Aún no hay noticias",
         "noNewsDescription": "Vuelve más tarde para ver las actualizaciones.",
         "ourFormations": "Nuestras Formaciones",
@@ -141,6 +142,11 @@
             "currency": "Moneda (e.g., eur, usd)",
             "image": "Imagen",
             "tokenProductId": "ID de Producto Token",
+            "videoUrl": "URL del Video (YouTube, Vimeo)",
+            "pageContentTitle": "Contenido de la Página",
+            "pageContentFr": "Contenido (FR)",
+            "pageContentEn": "Contenido (EN)",
+            "pageContentEs": "Contenido (ES)",
             "titleEn": "Título (EN)",
             "titleFr": "Título (FR)",
             "titleEs": "Título (ES)",
@@ -187,13 +193,15 @@
     "shop": {
         "title": "Tienda",
         "addToCart": "Añadir al carrito",
+        "finalCta": "Inscribirse en esta formación",
         "formationAdded": "Formación Añadida",
         "addedToCart": "ha sido añadido a tu cesta.",
         "loading": "Cargando formaciones...",
         "noFormations": "No hay formaciones disponibles por el momento.",
         "alreadyInCart": "Ya en el carrito",
         "alreadyInCartDescription": "ya está en tu cesta.",
-        "inCart": "En el carrito"
+        "inCart": "En el carrito",
+        "presentationVideo": "Vídeo de Presentación"
     },
     "checkout": {
         "title": "Pago",

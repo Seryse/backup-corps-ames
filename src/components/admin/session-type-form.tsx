@@ -45,6 +45,7 @@ const sessionTypeSchema = z.object({
   tokenProductId: z.string().min(1, 'Token Product ID is required'),
   sessionModel: z.enum(['private', 'small_group', 'large_group']),
   maxParticipants: z.coerce.number().int().min(1, 'Must have at least 1 participant'),
+  videoUrl: z.string().url().optional().or(z.literal('')),
   imageFile: z.any().optional(),
 }).refine(data => {
     if (data.sessionModel === 'private') {
@@ -80,6 +81,7 @@ export default function SessionTypeForm({ sessionTypeToEdit, onClose, dictionary
           ...sessionTypeToEdit,
           price: sessionTypeToEdit.price / 100, // Convert from cents
           pageContent: sessionTypeToEdit.pageContent || { en: '', fr: '', es: '' },
+          videoUrl: sessionTypeToEdit.videoUrl || '',
         }
       : {
           name: { en: '', fr: '', es: '' },
@@ -89,7 +91,8 @@ export default function SessionTypeForm({ sessionTypeToEdit, onClose, dictionary
           currency: 'eur',
           tokenProductId: '',
           sessionModel: 'private',
-          maxParticipants: 1
+          maxParticipants: 1,
+          videoUrl: '',
         },
   });
 
@@ -142,6 +145,7 @@ export default function SessionTypeForm({ sessionTypeToEdit, onClose, dictionary
           tokenProductId: data.tokenProductId,
           sessionModel: data.sessionModel,
           maxParticipants: data.maxParticipants,
+          videoUrl: data.videoUrl,
           imageUrl: imageUrl || 'https://placehold.co/600x400/E6E6FA/333333?text=Image',
         };
 
@@ -292,6 +296,12 @@ export default function SessionTypeForm({ sessionTypeToEdit, onClose, dictionary
             <Input id="maxParticipants" type="number" {...register('maxParticipants')} readOnly={sessionModel === 'private'} />
             {errors.maxParticipants && <p className="text-sm text-destructive">{errors.maxParticipants.message}</p>}
         </div>
+      </div>
+
+      <div>
+        <Label htmlFor="videoUrl">{dictionary.form.videoUrl}</Label>
+        <Input id="videoUrl" {...register('videoUrl')} placeholder="https://www.youtube.com/watch?v=..." />
+        {errors.videoUrl && <p className="text-sm text-destructive">{errors.videoUrl.message}</p>}
       </div>
 
       <div>

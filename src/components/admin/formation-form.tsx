@@ -41,6 +41,7 @@ const formationSchema = z.object({
   price: z.coerce.number().min(0, 'Price must be non-negative'),
   currency: z.string().min(2, 'Currency is required'),
   tokenProductId: z.string().min(1, 'Token Product ID is required'),
+  videoUrl: z.string().url().optional().or(z.literal('')),
   imageFile: z.any().optional(),
 });
 
@@ -66,6 +67,7 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
           ...formationToEdit,
           price: formationToEdit.price / 100, // Convert from cents for display
           pageContent: formationToEdit.pageContent || { en: '', fr: '', es: '' },
+          videoUrl: formationToEdit.videoUrl || '',
         }
       : {
           name: { en: '', fr: '', es: '' },
@@ -74,6 +76,7 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
           price: 0,
           currency: 'eur',
           tokenProductId: '',
+          videoUrl: '',
         },
   });
 
@@ -123,6 +126,7 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
           price: Math.round(data.price * 100),
           currency: data.currency,
           tokenProductId: data.tokenProductId,
+          videoUrl: data.videoUrl,
           imageUrl: imageUrl || 'https://placehold.co/600x400/E6E6FA/333333?text=Image',
         };
 
@@ -247,6 +251,12 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
         {errors.tokenProductId && <p className="text-sm text-destructive">{errors.tokenProductId.message}</p>}
       </div>
       
+      <div>
+        <Label htmlFor="videoUrl">{dictionary.form.videoUrl}</Label>
+        <Input id="videoUrl" {...register('videoUrl')} placeholder="https://www.youtube.com/watch?v=..." />
+        {errors.videoUrl && <p className="text-sm text-destructive">{errors.videoUrl.message}</p>}
+      </div>
+
       <div>
           <Label htmlFor="imageFile">{dictionary.form.image}</Label>
           <Input id="imageFile" type="file" accept="image/*" {...register('imageFile')} />

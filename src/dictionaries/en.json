@@ -54,6 +54,7 @@
         "greeting_anonymous": "Hello Beautiful Soul",
         "description": "Discover the latest news and updates from our community.",
         "latestNews": "Latest News",
+        "moreNews": "More News",
         "noNews": "No news yet",
         "noNewsDescription": "Check back later for updates.",
         "ourFormations": "Our Formations",
@@ -141,6 +142,11 @@
             "currency": "Currency (e.g., eur, usd)",
             "image": "Image",
             "tokenProductId": "Token Product ID",
+            "videoUrl": "Video URL (YouTube, Vimeo)",
+            "pageContentTitle": "Page Content",
+            "pageContentFr": "Content (FR)",
+            "pageContentEn": "Content (EN)",
+            "pageContentEs": "Content (ES)",
             "titleEn": "Title (EN)",
             "titleFr": "Title (FR)",
             "titleEs": "Title (ES)",
@@ -187,13 +193,15 @@
     "shop": {
         "title": "Shop",
         "addToCart": "Add to Cart",
+        "finalCta": "Enroll in this training",
         "formationAdded": "Formation Added",
         "addedToCart": "has been added to your cart.",
         "loading": "Loading formations...",
         "noFormations": "No formations available at the moment.",
         "alreadyInCart": "Already in Cart",
         "alreadyInCartDescription": "is already in your cart.",
-        "inCart": "In Cart"
+        "inCart": "In Cart",
+        "presentationVideo": "Presentation Video"
     },
     "checkout": {
         "title": "Checkout",

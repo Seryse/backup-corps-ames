@@ -55,6 +55,11 @@
             "es": { "type": "string" }
           }
         },
+        "videoUrl": {
+          "type": "string",
+          "description": "URL of the formation's presentation video.",
+          "format": "uri"
+        },
         "tokenProductId": {
           "type": "string",
           "description": "Identifier for the access token product."
@@ -203,6 +208,11 @@
             "fr": { "type": "string" },
             "es": { "type": "string" }
           }
+        },
+        "videoUrl": {
+          "type": "string",
+          "description": "URL of the session type's presentation video.",
+          "format": "uri"
         },
         "sessionModel": {
           "type": "string",
