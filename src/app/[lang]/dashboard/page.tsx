@@ -1,18 +1,21 @@
 'use client';
-import { use } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { getDictionary } from '@/lib/dictionaries';
+import { getDictionary, Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { User, GraduationCap, CalendarCheck, Users, ChevronRight } from 'lucide-react';
 import { useUser } from '@/firebase';
 import { Loader2 } from 'lucide-react';
 
-export default function DashboardPage({ params }: { params: Promise<{ lang: Locale }> }) {
-  const { lang } = use(params);
-  const dictPromise = getDictionary(lang);
-  const dict = use(dictPromise);
+export default function DashboardPage({ params }: { params: { lang: Locale } }) {
+  const { lang } = params;
+  const [dict, setDict] = useState<Dictionary | null>(null);
   const { user, isUserLoading } = useUser();
+
+  useEffect(() => {
+    getDictionary(lang).then(setDict);
+  }, [lang]);
 
   if (isUserLoading || !dict) {
     return (

@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useMemo, use } from 'react';
-import { getDictionary } from '@/lib/dictionaries';
+import React, { useMemo, useState, useEffect } from 'react';
+import { getDictionary, Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
 import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, Query } from 'firebase/firestore';
@@ -36,14 +36,17 @@ type MergedBooking = Booking & {
     timeSlot: TimeSlot;
 };
 
-export default function BookingsPage({ params }: { params: Promise<{ lang: Locale }> }) {
-  const { lang } = use(params);
-  const dictPromise = getDictionary(lang);
-  const dict = use(dictPromise);
+export default function BookingsPage({ params }: { params: { lang: Locale } }) {
+  const { lang } = params;
+  const [dict, setDict] = useState<Dictionary | null>(null);
   const { user, isUserLoading } = useUser();
   const firestore = useFirestore();
 
-  const bookingsDict = dict.bookings_page;
+  useEffect(() => {
+    getDictionary(lang).then(setDict);
+  }, [lang]);
+
+  const bookingsDict = dict?.bookings_page;
   const localesDateFns: { [key: string]: any } = { en: enUS, fr, es };
   const dateFnsLocale = localesDateFns[lang] || enUS;
 
@@ -87,14 +90,14 @@ export default function BookingsPage({ params }: { params: Promise<{ lang: Local
     const upcoming = allMerged.filter(b => !isPast(b.timeSlot.endTime.toDate()));
     const past = allMerged.filter(b => isPast(b.timeSlot.endTime.toDate()));
 
-    return { upcomingBookings: upcoming, pastBookings: past };
+    return { upcomingBookings: [...upcoming].reverse(), pastBookings: past };
 
   }, [bookings, sessionTypes, timeSlots]);
 
 
   const isLoading = isUserLoading || isLoadingBookings || isLoadingSessionTypes || isLoadingTimeSlots || !dict;
 
-  if (isLoading) {
+  if (isLoading || !bookingsDict) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Loader2 className="h-12 w-12 animate-spin text-accent" />

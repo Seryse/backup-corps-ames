@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, use } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -16,16 +16,27 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, User, KeyRound, Languages } from 'lucide-react';
 import LanguageSwitcher from '@/components/layout/language-switcher';
 
-export default function AccountPage({ params }: { params: Promise<{ lang: Locale }> }) {
-  const { lang } = use(params);
-  const dictPromise = getDictionary(lang);
-  const dict = use(dictPromise);
+export default function AccountPage({ params }: { params: { lang: Locale } }) {
+  const { lang } = params;
+  const [dict, setDict] = useState<Dictionary | null>(null);
   const { user, isUserLoading } = useUser();
   const auth = useAuth();
   const { toast } = useToast();
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
   const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
+
+  useEffect(() => {
+    getDictionary(lang).then(setDict);
+  }, [lang]);
   
+  if (isUserLoading || !dict || !user) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loader2 className="h-12 w-12 animate-spin text-accent" />
+      </div>
+    );
+  }
+
   const accountDict = dict.account_page;
 
   // --- Profile Form ---
@@ -84,14 +95,6 @@ export default function AccountPage({ params }: { params: Promise<{ lang: Locale
     }
   };
 
-
-  if (isUserLoading || !dict || !user) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <Loader2 className="h-12 w-12 animate-spin text-accent" />
-      </div>
-    );
-  }
 
   return (
     <div className="container mx-auto p-4 sm:p-8 max-w-4xl">
