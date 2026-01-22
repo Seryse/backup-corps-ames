@@ -50,7 +50,7 @@
         }
     },
     "home": {
-        "title": "Welcome, Beautiful Soul.",
+        "title": "Welcome, {name}.",
         "greeting_anonymous": "Hello Beautiful Soul",
         "description": "Discover the latest news and updates from our community.",
         "latestNews": "Latest News",

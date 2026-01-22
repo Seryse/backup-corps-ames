@@ -50,7 +50,7 @@
         }
     },
     "home": {
-        "title": "Bienvenue, Belle Âme.",
+        "title": "Bienvenue, {name}.",
         "greeting_anonymous": "Bonjour Belle Âme",
         "description": "Découvrez les dernières actualités et mises à jour de notre communauté.",
         "latestNews": "Dernières Actualités",
