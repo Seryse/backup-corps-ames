@@ -5,8 +5,7 @@ import { Locale } from '@/i18n-config';
 import { db } from '@/firebase/server';
 import { doc, getDoc } from 'firebase/firestore';
 import type { Formation } from '@/components/providers/cart-provider';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import FormationDetailClient from '@/components/shop/formation-detail-client';
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import FinalCtaButton from '@/components/shop/final-cta-button';
 
 async function getFormation(id: string): Promise<Formation | null> {
@@ -59,61 +58,60 @@ export default async function FormationDetailPage({ params: { lang, formationId 
 
     return (
         <div className="container mx-auto p-4 sm:p-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div className="md:col-span-2 space-y-8">
+            <div className="max-w-4xl mx-auto space-y-8">
+                <Card>
+                    <CardHeader className="p-0">
+                        <div className="relative aspect-video">
+                            <Image 
+                                src={formation.imageUrl} 
+                                alt={localizedName} 
+                                fill 
+                                className="object-cover rounded-t-lg"
+                            />
+                        </div>
+                    </CardHeader>
+                    <CardContent className="p-6">
+                        <h1 className="text-4xl font-headline mb-4">{localizedName}</h1>
+                        <p className="text-lg text-muted-foreground">{localizedDescription}</p>
+                    </CardContent>
+                    <CardFooter className="flex-col sm:flex-row items-stretch sm:items-center sm:justify-between p-6 bg-muted/50">
+                        <div className="text-3xl font-bold text-accent mb-4 sm:mb-0">
+                            {new Intl.NumberFormat(lang, { style: 'currency', currency: formation.currency }).format(formation.price / 100)}
+                        </div>
+                        <FinalCtaButton formation={formation} dict={dict} lang={lang} />
+                    </CardFooter>
+                </Card>
+
+                {embedUrl && (
                     <Card>
-                        <CardHeader className="p-0">
-                            <div className="relative aspect-video">
-                                <Image 
-                                    src={formation.imageUrl} 
-                                    alt={localizedName} 
-                                    fill 
-                                    className="object-cover rounded-t-lg"
-                                />
-                            </div>
+                        <CardHeader>
+                            <CardTitle>{dict.shop.presentationVideo}</CardTitle>
                         </CardHeader>
-                        <CardContent className="p-6">
-                            <h1 className="text-4xl font-headline mb-4">{localizedName}</h1>
-                            <p className="text-lg text-muted-foreground">{localizedDescription}</p>
+                        <CardContent>
+                            <div className="relative aspect-video">
+                                <iframe
+                                    src={embedUrl}
+                                    title={dict.shop.presentationVideo}
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                    className="absolute top-0 left-0 w-full h-full rounded-lg"
+                                ></iframe>
+                            </div>
                         </CardContent>
                     </Card>
+                )}
 
-                    {embedUrl && (
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>{dict.shop.presentationVideo}</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="relative aspect-video">
-                                    <iframe
-                                        src={embedUrl}
-                                        title={dict.shop.presentationVideo}
-                                        frameBorder="0"
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                        allowFullScreen
-                                        className="absolute top-0 left-0 w-full h-full rounded-lg"
-                                    ></iframe>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    )}
+                {localizedPageContent && (
+                     <Card>
+                         <CardContent className="p-6">
+                            <div className="prose dark:prose-invert mt-6 max-w-none" dangerouslySetInnerHTML={{ __html: localizedPageContent.replace(/\n/g, '<br />') }} />
+                        </CardContent>
+                     </Card>
+                )}
 
-                    {localizedPageContent && (
-                         <Card>
-                             <CardContent className="p-6">
-                                <div className="prose dark:prose-invert mt-6 max-w-none" dangerouslySetInnerHTML={{ __html: localizedPageContent.replace(/\n/g, '<br />') }} />
-                            </CardContent>
-                         </Card>
-                    )}
-
-                    <div className="text-center py-8">
-                        <FinalCtaButton formation={formation} dict={dict} lang={lang} />
-                    </div>
-                </div>
-                <div className="md:col-span-1">
-                     <div className="sticky top-20 space-y-8">
-                        <FormationDetailClient formation={formation} dict={dict} lang={lang} />
-                    </div>
+                <div className="text-center py-8">
+                    <FinalCtaButton formation={formation} dict={dict} lang={lang} className="w-full h-16 text-xl" />
                 </div>
             </div>
         </div>

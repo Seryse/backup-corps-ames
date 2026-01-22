@@ -6,14 +6,16 @@ import { useToast } from "@/hooks/use-toast";
 import { Dictionary } from "@/lib/dictionaries";
 import { Locale } from "@/i18n-config";
 import { Check, ShoppingCart } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface FinalCtaButtonProps {
     formation: Formation;
     dict: Dictionary;
     lang: Locale;
+    className?: string;
 }
 
-export default function FinalCtaButton({ formation, dict, lang }: FinalCtaButtonProps) {
+export default function FinalCtaButton({ formation, dict, lang, className }: FinalCtaButtonProps) {
     const { addToCart, items } = useCart();
     const { toast } = useToast();
     const shopDict = dict.shop;
@@ -36,7 +38,7 @@ export default function FinalCtaButton({ formation, dict, lang }: FinalCtaButton
     }
     
     return (
-         <Button size="lg" className="w-full h-16 text-xl" onClick={handleAddToCart} disabled={isAlreadyInCart}>
+         <Button size="lg" className={cn("h-12 text-lg", className)} onClick={handleAddToCart} disabled={isAlreadyInCart}>
             {isAlreadyInCart ? (
                 <>
                     <Check className="mr-2 h-6 w-6" />
@@ -45,7 +47,7 @@ export default function FinalCtaButton({ formation, dict, lang }: FinalCtaButton
             ) : (
                 <>
                     <ShoppingCart className="mr-2 h-6 w-6" />
-                    {shopDict.finalCta}
+                    {shopDict.addToCart}
                 </>
             )}
         </Button>
