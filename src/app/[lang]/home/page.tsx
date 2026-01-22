@@ -42,7 +42,7 @@ export default function HomePage({ params }: { params: Promise<{ lang: Locale }>
   }, [firestore]);
 
   const { data: news, isLoading: isLoadingNews } = useCollection<NewsArticle>(newsQuery);
-  const { data: formations, isLoading: isLoadingFormations } = useCollection<SessionType>(sessionTypesQuery);
+  const { data: formations, isLoading: isLoadingFormations } = useCollection<Formation>(formationsQuery);
   const { data: sessionTypes, isLoading: isLoadingSessionTypes } = useCollection<SessionType>(sessionTypesQuery);
   
   const localesDateFns: { [key: string]: any } = { en: enUS, fr, es };
