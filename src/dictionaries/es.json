@@ -287,6 +287,15 @@
             "title": "Idioma",
             "description": "Elige tu idioma preferido para la aplicación."
         },
+        "billing": {
+            "title": "Dirección de Facturación",
+            "description": "Gestiona tu dirección de facturación para pagos más rápidos.",
+            "street_label": "Calle",
+            "city_label": "Ciudad",
+            "postal_code_label": "Código Postal",
+            "country_label": "País",
+            "save_button": "Guardar Dirección"
+        },
         "profile_crop": {
             "title": "Editar foto de perfil",
             "save_button": "Guardar"
@@ -294,7 +303,8 @@
         "success": {
             "profile_updated": "¡Perfil actualizado con éxito!",
             "password_updated": "¡Contraseña actualizada con éxito!",
-            "avatar_updated": "¡Foto de perfil actualizada con éxito!"
+            "avatar_updated": "¡Foto de perfil actualizada con éxito!",
+            "address_updated": "¡Dirección de facturación actualizada con éxito!"
         },
         "errors": {
             "update_failed": "Error en la Actualización",

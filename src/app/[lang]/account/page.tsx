@@ -6,8 +6,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { getDictionary, Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
-import { useUser, useAuth, useStorage } from '@/firebase';
+import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { updateProfile, updatePassword, reauthenticateWithCredential, EmailAuthProvider, User as FirebaseUser } from 'firebase/auth';
+import { doc, setDoc, DocumentReference } from 'firebase/firestore';
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,19 +18,59 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Slider } from '@/components/ui/slider';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, User, KeyRound, Languages, Camera } from 'lucide-react';
+import { Loader2, User, KeyRound, Languages, Camera, Home } from 'lucide-react';
 import LanguageSwitcher from '@/components/layout/language-switcher';
 import Cropper, { Area } from 'react-easy-crop';
 import getCroppedImg from '@/lib/crop-image';
 
-// This component holds the state and logic that depends on the user and dictionary being loaded.
+type BillingAddress = {
+  street?: string;
+  city?: string;
+  postalCode?: string;
+  country?: string;
+};
+
+type UserProfile = {
+  id: string;
+  displayName: string;
+  email: string;
+  photoURL?: string;
+  billingAddress?: BillingAddress;
+};
+
+// --- Zod Schemas for Validation ---
+const profileSchema = z.object({
+  displayName: z.string().min(1, 'Display name is required'),
+});
+
+const passwordSchema = z.object({
+  currentPassword: z.string().min(6, 'Password must be at least 6 characters'),
+  newPassword: z.string().min(6, 'Password must be at least 6 characters'),
+}).refine((data) => data.currentPassword !== data.newPassword, {
+  message: "New password must be different from the current one.",
+  path: ["newPassword"],
+});
+
+const billingAddressSchema = z.object({
+  street: z.string().optional(),
+  city: z.string().optional(),
+  postalCode: z.string().optional(),
+  country: z.string().optional(),
+});
+
+type ProfileFormData = z.infer<typeof profileSchema>;
+type PasswordFormData = z.infer<typeof passwordSchema>;
+type BillingAddressFormData = z.infer<typeof billingAddressSchema>;
+
 function AccountPageContent({ lang, dict, user }: { lang: Locale, dict: Dictionary, user: FirebaseUser }) {
   const { toast } = useToast();
-  const auth = useAuth();
+  const firestore = useFirestore();
   const storage = useStorage();
 
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
   const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
+  const [isUpdatingAddress, setIsUpdatingAddress] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   // State for image cropping
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -37,24 +78,54 @@ function AccountPageContent({ lang, dict, user }: { lang: Locale, dict: Dictiona
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
 
   const accountDict = dict.account_page;
 
-  // --- Profile Form ---
-  const profileSchema = z.object({
-    displayName: z.string().min(1, accountDict.errors.name_required),
-  });
-  type ProfileFormData = z.infer<typeof profileSchema>;
+  // --- Data Fetching and Syncing ---
+  const userProfileRef = useMemoFirebase(() => firestore ? doc(firestore, 'users', user.uid) as DocumentReference<UserProfile> : null, [firestore, user.uid]);
+  const { data: userProfile, isLoading: isProfileLoading } = useDoc<UserProfile>(userProfileRef);
+
+  useEffect(() => {
+    // If firestore profile doesn't exist, create it from auth data
+    if (!isProfileLoading && !userProfile && firestore) {
+      const initialProfile: UserProfile = {
+        id: user.uid,
+        displayName: user.displayName || '',
+        email: user.email || '',
+        photoURL: user.photoURL || '',
+      };
+      setDoc(userProfileRef!, initialProfile, { merge: true });
+    }
+  }, [isProfileLoading, userProfile, user, firestore, userProfileRef]);
+  
+  // --- Form Hooks ---
   const { register: registerProfile, handleSubmit: handleSubmitProfile, formState: { errors: profileErrors } } = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
-    values: { displayName: user.displayName || '' },
+    values: { displayName: userProfile?.displayName || user.displayName || '' },
   });
 
+  const { register: registerPassword, handleSubmit: handleSubmitPassword, formState: { errors: passwordErrors }, reset: resetPasswordForm } = useForm<PasswordFormData>({
+    resolver: zodResolver(passwordSchema),
+  });
+
+  const { register: registerAddress, handleSubmit: handleSubmitAddress, formState: { errors: addressErrors } } = useForm<BillingAddressFormData>({
+    resolver: zodResolver(billingAddressSchema),
+    values: {
+      street: userProfile?.billingAddress?.street || '',
+      city: userProfile?.billingAddress?.city || '',
+      postalCode: userProfile?.billingAddress?.postalCode || '',
+      country: userProfile?.billingAddress?.country || '',
+    },
+  });
+
+  // --- Submission Handlers ---
   const onProfileSubmit = async (data: ProfileFormData) => {
     setIsUpdatingProfile(true);
     try {
       await updateProfile(user, { displayName: data.displayName });
+      if (userProfileRef) {
+        await setDoc(userProfileRef, { displayName: data.displayName }, { merge: true });
+      }
       toast({ title: accountDict.success.profile_updated });
     } catch (error: any) {
       toast({ variant: 'destructive', title: accountDict.errors.update_failed, description: error.message });
@@ -62,19 +133,6 @@ function AccountPageContent({ lang, dict, user }: { lang: Locale, dict: Dictiona
       setIsUpdatingProfile(false);
     }
   };
-
-  // --- Password Form ---
-  const passwordSchema = z.object({
-    currentPassword: z.string().min(6, accountDict.errors.password_min_length),
-    newPassword: z.string().min(6, accountDict.errors.password_min_length),
-  }).refine((data) => data.currentPassword !== data.newPassword, {
-    message: accountDict.errors.password_must_be_different,
-    path: ["newPassword"],
-  });
-  type PasswordFormData = z.infer<typeof passwordSchema>;
-  const { register: registerPassword, handleSubmit: handleSubmitPassword, formState: { errors: passwordErrors }, reset: resetPasswordForm } = useForm<PasswordFormData>({
-    resolver: zodResolver(passwordSchema),
-  });
 
   const onPasswordSubmit = async (data: PasswordFormData) => {
     if (!user.email) return;
@@ -96,7 +154,19 @@ function AccountPageContent({ lang, dict, user }: { lang: Locale, dict: Dictiona
     }
   };
 
-  // --- Image Crop Logic ---
+  const onAddressSubmit = async (data: BillingAddressFormData) => {
+    if (!userProfileRef) return;
+    setIsUpdatingAddress(true);
+    try {
+        await setDoc(userProfileRef, { billingAddress: data }, { merge: true });
+        toast({ title: accountDict.success.address_updated });
+    } catch (error: any) {
+        toast({ variant: 'destructive', title: accountDict.errors.update_failed, description: error.message });
+    } finally {
+        setIsUpdatingAddress(false);
+    }
+  };
+
   const onCropComplete = useCallback((_croppedArea: Area, croppedAreaPixels: Area) => {
     setCroppedAreaPixels(croppedAreaPixels);
   }, []);
@@ -111,7 +181,7 @@ function AccountPageContent({ lang, dict, user }: { lang: Locale, dict: Dictiona
   };
 
   const saveCroppedImage = async () => {
-    if (!imageSrc || !croppedAreaPixels) return;
+    if (!imageSrc || !croppedAreaPixels || !storage) return;
     setIsUploading(true);
     try {
       const croppedImageBlob = await getCroppedImg(imageSrc, croppedAreaPixels);
@@ -122,6 +192,9 @@ function AccountPageContent({ lang, dict, user }: { lang: Locale, dict: Dictiona
       const downloadURL = await getDownloadURL(avatarRef);
 
       await updateProfile(user, { photoURL: downloadURL });
+      if (userProfileRef) {
+          await setDoc(userProfileRef, { photoURL: downloadURL }, { merge: true });
+      }
 
       toast({ title: accountDict.success.avatar_updated });
       setImageSrc(null); // Close modal
@@ -132,6 +205,16 @@ function AccountPageContent({ lang, dict, user }: { lang: Locale, dict: Dictiona
       setIsUploading(false);
     }
   };
+
+  if (isProfileLoading) {
+      return (
+        <div className="flex h-screen items-center justify-center">
+            <Loader2 className="h-12 w-12 animate-spin text-accent" />
+        </div>
+      );
+  }
+
+  const currentPhotoURL = userProfile?.photoURL || user.photoURL;
 
   return (
     <div className="container mx-auto p-4 sm:p-8 max-w-4xl">
@@ -144,7 +227,6 @@ function AccountPageContent({ lang, dict, user }: { lang: Locale, dict: Dictiona
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2"><User className="h-5 w-5"/>{accountDict.profile.title}</CardTitle>
-            <CardDescription>{accountDict.profile.description}</CardDescription>
           </CardHeader>
           <form onSubmit={handleSubmitProfile(onProfileSubmit)}>
             <CardContent className="space-y-4">
@@ -175,7 +257,7 @@ function AccountPageContent({ lang, dict, user }: { lang: Locale, dict: Dictiona
           </CardHeader>
           <CardContent className="flex items-center gap-6">
             <Avatar className="h-24 w-24">
-              <AvatarImage src={user.photoURL || ''} alt={user.displayName || 'User avatar'} />
+              <AvatarImage src={currentPhotoURL || ''} alt={user.displayName || 'User avatar'} />
               <AvatarFallback className="text-3xl">
                 {user.displayName?.[0] || user.email?.[0]}
               </AvatarFallback>
@@ -193,6 +275,46 @@ function AccountPageContent({ lang, dict, user }: { lang: Locale, dict: Dictiona
               />
             </div>
           </CardContent>
+        </Card>
+
+        {/* Billing Address Card */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2"><Home className="h-5 w-5" />{accountDict.billing.title}</CardTitle>
+            <CardDescription>{accountDict.billing.description}</CardDescription>
+          </CardHeader>
+          <form onSubmit={handleSubmitAddress(onAddressSubmit)}>
+            <CardContent className="space-y-4">
+                <div className="grid gap-2">
+                    <Label htmlFor="street">{accountDict.billing.street_label}</Label>
+                    <Input id="street" {...registerAddress('street')} />
+                    {addressErrors.street && <p className="text-sm text-destructive">{addressErrors.street.message}</p>}
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid gap-2 md:col-span-2">
+                        <Label htmlFor="city">{accountDict.billing.city_label}</Label>
+                        <Input id="city" {...registerAddress('city')} />
+                        {addressErrors.city && <p className="text-sm text-destructive">{addressErrors.city.message}</p>}
+                    </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="postalCode">{accountDict.billing.postal_code_label}</Label>
+                        <Input id="postalCode" {...registerAddress('postalCode')} />
+                        {addressErrors.postalCode && <p className="text-sm text-destructive">{addressErrors.postalCode.message}</p>}
+                    </div>
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="country">{accountDict.billing.country_label}</Label>
+                    <Input id="country" {...registerAddress('country')} />
+                    {addressErrors.country && <p className="text-sm text-destructive">{addressErrors.country.message}</p>}
+                </div>
+            </CardContent>
+            <CardFooter className="border-t px-6 py-4">
+              <Button type="submit" disabled={isUpdatingAddress}>
+                {isUpdatingAddress && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {accountDict.billing.save_button}
+              </Button>
+            </CardFooter>
+          </form>
         </Card>
 
         {/* Change Password Card */}
@@ -237,7 +359,6 @@ function AccountPageContent({ lang, dict, user }: { lang: Locale, dict: Dictiona
         </Card>
       </div>
       
-      {/* --- Image Cropping Dialog --- */}
       <Dialog open={!!imageSrc} onOpenChange={(open) => !open && setImageSrc(null)}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
@@ -281,7 +402,6 @@ function AccountPageContent({ lang, dict, user }: { lang: Locale, dict: Dictiona
     </div>
   );
 }
-
 
 export default function AccountPage({ params }: { params: Promise<{ lang: Locale }> }) {
   const { lang } = use(params);

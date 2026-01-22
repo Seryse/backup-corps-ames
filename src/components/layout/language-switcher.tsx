@@ -1,6 +1,5 @@
 'use client';
 
-import { Languages } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
@@ -11,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { i18n } from '@/i18n-config';
+import { FlagIcon } from '@/components/ui/flag-icon';
 
 export default function LanguageSwitcher({ lang }: { lang: string }) {
   const router = useRouter();
@@ -26,7 +26,7 @@ export default function LanguageSwitcher({ lang }: { lang: string }) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon">
-          <Languages className="h-[1.2rem] w-[1.2rem]" />
+          <FlagIcon code={lang} className="w-6" />
           <span className="sr-only">Change language</span>
         </Button>
       </DropdownMenuTrigger>
@@ -35,7 +35,9 @@ export default function LanguageSwitcher({ lang }: { lang: string }) {
           <DropdownMenuItem
             key={locale}
             onClick={() => handleLanguageChange(locale)}
+            className="flex items-center gap-2"
           >
+            <FlagIcon code={locale} />
             {locale.toUpperCase()}
           </DropdownMenuItem>
         ))}

@@ -287,6 +287,15 @@
             "title": "Language",
             "description": "Choose your preferred language for the application."
         },
+        "billing": {
+            "title": "Billing Address",
+            "description": "Manage your billing address for faster checkouts.",
+            "street_label": "Street",
+            "city_label": "City",
+            "postal_code_label": "Postal Code",
+            "country_label": "Country",
+            "save_button": "Save Address"
+        },
         "profile_crop": {
             "title": "Edit Profile Picture",
             "save_button": "Save"
@@ -294,7 +303,8 @@
         "success": {
             "profile_updated": "Profile updated successfully!",
             "password_updated": "Password updated successfully!",
-            "avatar_updated": "Profile picture updated successfully!"
+            "avatar_updated": "Profile picture updated successfully!",
+            "address_updated": "Billing address updated successfully!"
         },
         "errors": {
             "update_failed": "Update Failed",
