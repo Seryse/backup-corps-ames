@@ -1,6 +1,6 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Button } from '@/components/ui/button';
@@ -45,6 +45,7 @@ const sessionTypeSchema = z.object({
   tokenProductId: z.string().min(1, 'Token Product ID is required'),
   sessionModel: z.enum(['private', 'small_group', 'large_group']),
   maxParticipants: z.coerce.number().int().min(1, 'Must have at least 1 participant'),
+  category: z.enum(['irisphere-harmonia', 'guidances', 'energetic-treatments', 'dialogue-space', 'combined-treatments']),
   videoUrl: z.string().url().optional().or(z.literal('')),
   imageFile: z.any().optional(),
 }).refine(data => {
@@ -93,6 +94,7 @@ export default function SessionTypeForm({ sessionTypeToEdit, onClose, dictionary
           sessionModel: 'private',
           maxParticipants: 1,
           videoUrl: '',
+          category: 'energetic-treatments',
         },
   });
 
@@ -145,6 +147,7 @@ export default function SessionTypeForm({ sessionTypeToEdit, onClose, dictionary
           tokenProductId: data.tokenProductId,
           sessionModel: data.sessionModel,
           maxParticipants: data.maxParticipants,
+          category: data.category,
           videoUrl: data.videoUrl,
           imageUrl: imageUrl || 'https://placehold.co/600x400/E6E6FA/333333?text=Image',
         };
@@ -297,6 +300,27 @@ export default function SessionTypeForm({ sessionTypeToEdit, onClose, dictionary
             {errors.maxParticipants && <p className="text-sm text-destructive">{errors.maxParticipants.message}</p>}
         </div>
       </div>
+      
+      <div>
+            <Label htmlFor="category">{dictionary.form.category}</Label>
+            <Controller
+                control={control}
+                name="category"
+                render={({ field }) => (
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <SelectTrigger>
+                            <SelectValue placeholder={dictionary.form.selectCategory} />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {Object.entries(dictionary.sessionCategoryOptions).map(([key, value]) => (
+                                <SelectItem key={key} value={key}>{value as string}</SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                )}
+            />
+            {errors.category && <p className="text-sm text-destructive">{errors.category.message}</p>}
+        </div>
 
       <div>
         <Label htmlFor="videoUrl">{dictionary.form.videoUrl}</Label>

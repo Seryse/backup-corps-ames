@@ -43,6 +43,8 @@ export type SessionType = {
     currency: string;
     tokenProductId: string;
     imageUrl?: string;
+    videoUrl?: string;
+    category: 'irisphere-harmonia' | 'guidances' | 'energetic-treatments' | 'dialogue-space' | 'combined-treatments';
 };
 
 interface SessionTypeManagerProps {

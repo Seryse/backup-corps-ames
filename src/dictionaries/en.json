@@ -12,7 +12,8 @@
         "shop": "Shop",
         "agenda": "Agenda",
         "trainings": "Trainings",
-        "hub": "Hub"
+        "hub": "Hub",
+        "soins": "Treatments"
     },
     "landing": {
         "title": "Body and Souls",
@@ -131,6 +132,13 @@
         "joinCall": "Join Call",
         "noSessionsToday": "No Sessions Scheduled for Today",
         "noSessionsTodayDescription": "Any sessions booked for today will appear here.",
+        "sessionCategoryOptions": {
+            "irisphere-harmonia": "Irisphere Harmonia (Signature Treatment)",
+            "guidances": "Guidance Sessions",
+            "energetic-treatments": "Energetic Healings",
+            "dialogue-space": "Dialogue Space",
+            "combined-treatments": "Combined Treatments"
+        },
         "form": {
             "nameEn": "Name (EN)",
             "nameFr": "Name (FR)",
@@ -167,7 +175,9 @@
             "translating": "Translating...",
             "nothingToTranslateTitle": "Nothing to translate",
             "nothingToTranslateDescription": "Please fill in the French field first.",
-            "translationError": "Translation Error"
+            "translationError": "Translation Error",
+            "category": "Category",
+            "selectCategory": "Select a category"
         },
         "success": {
             "formationAdded": "Formation added successfully!",
@@ -332,5 +342,34 @@
         "no_past": "You have no past appointments.",
         "book_now": "Book a new session",
         "join_button": "Join Session"
+    },
+    "soins_page": {
+        "title": "Our Treatments",
+        "intro": "Discover all our 100% online treatments. Enjoy the benefits of your Holistic Institute and the expertise of experienced practitioners directly from the comfort of your home.",
+        "categories": {
+            "irisphere-harmonia": {
+                "title": "Irisphere Harmonia (Signature Treatment)",
+                "intro": "Irisphere Harmonia is an exclusive Signature Treatment by Corps et Âmes, partly based on the methods of Innerdance - Kundalini Activation. The principle is simple: A series of scrupulously selected and energetically modified music tracks are played at high volume (headphones strongly recommended) to induce a state of light trance. They are programmed to take you on a safe journey through different phases and stages to cleanse and connect all parts of your Being. The protocol has been studied and refined to include dimensions of mediumship and defined intentions. Benefit from private or group sessions, supervised by the creator of the method in person, who will be assisted by other facilitators for large groups."
+            },
+            "guidances": {
+                "title": "Guidance Sessions",
+                "intro": "Book your 100% online guidance session: Choose between a card and oracle reading, a witch's rune casting, or a psycho-energetic session with a wellness professional specialized in these areas."
+            },
+            "energetic-treatments": {
+                "title": "Energetic Healings",
+                "intro": "Need a little boost, an alignment, a break from the daily hustle? Our practitioners will be delighted to welcome you from your home in a 100% online setting for an intuitive energetic healing session tailored to your current needs."
+            },
+            "dialogue-space": {
+                "title": "Dialogue Space",
+                "intro": "A privileged space for speaking and listening. Whether you have specific questions about our training programs, need advice on choosing the most suitable treatment for your needs, or simply want a live exchange before you commit, this space is yours. An open-hearted dialogue to enlighten your path."
+            },
+            "combined-treatments": {
+                "title": "Combined Treatments",
+                "intro": "Book your combined session, group our services into a single appointment to get up to 5 hours of continuous well-being in one day."
+            }
+        },
+        "loading": "Loading treatments...",
+        "no_soins": "No treatments available at the moment.",
+        "book_now": "Book Now"
     }
 }

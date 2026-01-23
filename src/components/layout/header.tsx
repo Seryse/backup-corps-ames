@@ -8,7 +8,7 @@ import { Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, ShoppingBag, CalendarDays, Home } from 'lucide-react';
+import { Menu, ShoppingBag, CalendarDays, Home, Sparkles } from 'lucide-react';
 import { CartNav } from './cart-nav';
 import { useEffect, useState } from 'react';
 
@@ -21,6 +21,7 @@ export default function Header({ dictionary, lang }: { dictionary: Dictionary['h
   
   const navLinks = [
       { href: `/${lang}/home`, label: dictionary.home, icon: Home },
+      { href: `/${lang}/soins`, label: dictionary.soins, icon: Sparkles },
       { href: `/${lang}/shop`, label: dictionary.shop, icon: ShoppingBag },
       { href: `/${lang}/agenda`, label: dictionary.agenda, icon: CalendarDays },
   ]

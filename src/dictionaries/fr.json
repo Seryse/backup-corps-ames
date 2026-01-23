@@ -12,7 +12,8 @@
         "shop": "Boutique",
         "agenda": "Agenda",
         "trainings": "Formations",
-        "hub": "Hub"
+        "hub": "Hub",
+        "soins": "Les Soins"
     },
     "landing": {
         "title": "Corps et Âmes",
@@ -131,6 +132,13 @@
         "joinCall": "Rejoindre l'Appel",
         "noSessionsToday": "Aucune séance prévue aujourd'hui",
         "noSessionsTodayDescription": "Les séances réservées pour aujourd'hui apparaîtront ici.",
+        "sessionCategoryOptions": {
+            "irisphere-harmonia": "Irisphère Harmonia (Soin Signature)",
+            "guidances": "Les Guidances",
+            "energetic-treatments": "Les Soins Énergétiques",
+            "dialogue-space": "L'Espace Dialogues",
+            "combined-treatments": "Les Soins Combinés"
+        },
         "form": {
             "nameEn": "Nom (EN)",
             "nameFr": "Nom (FR)",
@@ -167,7 +175,9 @@
             "translating": "Traduction en cours...",
             "nothingToTranslateTitle": "Rien à traduire",
             "nothingToTranslateDescription": "Veuillez d'abord remplir le champ en français.",
-            "translationError": "Erreur de traduction"
+            "translationError": "Erreur de traduction",
+            "category": "Catégorie",
+            "selectCategory": "Sélectionner une catégorie"
         },
         "success": {
             "formationAdded": "Formation ajoutée avec succès !",
@@ -332,5 +342,34 @@
         "no_past": "Vous n'avez aucun rendez-vous passé.",
         "book_now": "Réserver une nouvelle séance",
         "join_button": "Rejoindre la séance"
+    },
+    "soins_page": {
+        "title": "Les Soins",
+        "intro": "Découvrez tous nos soins 100% en ligne. Profitez des bienfaits de votre Institut Holistique et de l'expertise de praticiens expérimentés directement depuis le confort de votre maison.",
+        "categories": {
+            "irisphere-harmonia": {
+                "title": "Irisphère Harmonia (Soin Signature)",
+                "intro": "Irisphère Harmonia est un soin Signature exclusif Corps et Âmes, qui se base en partie sur les méthodes de l'Innerdance - Kundalini Activation. Le principe est simple : Une suite de musiques scrupuleusement sélectionnées et modifiées énergétiquement sont diffusées à haut volume (casque fortement recommandé) afin d'induire un état de transe légère. Elles sont programmées pour vous emmener dans un voyage sécurisé suivant différentes phases et étapes afin de nettoyer et connecter toutes les parties de votre Être. Le protocole a été étudié et affiné pour y inclure des dimensions de médiumnité et des intentions définies. Bénéficiez de séances privées ou en groupe, encadrées par le créateur de la méthode en personne, qui sera assisté d'autres facilitateurs pour les groupes importants."
+            },
+            "guidances": {
+                "title": "Les Guidances",
+                "intro": "Réservez votre guidance 100% en ligne : Choisissez entre une lecture de cartes et oracles, un tirage de runes de sorcières ou une séance de psycho-énergétique avec un professionnel du bien-être spécialisé dans ces domaines."
+            },
+            "energetic-treatments": {
+                "title": "Les Soins Énergétiques",
+                "intro": "Besoin d'un petit coup de boost, d'un alignement, d'une pause dans le tumulte du quotidien ? Nos praticiens seront ravis de vous recevoir depuis votre domicile dans un cadre 100% en ligne pour un soin énergétique intuitif adapté à votre demande du moment."
+            },
+            "dialogue-space": {
+                "title": "L'Espace Dialogues",
+                "intro": "Un espace de parole et d’écoute privilégié. Que vous ayez des questions précises sur nos formations, besoin d'un conseil pour choisir le soin le plus adapté à votre besoin, ou simplement l'envie d'un temps d'échange en direct avant de vous lancer, cet espace est le vôtre. Un dialogue à cœur ouvert pour éclairer votre chemin."
+            },
+            "combined-treatments": {
+                "title": "Les Soins Combinés",
+                "intro": "Réservez votre séance combinée, regroupez nos services en un seul rendez-vous pour obtenir jusqu'à 5h de bien-être d'affilée en une seule journée."
+            }
+        },
+        "loading": "Chargement des soins...",
+        "no_soins": "Aucun soin disponible pour le moment.",
+        "book_now": "Réserver"
     }
 }

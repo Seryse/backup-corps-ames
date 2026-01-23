@@ -12,7 +12,8 @@
         "shop": "Tienda",
         "agenda": "Agenda",
         "trainings": "Formaciones",
-        "hub": "Hub"
+        "hub": "Hub",
+        "soins": "Tratamientos"
     },
     "landing": {
         "title": "Cuerpo y Almas",
@@ -131,6 +132,13 @@
         "joinCall": "Unirse a la Llamada",
         "noSessionsToday": "No hay sesiones programadas para hoy",
         "noSessionsTodayDescription": "Cualquier sesión reservada para hoy aparecerá aquí.",
+        "sessionCategoryOptions": {
+            "irisphere-harmonia": "Irisfera Armonía (Tratamiento de Firma)",
+            "guidances": "Sesiones de Guía",
+            "energetic-treatments": "Sanaciones Energéticas",
+            "dialogue-space": "Espacio de Diálogo",
+            "combined-treatments": "Tratamientos Combinados"
+        },
         "form": {
             "nameEn": "Nombre (EN)",
             "nameFr": "Nombre (FR)",
@@ -167,7 +175,9 @@
             "translating": "Traduciendo...",
             "nothingToTranslateTitle": "Nada que traducir",
             "nothingToTranslateDescription": "Por favor, rellene primero el campo en francés.",
-            "translationError": "Error de Traducción"
+            "translationError": "Error de Traducción",
+            "category": "Categoría",
+            "selectCategory": "Seleccione una categoría"
         },
         "success": {
             "formationAdded": "¡Formación añadida con éxito!",
@@ -332,5 +342,34 @@
         "no_past": "No tienes citas pasadas.",
         "book_now": "Reservar una nueva sesión",
         "join_button": "Unirse a la Sesión"
+    },
+    "soins_page": {
+        "title": "Nuestros Tratamientos",
+        "intro": "Descubra todos nuestros tratamientos 100% en línea. Disfrute de los beneficios de su Instituto Holístico y de la experiencia de profesionales experimentados directamente desde la comodidad de su hogar.",
+        "categories": {
+            "irisphere-harmonia": {
+                "title": "Irisfera Armonía (Tratamiento de Firma)",
+                "intro": "Irisfera Armonía es un Tratamiento de Firma exclusivo de Corps et Âmes, basado en parte en los métodos de Innerdance - Activación de Kundalini. El principio es simple: una serie de pistas de música escrupulosamente seleccionadas y modificadas energéticamente se reproducen a un volumen alto (se recomienda encarecidamente el uso de auriculares) para inducir un estado de trance ligero. Están programadas para llevarlo a un viaje seguro a través de diferentes fases y etapas para limpiar y conectar todas las partes de su Ser. El protocolo ha sido estudiado y refinado para incluir dimensiones de mediumnidad e intenciones definidas. Benefíciese de sesiones privadas o en grupo, supervisadas por el creador del método en persona, quien será asistido por otros facilitadores para grupos grandes."
+            },
+            "guidances": {
+                "title": "Sesiones de Guía",
+                "intro": "Reserve su sesión de guía 100% en línea: elija entre una lectura de cartas y oráculos, una tirada de runas de brujas o una sesión psicoenergética con un profesional del bienestar especializado en estas áreas."
+            },
+            "energetic-treatments": {
+                "title": "Sanaciones Energéticas",
+                "intro": "¿Necesita un pequeño impulso, una alineación, un descanso del ajetreo diario? Nuestros practicantes estarán encantados de recibirlo desde su hogar en un entorno 100% en línea para una sesión de sanación energética intuitiva adaptada a sus necesidades actuales."
+            },
+            "dialogue-space": {
+                "title": "Espacio de Diálogo",
+                "intro": "Un espacio privilegiado para hablar y escuchar. Ya sea que tenga preguntas específicas sobre nuestros programas de formación, necesite consejos para elegir el tratamiento más adecuado para sus necesidades o simplemente desee un intercambio en vivo antes de comprometerse, este espacio es suyo. Un diálogo a corazón abierto para iluminar su camino."
+            },
+            "combined-treatments": {
+                "title": "Tratamientos Combinados",
+                "intro": "Reserve su sesión combinada, agrupe nuestros servicios en una sola cita para obtener hasta 5 horas de bienestar continuo en un día."
+            }
+        },
+        "loading": "Cargando tratamientos...",
+        "no_soins": "No hay tratamientos disponibles por el momento.",
+        "book_now": "Reservar ahora"
     }
 }

@@ -239,9 +239,20 @@
           "type": "string",
           "description": "URL of the session type's image, hosted on Firebase Storage.",
           "format": "uri"
+        },
+        "category": {
+            "type": "string",
+            "description": "The category of the session type.",
+            "enum": [
+                "irisphere-harmonia",
+                "guidances",
+                "energetic-treatments",
+                "dialogue-space",
+                "combined-treatments"
+            ]
         }
       },
-      "required": ["name", "description", "sessionModel", "maxParticipants", "price", "currency", "tokenProductId"]
+      "required": ["name", "description", "sessionModel", "maxParticipants", "price", "currency", "tokenProductId", "category"]
     },
     "TimeSlot": {
       "title": "Time Slot",
