@@ -8,8 +8,6 @@ service cloud.firestore {
     }
 
     function isAdmin() {
-      // Check admin status by email for consistency across projects.
-      // Using UID for seryse@live.be as a more reliable check.
       return request.auth != null && (
         request.auth.uid == 'HvsOFzrOwFTHWTBVBextpZtV5I53' || // seryse@live.be
         request.auth.token.email == 'jael@live.fr' ||
@@ -62,18 +60,9 @@ service cloud.firestore {
       allow update: if request.auth != null && isBookingIncrement(resource.data, request.resource.data);
     }
 
-    // Rule for the admin's collection group query on 'bookings'.
-    match /{path=**}/bookings/{bookingId} {
-      // Allow admins to perform collection group queries on bookings by inlining the isAdmin() check.
-      // Using UID for seryse@live.be as a more reliable check.
-      allow read: if request.auth != null && (
-        request.auth.uid == 'HvsOFzrOwFTHWTBVBextpZtV5I53' ||
-        request.auth.token.email == 'jael@live.fr' ||
-        request.auth.token.email == 'selvura@gmail.com'
-      );
-    }
-
     match /users/{userId}/bookings/{bookingId} {
+      // An owner can read/write their own bookings.
+      // An admin can read/write any booking, which covers collection group queries.
       allow read, write: if isOwner(userId) || isAdmin();
     }
 
