@@ -147,6 +147,7 @@
             "title": "Télécharger le rapport Grimoire",
             "description": "Téléchargez le PDF du rapport pour l'utilisateur {userName}.",
             "file_label": "Fichier PDF du rapport",
+            "thumbnail_label": "Image de couverture (Optionnel)",
             "upload_button": "Télécharger",
             "upload_success_title": "Rapport téléchargé !",
             "upload_error_title": "Échec du téléchargement",

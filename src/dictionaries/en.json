@@ -147,6 +147,7 @@
             "title": "Upload Grimoire Report",
             "description": "Upload the report PDF for user {userName}.",
             "file_label": "Report PDF file",
+            "thumbnail_label": "Cover Image (Optional)",
             "upload_button": "Upload",
             "upload_success_title": "Report uploaded!",
             "upload_error_title": "Upload Failed",

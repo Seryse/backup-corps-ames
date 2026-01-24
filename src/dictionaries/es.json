@@ -147,6 +147,7 @@
             "title": "Subir Informe del Grimorio",
             "description": "Subir el informe en PDF para el usuario {userName}.",
             "file_label": "Archivo PDF del informe",
+            "thumbnail_label": "Imagen de portada (Opcional)",
             "upload_button": "Subir",
             "upload_success_title": "¡Informe subido!",
             "upload_error_title": "Error al subir",

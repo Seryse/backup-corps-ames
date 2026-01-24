@@ -23,12 +23,6 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, BookHeart, Upload } from 'lucide-react';
 import type { MergedBooking } from '@/lib/types';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import * as pdfjs from 'pdfjs-dist';
-
-// Set worker source for pdf.js
-if (typeof window !== 'undefined') {
-  pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
-}
 
 interface GrimoireUploadDialogProps {
   booking: MergedBooking;
@@ -37,28 +31,10 @@ interface GrimoireUploadDialogProps {
 
 const grimoireSchema = z.object({
   pdfFile: z.any().refine((files) => files?.length == 1, 'PDF file is required.'),
+  pdfThumbnailFile: z.any().optional(),
 });
 
 type GrimoireFormData = z.infer<typeof grimoireSchema>;
-
-async function generatePdfThumbnail(file: File): Promise<Blob | null> {
-    const arrayBuffer = await file.arrayBuffer();
-    const pdf = await pdfjs.getDocument(arrayBuffer).promise;
-    const page = await pdf.getPage(1);
-
-    const viewport = page.getViewport({ scale: 1.5 });
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
-    
-    if (!context) return null;
-
-    canvas.height = viewport.height;
-    canvas.width = viewport.width;
-
-    await page.render({ canvasContext: context, viewport: viewport }).promise;
-
-    return new Promise<Blob | null>(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.8));
-}
 
 
 export function GrimoireUploadDialog({ booking, dictionary }: GrimoireUploadDialogProps) {
@@ -82,38 +58,34 @@ export function GrimoireUploadDialog({ booking, dictionary }: GrimoireUploadDial
 
     setIsSubmitting(true);
     try {
-      const file = data.pdfFile[0];
+        const pdfFile = data.pdfFile[0];
+        const thumbnailFile = data.pdfThumbnailFile?.[0];
       
-      let pdfThumbnailUrl = PlaceHolderImages.find(p => p.id === 'grimoire-thumbnail')?.imageUrl || '';
+        let pdfThumbnailUrl = PlaceHolderImages.find(p => p.id === 'grimoire-thumbnail')?.imageUrl || '';
 
-      try {
-          const thumbnailBlob = await generatePdfThumbnail(file);
-          if (thumbnailBlob) {
-              const thumbnailPath = `reports/${booking.userId}/${booking.id}_thumb.jpg`;
-              const thumbnailFileRef = ref(storage, thumbnailPath);
-              await uploadBytes(thumbnailFileRef, thumbnailBlob);
-              pdfThumbnailUrl = await getDownloadURL(thumbnailFileRef);
-          }
-      } catch (thumbError) {
-          console.error("Could not generate PDF thumbnail, using placeholder.", thumbError);
-      }
+        if (thumbnailFile) {
+            const thumbnailPath = `reports/${booking.userId}/${booking.id}_thumb.jpg`;
+            const thumbnailFileRef = ref(storage, thumbnailPath);
+            await uploadBytes(thumbnailFileRef, thumbnailFile);
+            pdfThumbnailUrl = await getDownloadURL(thumbnailFileRef);
+        }
 
-      const filePath = `reports/${booking.userId}/${booking.id}.pdf`;
-      const fileRef = ref(storage, filePath);
+        const filePath = `reports/${booking.userId}/${booking.id}.pdf`;
+        const fileRef = ref(storage, filePath);
 
-      await uploadBytes(fileRef, file);
-      const pdfUrl = await getDownloadURL(fileRef);
+        await uploadBytes(fileRef, pdfFile);
+        const pdfUrl = await getDownloadURL(fileRef);
+        
+        const bookingRef = doc(firestore, 'users', booking.userId, 'bookings', booking.id);
+        await updateDoc(bookingRef, {
+            pdfUrl: pdfUrl,
+            pdfThumbnail: pdfThumbnailUrl,
+            reportStatus: 'available',
+        });
       
-      const bookingRef = doc(firestore, 'users', booking.userId, 'bookings', booking.id);
-      await updateDoc(bookingRef, {
-        pdfUrl: pdfUrl,
-        pdfThumbnail: pdfThumbnailUrl,
-        reportStatus: 'available',
-      });
-      
-      toast({ title: dictionary.admin.grimoire.upload_success_title });
-      setIsOpen(false);
-      reset();
+        toast({ title: dictionary.admin.grimoire.upload_success_title });
+        setIsOpen(false);
+        reset();
 
     } catch (error: any) {
       console.error("Error uploading Grimoire:", error);
@@ -147,6 +119,12 @@ export function GrimoireUploadDialog({ booking, dictionary }: GrimoireUploadDial
             <Label htmlFor="pdfFile">{dictionary.admin.grimoire.file_label}</Label>
             <Input id="pdfFile" type="file" accept=".pdf" {...register('pdfFile')} />
             {errors.pdfFile && <p className="text-sm text-destructive">{errors.pdfFile?.message?.toString()}</p>}
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="pdfThumbnailFile">{dictionary.admin.grimoire.thumbnail_label || 'Cover Image (Optional)'}</Label>
+            <Input id="pdfThumbnailFile" type="file" accept="image/*" {...register('pdfThumbnailFile')} />
+            {errors.pdfThumbnailFile && <p className="text-sm text-destructive">{errors.pdfThumbnailFile?.message?.toString()}</p>}
           </div>
 
           <DialogFooter>
