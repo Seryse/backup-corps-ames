@@ -63,14 +63,16 @@ service cloud.firestore {
 
     // Rule for the admin's collection group query on 'bookings'.
     match /{path=**}/bookings/{bookingId} {
-      // Allow admins to perform collection group queries on bookings
-      allow read: if isAdmin();
+      // Allow admins to perform collection group queries on bookings by inlining the isAdmin() check.
+      allow read: if request.auth != null && (
+        request.auth.token.email == 'seryse@live.be' ||
+        request.auth.token.email == 'jael@live.fr' ||
+        request.auth.token.email == 'selvura@gmail.com'
+      );
     }
 
     match /users/{userId}/bookings/{bookingId} {
-      allow get: if isOwner(userId) || isAdmin();
-      allow list: if isOwner(userId) || isAdmin();
-      allow write: if isOwner(userId) || isAdmin();
+      allow read, write: if isOwner(userId) || isAdmin();
     }
 
     match /sessions/{sessionId} {
