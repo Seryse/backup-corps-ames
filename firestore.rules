@@ -60,7 +60,7 @@ service cloud.firestore {
     // Rule for the admin's collection group query on 'bookings'.
     match /{path=**}/bookings/{bookingId} {
       // Allow admins to perform collection group queries on bookings
-      allow list: if isAdmin();
+      allow read: if isAdmin();
     }
 
     match /users/{userId}/bookings/{bookingId} {
