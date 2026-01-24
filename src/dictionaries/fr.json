@@ -129,6 +129,9 @@
         },
         "repeatCount": "Nombre de répétitions",
         "todaysSessions": "Séances du Jour",
+        "pastSessions": "Séances Passées",
+        "noPastSessions": "Aucune séance passée à afficher.",
+        "bookedBy": "Réservé par",
         "joinCall": "Rejoindre l'Appel",
         "noSessionsToday": "Aucune séance prévue aujourd'hui",
         "noSessionsTodayDescription": "Les séances réservées pour aujourd'hui apparaîtront ici.",
@@ -138,6 +141,16 @@
             "energetic-treatments": "Les Soins Énergétiques",
             "dialogue-space": "L'Espace Dialogues",
             "combined-treatments": "Les Soins Combinés"
+        },
+        "grimoire": {
+            "manage_button": "Gérer le Grimoire",
+            "title": "Télécharger le rapport Grimoire",
+            "description": "Téléchargez le PDF du rapport pour l'utilisateur {userName}.",
+            "file_label": "Fichier PDF du rapport",
+            "upload_button": "Télécharger",
+            "upload_success_title": "Rapport téléchargé !",
+            "upload_error_title": "Échec du téléchargement",
+            "report_sent": "Rapport envoyé"
         },
         "form": {
             "nameEn": "Nom (EN)",
@@ -277,6 +290,10 @@
             "title": "Hub Communautaire",
             "description": "Rejoignez les forums de discussion pour vos formations et séances."
         },
+        "grimoire": {
+            "title": "Mon Grimoire Personnel",
+            "description": "Retrouvez ici les rapports symboliques de vos voyages."
+        },
         "admin": {
             "title": "Console d'Administration",
             "description": "Gérer les formations, les actualités et les sessions."
@@ -371,5 +388,14 @@
         "loading": "Chargement des soins...",
         "no_soins": "Aucun soin disponible pour le moment.",
         "book_now": "Réserver"
+    },
+    "grimoire_page": {
+        "title": "Mon Grimoire Personnel",
+        "subtitle": "Retrouvez ici tous les rapports de vos voyages Irisphère Harmonia.",
+        "voyage_title": "Voyage du",
+        "report_for": "Rapport pour la séance du {date}",
+        "open_button": "Ouvrir mon Grimoire",
+        "no_reports_title": "Votre Grimoire est encore vide",
+        "no_reports_description": "Les rapports de vos séances 'Irisphère Harmonia' apparaîtront ici une fois qu'ils auront été préparés."
     }
 }

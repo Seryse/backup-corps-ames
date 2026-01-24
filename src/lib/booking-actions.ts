@@ -59,6 +59,9 @@ export async function createBooking(
         bookingTime: serverTimestamp(),
         status: 'confirmed',
         visioToken: visioToken,
+        reportStatus: 'pending',
+        pdfUrl: null,
+        pdfThumbnail: null,
       });
     });
 

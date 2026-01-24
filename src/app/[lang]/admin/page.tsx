@@ -12,7 +12,7 @@ import { Separator } from '@/components/ui/separator';
 import NewsManager from '@/components/admin/news-manager';
 import SessionTypeManager from '@/components/admin/session-type-manager';
 import { Loader2 } from 'lucide-react';
-import UpcomingSessions from '@/components/admin/upcoming-sessions';
+import AdminSessionManager from '@/components/admin/admin-session-manager';
 import { adminEmails } from '@/lib/config';
 
 export default function AdminPage({ params }: { params: Promise<{ lang: Locale }> }) {
@@ -67,7 +67,7 @@ export default function AdminPage({ params }: { params: Promise<{ lang: Locale }
       </div>
       
       <div className="space-y-8">
-        <UpcomingSessions dictionary={dict} lang={lang} />
+        <AdminSessionManager dictionary={dict} lang={lang} />
         <Separator />
         <NewsManager dictionary={dict.admin} lang={lang} />
         <Separator />

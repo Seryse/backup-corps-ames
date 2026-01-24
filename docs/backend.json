@@ -293,9 +293,24 @@
         "visioToken": {
           "type": "string",
           "description": "The unique token granting access to the live video session for this booking."
+        },
+        "reportStatus": {
+          "type": "string",
+          "enum": ["pending", "available"],
+          "description": "Status of the Grimoire PDF report for this booking."
+        },
+        "pdfUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL of the generated Grimoire PDF report."
+        },
+        "pdfThumbnail": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL of the thumbnail for the Grimoire PDF report."
         }
       },
-      "required": ["userId", "timeSlotId", "sessionTypeId", "bookingTime", "status", "visioToken"]
+      "required": ["userId", "timeSlotId", "sessionTypeId", "bookingTime", "status", "visioToken", "reportStatus"]
     },
     "LiveSession": {
       "title": "Live Session State",

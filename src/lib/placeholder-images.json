@@ -35,6 +35,12 @@
       "description": "An image of carved rune stones.",
       "imageUrl": "https://images.unsplash.com/photo-1610212570415-475a46306c54?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxydW5lJTIwc3RvbmVzfGVufDB8fHx8MTc2OTA0NDYwNnww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "rune stones"
+    },
+    {
+      "id": "grimoire-thumbnail",
+      "description": "A placeholder thumbnail for Grimoire PDF reports.",
+      "imageUrl": "https://images.unsplash.com/photo-1544947950-fa07a98d237f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxvcm5hdGUlMjBib29rfGVufDB8fHx8MTc3MDk5NzYyOHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "ornate book"
     }
   ]
 }

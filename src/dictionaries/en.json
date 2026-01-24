@@ -129,6 +129,9 @@
         },
         "repeatCount": "Number of repetitions",
         "todaysSessions": "Today's Sessions",
+        "pastSessions": "Past Sessions",
+        "noPastSessions": "No past sessions to display.",
+        "bookedBy": "Booked by",
         "joinCall": "Join Call",
         "noSessionsToday": "No Sessions Scheduled for Today",
         "noSessionsTodayDescription": "Any sessions booked for today will appear here.",
@@ -138,6 +141,16 @@
             "energetic-treatments": "Energetic Healings",
             "dialogue-space": "Dialogue Space",
             "combined-treatments": "Combined Treatments"
+        },
+        "grimoire": {
+            "manage_button": "Manage Grimoire",
+            "title": "Upload Grimoire Report",
+            "description": "Upload the report PDF for user {userName}.",
+            "file_label": "Report PDF file",
+            "upload_button": "Upload",
+            "upload_success_title": "Report uploaded!",
+            "upload_error_title": "Upload Failed",
+            "report_sent": "Report sent"
         },
         "form": {
             "nameEn": "Name (EN)",
@@ -277,6 +290,10 @@
             "title": "Community Hub",
             "description": "Join discussion forums for your trainings and sessions."
         },
+        "grimoire": {
+            "title": "My Personal Grimoire",
+            "description": "Find the symbolic reports of your journeys here."
+        },
         "admin": {
             "title": "Admin Console",
             "description": "Manage formations, news, and sessions."
@@ -371,5 +388,14 @@
         "loading": "Loading treatments...",
         "no_soins": "No treatments available at the moment.",
         "book_now": "Book Now"
+    },
+    "grimoire_page": {
+        "title": "My Personal Grimoire",
+        "subtitle": "Find all the reports from your Irisphère Harmonia journeys here.",
+        "voyage_title": "Journey of",
+        "report_for": "Report for the session of {date}",
+        "open_button": "Open my Grimoire",
+        "no_reports_title": "Your Grimoire is still empty",
+        "no_reports_description": "The reports from your 'Irisphère Harmonia' sessions will appear here once they have been prepared."
     }
 }

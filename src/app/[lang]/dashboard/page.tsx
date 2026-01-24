@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { getDictionary, Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { User, GraduationCap, CalendarCheck, Users, ChevronRight, Shield } from 'lucide-react';
+import { User, GraduationCap, CalendarCheck, Users, ChevronRight, Shield, BookHeart } from 'lucide-react';
 import { useUser } from '@/firebase';
 import { Loader2 } from 'lucide-react';
 import { adminEmails } from '@/lib/config';
@@ -49,6 +49,12 @@ export default function DashboardPage({ params }: { params: Promise<{ lang: Loca
       title: dashboardDict.bookings.title,
       description: dashboardDict.bookings.description,
       icon: CalendarCheck,
+    },
+    {
+      href: `/${lang}/grimoire`,
+      title: dashboardDict.grimoire.title,
+      description: dashboardDict.grimoire.description,
+      icon: BookHeart,
     },
     {
       href: `/${lang}/hub`,
