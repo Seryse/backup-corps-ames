@@ -57,8 +57,6 @@ export default function AdminSessionManager({ lang, dictionary }: { lang: Locale
       })
       .filter((b): b is MergedBooking => b !== null)
       .sort((a, b) => a.timeSlot.startTime.toMillis() - b.timeSlot.startTime.toMillis());
-
-    const today = new Date();
     
     const todays = allMerged.filter(b => {
         const startTime = b.timeSlot.startTime.toDate();
@@ -66,8 +64,8 @@ export default function AdminSessionManager({ lang, dictionary }: { lang: Locale
     });
 
     const past = allMerged.filter(b => {
-        const startTime = b.timeSlot.startTime.toDate();
-        return isPast(startTime) && !isToday(startTime);
+        const endTime = b.timeSlot.endTime.toDate();
+        return isPast(endTime) && !isToday(b.timeSlot.startTime.toDate());
     });
 
     return { todaysBookings: todays, pastBookings: past.reverse() };
@@ -89,7 +87,7 @@ export default function AdminSessionManager({ lang, dictionary }: { lang: Locale
     const startTime = timeSlot.startTime.toDate();
     const sessionHasEnded = isPast(timeSlot.endTime.toDate());
 
-    const isGrimoireEligible = sessionType.name?.fr === 'Irisphère Harmonia - Séance Privée';
+    const isGrimoireEligible = sessionType.category === 'irisphere-harmonia' && sessionType.sessionModel === 'private';
 
     return (
         <Card key={booking.id} className="flex flex-col">
