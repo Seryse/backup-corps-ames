@@ -46,7 +46,7 @@ export function UserNav({ dictionary, lang }: { dictionary: Dictionary['header']
     )
   }
 
-  const isAdmin = user && user.email && adminEmails.includes(user.email);
+  const isAdmin = user && user.email && adminEmails.map(e => e.toLowerCase()).includes(user.email.toLowerCase());
 
   return (
     <DropdownMenu>

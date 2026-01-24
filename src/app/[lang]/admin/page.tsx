@@ -30,7 +30,7 @@ export default function AdminPage({ params }: { params: Promise<{ lang: Locale }
 
   useEffect(() => {
     if (!isUserLoading) {
-      const isEmailAuthorized = user && user.email && adminEmails.includes(user.email);
+      const isEmailAuthorized = user && user.email && adminEmails.map(e => e.toLowerCase()).includes(user.email.toLowerCase());
       
       if (user && isEmailAuthorized) {
         setIsAuthorized(true);
