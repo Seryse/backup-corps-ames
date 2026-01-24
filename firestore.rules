@@ -9,7 +9,11 @@ service cloud.firestore {
 
     function isAdmin() {
       // Check admin status by email for consistency across projects.
-      return request.auth != null && request.auth.token.email in ['seryse@live.be', 'jael@live.fr', 'selvura@gmail.com'];
+      return request.auth != null && (
+        request.auth.token.email == 'seryse@live.be' ||
+        request.auth.token.email == 'jael@live.fr' ||
+        request.auth.token.email == 'selvura@gmail.com'
+      );
     }
 
     function isBookingIncrement(before, after) {
