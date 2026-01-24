@@ -36,8 +36,7 @@ export default function GrimoirePage({ params }: { params: Promise<{ lang: Local
     if (!firestore || !user) return null;
     return query(
         collection(firestore, 'users', user.uid, 'bookings'), 
-        where('reportStatus', '==', 'available'),
-        orderBy('bookingTime', 'desc')
+        where('reportStatus', '==', 'available')
     ) as Query<Booking>;
   }, [firestore, user]);
 
@@ -68,7 +67,8 @@ export default function GrimoirePage({ params }: { params: Promise<{ lang: Local
         if (!sessionType || !timeSlot) return null;
         return { ...booking, sessionType, timeSlot };
       })
-      .filter((b): b is MergedBooking => b !== null);
+      .filter((b): b is MergedBooking => b !== null)
+      .sort((a, b) => b.bookingTime.toMillis() - a.bookingTime.toMillis());
   }, [bookings, sessionTypes, timeSlots]);
 
 
