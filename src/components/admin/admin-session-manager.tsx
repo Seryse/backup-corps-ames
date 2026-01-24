@@ -25,7 +25,7 @@ export default function AdminSessionManager({ lang, dictionary }: { lang: Locale
   // --- Data Fetching ---
   const bookingsQuery = useMemoFirebase(() => {
     if (!firestore) return null;
-    return query(collectionGroup(firestore, 'bookings'), orderBy('bookingTime', 'desc')) as Query<Booking>;
+    return query(collectionGroup(firestore, 'bookings')) as Query<Booking>;
   }, [firestore]);
 
   const sessionTypesQuery = useMemoFirebase(() => {
