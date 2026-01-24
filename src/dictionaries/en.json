@@ -395,7 +395,7 @@
         "subtitle": "Find all the reports from your Irisphère Harmonia journeys here.",
         "voyage_title": "Journey of",
         "report_for": "Report for the session of {date}",
-        "open_button": "Open my Grimoire",
+        "open_button": "Download my Grimoire",
         "no_reports_title": "Your Grimoire is still empty",
         "no_reports_description": "The reports from your 'Irisphère Harmonia' sessions will appear here once they have been prepared."
     }

@@ -4,10 +4,10 @@ import React, { useMemo, useState, useEffect, use } from 'react';
 import { getDictionary, Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
 import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
-import { collection, query, orderBy, Query, where } from 'firebase/firestore';
+import { collection, query, where } from 'firebase/firestore';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Loader2, BookHeart, BookOpen, ImageOff } from 'lucide-react';
+import { Loader2, BookHeart, BookOpen, ImageOff, Download } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { format } from 'date-fns';
@@ -114,8 +114,8 @@ export default function GrimoirePage({ params }: { params: Promise<{ lang: Local
                             </CardHeader>
                             <CardFooter>
                                 <Button asChild className="w-full">
-                                   <a href={entry.pdfUrl} target="_blank" rel="noopener noreferrer">
-                                     <BookOpen className="mr-2 h-4 w-4" />
+                                   <a href={entry.pdfUrl} download target="_blank" rel="noopener noreferrer">
+                                     <Download className="mr-2 h-4 w-4" />
                                      {grimoireDict.open_button}
                                    </a>
                                 </Button>
