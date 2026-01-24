@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Locale } from '@/i18n-config';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, Query, collectionGroup } from 'firebase/firestore';
@@ -8,13 +8,22 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Loader2, Video, Calendar, Clock, Users, Link as LinkIcon, BookHeart, Download } from 'lucide-react';
 import Link from 'next/link';
-import { format, isPast, isToday, startOfDay } from 'date-fns';
+import { format, isPast, isToday } from 'date-fns';
 import { enUS, fr, es } from 'date-fns/locale';
 import type { SessionType } from '@/components/admin/session-type-manager';
 import type { Booking, MergedBooking, TimeSlot } from '@/lib/types';
 import { GrimoireUploadDialog } from './GrimoireUploadDialog';
 import { Badge } from '../ui/badge';
 
+type UserProfile = {
+    id: string;
+    displayName?: string;
+    email?: string;
+};
+
+type AdminMergedBooking = MergedBooking & {
+    user: UserProfile;
+}
 
 export default function AdminSessionManager({ lang, dictionary }: { lang: Locale, dictionary: any }) {
   const firestore = useFirestore();
@@ -37,41 +46,48 @@ export default function AdminSessionManager({ lang, dictionary }: { lang: Locale
     if (!firestore) return null;
     return collection(firestore, 'timeSlots') as Query<TimeSlot>;
   }, [firestore]);
+  
+  const usersQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return collection(firestore, 'users') as Query<UserProfile>;
+  }, [firestore]);
 
   const { data: bookings, isLoading: isLoadingBookings } = useCollection<Booking>(bookingsQuery);
   const { data: sessionTypes, isLoading: isLoadingSessionTypes } = useCollection<SessionType>(sessionTypesQuery);
   const { data: timeSlots, isLoading: isLoadingTimeSlots } = useCollection<TimeSlot>(timeSlotsQuery);
+  const { data: users, isLoading: isLoadingUsers } = useCollection<UserProfile>(usersQuery);
 
   const { todaysBookings, pastBookings } = useMemo(() => {
-    if (!bookings || !sessionTypes || !timeSlots) return { todaysBookings: [], pastBookings: [] };
+    if (!bookings || !sessionTypes || !timeSlots || !users) return { todaysBookings: [], pastBookings: [] };
 
     const sessionTypeMap = new Map(sessionTypes.map(st => [st.id, st]));
     const timeSlotMap = new Map(timeSlots.map(ts => [ts.id, ts]));
+    const userMap = new Map(users.map(u => [u.id, u]));
 
     const allMerged = bookings
       .map(booking => {
         const sessionType = sessionTypeMap.get(booking.sessionTypeId);
         const timeSlot = timeSlotMap.get(booking.timeSlotId);
-        if (!sessionType || !timeSlot) return null;
-        return { ...booking, sessionType, timeSlot };
+        const user = userMap.get(booking.userId);
+        if (!sessionType || !timeSlot || !user) return null;
+        return { ...booking, sessionType, timeSlot, user };
       })
-      .filter((b): b is MergedBooking => b !== null)
-      .sort((a, b) => a.timeSlot.startTime.toMillis() - b.timeSlot.startTime.toMillis());
+      .filter((b): b is AdminMergedBooking => b !== null);
     
     const todays = allMerged.filter(b => {
         const startTime = b.timeSlot.startTime.toDate();
         return isToday(startTime);
-    });
+    }).sort((a,b) => a.timeSlot.startTime.toMillis() - b.timeSlot.startTime.toMillis());
 
     const past = allMerged.filter(b => {
         const endTime = b.timeSlot.endTime.toDate();
         return isPast(endTime) && !isToday(b.timeSlot.startTime.toDate());
-    });
+    }).sort((a,b) => b.timeSlot.startTime.toMillis() - a.timeSlot.startTime.toMillis());
 
-    return { todaysBookings: todays, pastBookings: past.reverse() };
-  }, [bookings, sessionTypes, timeSlots]);
+    return { todaysBookings: todays, pastBookings: past };
+  }, [bookings, sessionTypes, timeSlots, users]);
 
-  const isLoading = isLoadingBookings || isLoadingSessionTypes || isLoadingTimeSlots;
+  const isLoading = isLoadingBookings || isLoadingSessionTypes || isLoadingTimeSlots || isLoadingUsers;
 
   if (isLoading) {
     return (
@@ -81,13 +97,14 @@ export default function AdminSessionManager({ lang, dictionary }: { lang: Locale
     );
   }
   
-  const SessionCard = ({ booking }: { booking: MergedBooking }) => {
-    const { sessionType, timeSlot } = booking;
+  const SessionCard = ({ booking }: { booking: AdminMergedBooking }) => {
+    const { sessionType, timeSlot, user } = booking;
     const localizedName = sessionType.name?.[lang] || sessionType.name?.en;
     const startTime = timeSlot.startTime.toDate();
     const sessionHasEnded = isPast(timeSlot.endTime.toDate());
 
     const isGrimoireEligible = sessionType.category === 'irisphere-harmonia' && sessionType.sessionModel === 'private';
+    const userIdentifier = user.displayName || user.email || booking.userId;
 
     return (
         <Card key={booking.id} className="flex flex-col">
@@ -95,7 +112,7 @@ export default function AdminSessionManager({ lang, dictionary }: { lang: Locale
             <CardTitle>{localizedName}</CardTitle>
                 <CardDescription className="flex items-center gap-2 pt-1 text-muted-foreground">
                     <Users className="h-4 w-4" /> 
-                    {dictionary.admin.bookedBy}: {booking.userId.substring(0, 8)}...
+                    {dictionary.admin.bookedBy}: {userIdentifier}
                 </CardDescription>
                 <CardDescription className="flex items-center gap-2 text-muted-foreground">
                     <Clock className="h-4 w-4" /> 
