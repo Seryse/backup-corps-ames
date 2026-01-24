@@ -1,19 +1,20 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import { Locale } from '@/i18n-config';
-import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
-import { collection, query, Query, collectionGroup } from 'firebase/firestore';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Loader2, Video, Calendar, Clock, Users, Link as LinkIcon, BookHeart, Download } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { format, isPast, isToday } from 'date-fns';
 import { enUS, fr, es } from 'date-fns/locale';
+import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { collection, query, Query, collectionGroup } from 'firebase/firestore';
+import { Locale } from '@/i18n-config';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '../ui/badge';
+import { Loader2, Video, Calendar, Clock, Users, Link as LinkIcon, BookHeart, Download } from 'lucide-react';
 import type { SessionType } from '@/components/admin/session-type-manager';
 import type { Booking, MergedBooking, TimeSlot } from '@/lib/types';
 import { GrimoireUploadDialog } from './GrimoireUploadDialog';
-import { Badge } from '../ui/badge';
 
 type UserProfile = {
     id: string;
@@ -109,21 +110,31 @@ export default function AdminSessionManager({ lang, dictionary }: { lang: Locale
     return (
         <Card key={booking.id} className="flex flex-col">
             <CardHeader>
-            <CardTitle>{localizedName}</CardTitle>
+                <CardTitle>{localizedName}</CardTitle>
                 <CardDescription className="flex items-center gap-2 pt-1 text-muted-foreground">
-                    <Users className="h-4 w-4" /> 
-                    {dictionary.admin.bookedBy}: {userIdentifier}
-                </CardDescription>
-                <CardDescription className="flex items-center gap-2 text-muted-foreground">
                     <Clock className="h-4 w-4" /> 
                     {format(startTime, 'Pp', { locale: dateFnsLocale })}
                 </CardDescription>
-                {booking.reportStatus === 'available' && <Badge variant="secondary">{dictionary.admin.grimoire.report_sent}</Badge>}
             </CardHeader>
-            <CardContent className="flex-grow">
-              
+            <CardContent className="flex-grow space-y-4">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Users className="h-4 w-4" /> 
+                    <span>{dictionary.admin.bookedBy}: {userIdentifier}</span>
+                </div>
+                {isGrimoireEligible && (
+                    <div>
+                        {booking.reportStatus === 'available' && <Badge variant="secondary">{dictionary.admin.grimoire.report_sent}</Badge>}
+                        <div className="relative aspect-[3/4] w-28 mt-2 bg-muted rounded-md flex items-center justify-center">
+                            {booking.pdfThumbnail ? (
+                                <Image src={booking.pdfThumbnail} alt="Grimoire thumbnail" fill className="object-cover rounded-md" />
+                            ) : (
+                                <BookHeart className="h-10 w-10 text-muted-foreground" />
+                            )}
+                        </div>
+                    </div>
+                )}
             </CardContent>
-            <CardContent className="flex flex-col sm:flex-row gap-2">
+            <CardFooter className="flex-col items-stretch sm:flex-row gap-2">
                 {!sessionHasEnded && (
                     <Button asChild className="w-full" variant="outline">
                         <Link href={`/${lang}/session/${booking.id}?token=${booking.visioToken}&uid=${booking.userId}`}>
@@ -135,19 +146,18 @@ export default function AdminSessionManager({ lang, dictionary }: { lang: Locale
 
                 {sessionHasEnded && isGrimoireEligible && (
                     <>
-                        {booking.reportStatus === 'available' && booking.pdfUrl ? (
-                             <Button asChild className="w-full" variant="secondary">
-                                <a href={booking.pdfUrl} target="_blank" rel="noopener noreferrer">
-                                    <Download className="mr-2 h-4 w-4" />
-                                    {dictionary.admin.grimoire.download_button || 'Download Report'}
-                                </a>
+                        {booking.reportStatus === 'available' && booking.pdfUrl && (
+                             <Button asChild className="flex-1" variant="secondary">
+                               <a href={booking.pdfUrl} download target="_blank" rel="noopener noreferrer">
+                                 <Download className="mr-2 h-4 w-4" />
+                                 {dictionary.admin.grimoire.download_button || 'Download'}
+                               </a>
                             </Button>
-                        ) : (
-                             <GrimoireUploadDialog booking={booking} dictionary={dictionary} />
                         )}
+                        <GrimoireUploadDialog booking={booking} dictionary={dictionary} className="flex-1" />
                     </>
                 )}
-            </CardContent>
+            </CardFooter>
         </Card>
     )
   }

@@ -144,6 +144,7 @@
         },
         "grimoire": {
             "manage_button": "Manage Grimoire",
+            "edit_button": "Edit Report",
             "title": "Upload Grimoire Report",
             "description": "Upload the report PDF for user {userName}.",
             "file_label": "Report PDF file",
@@ -152,7 +153,11 @@
             "upload_success_title": "Report uploaded!",
             "upload_error_title": "Upload Failed",
             "report_sent": "Report sent",
-            "download_button": "Download Report"
+            "download_button": "Download Report",
+            "current_thumbnail_label": "Current Cover",
+            "pdf_required_error": "A PDF file is required for the initial upload.",
+            "nothing_to_update_title": "Nothing to Update",
+            "nothing_to_update_desc": "Please select a PDF or an image file to update."
         },
         "form": {
             "nameEn": "Name (EN)",

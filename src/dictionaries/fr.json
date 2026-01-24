@@ -144,6 +144,7 @@
         },
         "grimoire": {
             "manage_button": "Gérer le Grimoire",
+            "edit_button": "Modifier le Rapport",
             "title": "Télécharger le rapport Grimoire",
             "description": "Téléchargez le PDF du rapport pour l'utilisateur {userName}.",
             "file_label": "Fichier PDF du rapport",
@@ -152,7 +153,11 @@
             "upload_success_title": "Rapport téléchargé !",
             "upload_error_title": "Échec du téléchargement",
             "report_sent": "Rapport envoyé",
-            "download_button": "Télécharger le rapport"
+            "download_button": "Télécharger le rapport",
+            "current_thumbnail_label": "Couverture actuelle",
+            "pdf_required_error": "Un fichier PDF est requis pour le premier envoi.",
+            "nothing_to_update_title": "Rien à mettre à jour",
+            "nothing_to_update_desc": "Veuillez sélectionner un fichier PDF ou une image à mettre à jour."
         },
         "form": {
             "nameEn": "Nom (EN)",

@@ -144,6 +144,7 @@
         },
         "grimoire": {
             "manage_button": "Gestionar Grimorio",
+            "edit_button": "Editar Informe",
             "title": "Subir Informe del Grimorio",
             "description": "Subir el informe en PDF para el usuario {userName}.",
             "file_label": "Archivo PDF del informe",
@@ -152,7 +153,11 @@
             "upload_success_title": "¡Informe subido!",
             "upload_error_title": "Error al subir",
             "report_sent": "Informe enviado",
-            "download_button": "Descargar Informe"
+            "download_button": "Descargar Informe",
+            "current_thumbnail_label": "Portada Actual",
+            "pdf_required_error": "Se requiere un archivo PDF para la carga inicial.",
+            "nothing_to_update_title": "Nada que Actualizar",
+            "nothing_to_update_desc": "Por favor, seleccione un archivo PDF o una imagen para actualizar."
         },
         "form": {
             "nameEn": "Nombre (EN)",
