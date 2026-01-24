@@ -134,7 +134,7 @@ export default function AdminSessionManager({ lang, dictionary }: { lang: Locale
                     </div>
                 )}
             </CardContent>
-            <CardFooter className="flex-col items-stretch sm:flex-row gap-2">
+            <CardFooter className="flex flex-col items-stretch gap-2">
                 {!sessionHasEnded && (
                     <Button asChild className="w-full" variant="outline">
                         <Link href={`/${lang}/session/${booking.id}?token=${booking.visioToken}&uid=${booking.userId}`}>
@@ -147,14 +147,14 @@ export default function AdminSessionManager({ lang, dictionary }: { lang: Locale
                 {sessionHasEnded && isGrimoireEligible && (
                     <>
                         {booking.reportStatus === 'available' && booking.pdfUrl && (
-                             <Button asChild className="flex-1" variant="secondary">
+                             <Button asChild variant="secondary">
                                <a href={booking.pdfUrl} download target="_blank" rel="noopener noreferrer">
                                  <Download className="mr-2 h-4 w-4" />
                                  {dictionary.admin.grimoire.download_button || 'Download'}
                                </a>
                             </Button>
                         )}
-                        <GrimoireUploadDialog booking={booking} dictionary={dictionary} className="flex-1" />
+                        <GrimoireUploadDialog booking={booking} dictionary={dictionary} />
                     </>
                 )}
             </CardFooter>
