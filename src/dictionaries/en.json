@@ -84,6 +84,11 @@
     },
     "admin": {
         "title": "Admin Console",
+        "dashboard": "Dashboard",
+        "stats": "Statistics",
+        "news": "News",
+        "formations": "Formations",
+        "sessionTypes": "Session Types",
         "introFiles": "Intro Files",
         "playlistFiles": "Playlist Files",
         "noFiles": "No files found in this directory.",
@@ -219,6 +224,14 @@
             "storageUnauthorizedTitle": "Storage Permission Error",
             "storageUnauthorized": "You do not have permission to upload files. Please check your Firebase Storage security rules."
         }
+    },
+    "stats_page": {
+        "title": "Statistics",
+        "loading": "Loading statistics...",
+        "totalRevenue": "Total Revenue",
+        "totalUsers": "Total Users",
+        "grimoireDownloads": "Grimoire Reports",
+        "revenueBreakdown": "Revenue Breakdown by Product"
     },
     "shop": {
         "title": "Shop",

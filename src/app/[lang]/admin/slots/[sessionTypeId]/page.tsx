@@ -13,7 +13,7 @@ export default async function ManageSlotsPage({ params: { lang, sessionTypeId } 
         <div className="container mx-auto p-4 sm:p-8">
              <div className="flex items-center gap-4 mb-8">
                 <Button variant="outline" size="icon" asChild>
-                    <Link href={`/${lang}/admin`}>
+                    <Link href={`/${lang}/admin/session-types`}>
                         <ChevronLeft className="h-4 w-4" />
                     </Link>
                 </Button>

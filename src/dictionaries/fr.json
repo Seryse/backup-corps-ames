@@ -84,6 +84,11 @@
     },
     "admin": {
         "title": "Console d'Administration",
+        "dashboard": "Tableau de bord",
+        "stats": "Statistiques",
+        "news": "Actualités",
+        "formations": "Formations",
+        "sessionTypes": "Types de Séance",
         "introFiles": "Fichiers d'introduction",
         "playlistFiles": "Fichiers de playlist",
         "noFiles": "Aucun fichier trouvé dans ce répertoire.",
@@ -219,6 +224,14 @@
             "storageUnauthorizedTitle": "Erreur de Permission de Stockage",
             "storageUnauthorized": "Vous n'avez pas la permission d'envoyer des fichiers. Vérifiez les règles de sécurité de Firebase Storage."
         }
+    },
+     "stats_page": {
+        "title": "Statistiques",
+        "loading": "Chargement des statistiques...",
+        "totalRevenue": "Revenu Total",
+        "totalUsers": "Utilisateurs Totaux",
+        "grimoireDownloads": "Rapports Grimoire",
+        "revenueBreakdown": "Répartition des revenus par produit"
     },
     "shop": {
         "title": "Boutique",

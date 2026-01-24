@@ -5,11 +5,11 @@ import { useRouter } from 'next/navigation';
 import { useUser } from '@/firebase';
 import { getDictionary, Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
-import { Loader2, LayoutDashboard } from 'lucide-react';
-import AdminSessionManager from '@/components/admin/admin-session-manager';
+import { Loader2 } from 'lucide-react';
+import SessionTypeManager from '@/components/admin/session-type-manager';
 import { adminEmails } from '@/lib/config';
 
-export default function AdminDashboardPage({ params }: { params: Promise<{ lang: Locale }> }) {
+export default function AdminSessionTypesPage({ params }: { params: Promise<{ lang: Locale }> }) {
   const { lang } = use(params);
   const router = useRouter();
   const { user, isUserLoading } = useUser();
@@ -41,12 +41,8 @@ export default function AdminDashboardPage({ params }: { params: Promise<{ lang:
   }
 
   return (
-    <div className="space-y-8 p-4 sm:p-8">
-       <div className="flex items-center gap-4">
-            <LayoutDashboard className="h-8 w-8 text-accent" />
-            <h1 className="text-4xl font-headline">{dict.admin.dashboard}</h1>
-       </div>
-      <AdminSessionManager dictionary={dict} lang={lang} />
+    <div className="p-4 sm:p-8">
+      <SessionTypeManager dictionary={dict.admin} lang={lang} />
     </div>
   );
 }

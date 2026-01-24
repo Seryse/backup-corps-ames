@@ -84,6 +84,11 @@
     },
     "admin": {
         "title": "Consola de Administración",
+        "dashboard": "Panel de control",
+        "stats": "Estadísticas",
+        "news": "Noticias",
+        "formations": "Formaciones",
+        "sessionTypes": "Tipos de Sesión",
         "introFiles": "Archivos de Intro",
         "playlistFiles": "Archivos de Playlist",
         "noFiles": "No se encontraron archivos en este directorio.",
@@ -219,6 +224,14 @@
             "storageUnauthorizedTitle": "Error de Permiso de Almacenamiento",
             "storageUnauthorized": "No tienes permiso para subir archivos. Por favor, comprueba las reglas de seguridad de Firebase Storage."
         }
+    },
+    "stats_page": {
+        "title": "Estadísticas",
+        "loading": "Cargando estadísticas...",
+        "totalRevenue": "Ingresos Totales",
+        "totalUsers": "Usuarios Totales",
+        "grimoireDownloads": "Informes de Grimorio",
+        "revenueBreakdown": "Desglose de Ingresos por Producto"
     },
     "shop": {
         "title": "Tienda",
