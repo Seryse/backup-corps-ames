@@ -150,7 +150,8 @@
             "upload_button": "Subir",
             "upload_success_title": "¡Informe subido!",
             "upload_error_title": "Error al subir",
-            "report_sent": "Informe enviado"
+            "report_sent": "Informe enviado",
+            "download_button": "Descargar Informe"
         },
         "form": {
             "nameEn": "Nombre (EN)",

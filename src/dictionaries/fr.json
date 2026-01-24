@@ -150,7 +150,8 @@
             "upload_button": "Télécharger",
             "upload_success_title": "Rapport téléchargé !",
             "upload_error_title": "Échec du téléchargement",
-            "report_sent": "Rapport envoyé"
+            "report_sent": "Rapport envoyé",
+            "download_button": "Télécharger le rapport"
         },
         "form": {
             "nameEn": "Nom (EN)",

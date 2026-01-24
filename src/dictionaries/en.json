@@ -150,7 +150,8 @@
             "upload_button": "Upload",
             "upload_success_title": "Report uploaded!",
             "upload_error_title": "Upload Failed",
-            "report_sent": "Report sent"
+            "report_sent": "Report sent",
+            "download_button": "Download Report"
         },
         "form": {
             "nameEn": "Name (EN)",

@@ -3,12 +3,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Locale } from '@/i18n-config';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
-import { collection, query, Query, collectionGroup, orderBy } from 'firebase/firestore';
+import { collection, query, Query, collectionGroup } from 'firebase/firestore';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Loader2, Video, Calendar, Clock, Users, Link as LinkIcon, BookHeart } from 'lucide-react';
+import { Loader2, Video, Calendar, Clock, Users, Link as LinkIcon, BookHeart, Download } from 'lucide-react';
 import Link from 'next/link';
-import { format, isPast, isToday, startOfDay, endOfDay } from 'date-fns';
+import { format, isPast, isToday, startOfDay } from 'date-fns';
 import { enUS, fr, es } from 'date-fns/locale';
 import type { SessionType } from '@/components/admin/session-type-manager';
 import type { Booking, MergedBooking, TimeSlot } from '@/lib/types';
@@ -59,7 +59,6 @@ export default function AdminSessionManager({ lang, dictionary }: { lang: Locale
       .sort((a, b) => a.timeSlot.startTime.toMillis() - b.timeSlot.startTime.toMillis());
 
     const today = new Date();
-    const todayStart = startOfDay(today);
     
     const todays = allMerged.filter(b => {
         const startTime = b.timeSlot.startTime.toDate();
@@ -90,7 +89,7 @@ export default function AdminSessionManager({ lang, dictionary }: { lang: Locale
     const startTime = timeSlot.startTime.toDate();
     const sessionHasEnded = isPast(timeSlot.endTime.toDate());
 
-    const isGrimoireEligible = sessionType.name?.fr === 'Irisphère Harmonia - Séance Privée' && sessionHasEnded;
+    const isGrimoireEligible = sessionType.name?.fr === 'Irisphère Harmonia - Séance Privée';
 
     return (
         <Card key={booking.id} className="flex flex-col">
@@ -110,14 +109,28 @@ export default function AdminSessionManager({ lang, dictionary }: { lang: Locale
               
             </CardContent>
             <CardContent className="flex flex-col sm:flex-row gap-2">
-                <Button asChild className="w-full" variant="outline">
-                    <Link href={`/${lang}/session/${booking.id}?token=${booking.visioToken}&uid=${booking.userId}`}>
-                    <LinkIcon className="mr-2 h-4 w-4" />
-                    {dictionary.admin.joinCall}
-                    </Link>
-                </Button>
-                {isGrimoireEligible && (
-                    <GrimoireUploadDialog booking={booking} dictionary={dictionary} />
+                {!sessionHasEnded && (
+                    <Button asChild className="w-full" variant="outline">
+                        <Link href={`/${lang}/session/${booking.id}?token=${booking.visioToken}&uid=${booking.userId}`}>
+                        <LinkIcon className="mr-2 h-4 w-4" />
+                        {dictionary.admin.joinCall}
+                        </Link>
+                    </Button>
+                )}
+
+                {sessionHasEnded && isGrimoireEligible && (
+                    <>
+                        {booking.reportStatus === 'available' && booking.pdfUrl ? (
+                             <Button asChild className="w-full" variant="secondary">
+                                <a href={booking.pdfUrl} target="_blank" rel="noopener noreferrer">
+                                    <Download className="mr-2 h-4 w-4" />
+                                    {dictionary.admin.grimoire.download_button || 'Download Report'}
+                                </a>
+                            </Button>
+                        ) : (
+                             <GrimoireUploadDialog booking={booking} dictionary={dictionary} />
+                        )}
+                    </>
                 )}
             </CardContent>
         </Card>
