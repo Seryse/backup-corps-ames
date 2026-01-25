@@ -84,7 +84,7 @@
     },
     "admin": {
         "title": "Admin Console",
-        "dashboard": "Dashboard",
+        "dashboard": "Appointments",
         "stats": "Statistics",
         "news": "News",
         "formations": "Formations",
