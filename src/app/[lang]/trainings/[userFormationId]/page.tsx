@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { Loader2, ArrowLeft, Award, BookOpen } from 'lucide-react';
+import { Loader2, ArrowLeft, Award, BookOpen, ExternalLink } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Input } from '@/components/ui/input';
 
@@ -167,6 +167,7 @@ export default function TrainingPage({ params }: { params: Promise<{ lang: Local
           <div className="space-y-4">
             {chapters.map((chapter) => {
               const isCompleted = completedChapters.includes(chapter.id);
+              const contentUrl = chapter.contentUrl?.[lang] || chapter.contentUrl?.fr;
               return (
                 <div key={chapter.id} className="flex items-center gap-4 rounded-md border p-4">
                   <Checkbox
@@ -174,7 +175,7 @@ export default function TrainingPage({ params }: { params: Promise<{ lang: Local
                     checked={isCompleted}
                     onCheckedChange={() => handleChapterToggle(chapter.id, isCompleted)}
                   />
-                  <div className="grid gap-1.5 leading-none">
+                  <div className="grid gap-1.5 leading-none flex-1">
                     <Label htmlFor={`chapter-${chapter.id}`} className="text-base font-medium">
                       {chapter.title?.[lang] || chapter.title?.fr}
                     </Label>
@@ -182,6 +183,14 @@ export default function TrainingPage({ params }: { params: Promise<{ lang: Local
                       {chapter.description?.[lang] || chapter.description?.fr}
                     </p>
                   </div>
+                  {contentUrl && (
+                    <Button variant="outline" size="sm" asChild>
+                        <a href={contentUrl} target="_blank" rel="noopener noreferrer">
+                            <ExternalLink className="mr-2 h-4 w-4" />
+                            {trainingDict.open_chapter || 'Open Chapter'}
+                        </a>
+                    </Button>
+                  )}
                 </div>
               );
             })}
@@ -230,3 +239,5 @@ export default function TrainingPage({ params }: { params: Promise<{ lang: Local
     </div>
   );
 }
+
+    

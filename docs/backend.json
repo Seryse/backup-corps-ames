@@ -103,6 +103,15 @@
                        "fr": { "type": "string" },
                        "es": { "type": "string" }
                     }
+                },
+                "contentUrl": {
+                    "type": "object",
+                    "description": "Localized URL to the chapter content (e.g., PDF).",
+                    "properties": {
+                       "en": { "type": "string", "format": "uri" },
+                       "fr": { "type": "string", "format": "uri" },
+                       "es": { "type": "string", "format": "uri" }
+                    }
                 }
               },
               "required": ["id", "title"]
@@ -477,3 +486,5 @@
     }
   }
 }
+
+    

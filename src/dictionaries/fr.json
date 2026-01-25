@@ -313,7 +313,8 @@
         "certificate_not_ready": "Votre certificat n'est pas encore disponible.",
         "back_to_trainings": "Retour à toutes les formations",
         "error_loading_title": "Erreur de chargement de la formation",
-        "error_loading_description": "Nous n'avons pas pu charger les détails de cette formation. Veuillez réessayer."
+        "error_loading_description": "Nous n'avons pas pu charger les détails de cette formation. Veuillez réessayer.",
+        "open_chapter": "Ouvrir le chapitre"
     },
     "dashboard_page": {
         "title": "Mon Tableau de Bord",
@@ -446,3 +447,5 @@
         "no_reports_description": "Les rapports de vos séances 'Irisphère Harmonia' apparaîtront ici une fois qu'ils auront été préparés."
     }
 }
+
+    

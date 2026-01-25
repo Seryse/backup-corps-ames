@@ -12,7 +12,8 @@ export type LocalizedString = {
 export type FormationChapter = {
   id: string;
   title: LocalizedString;
-  description: LocalizedString;
+  description?: LocalizedString;
+  contentUrl?: LocalizedString;
 };
 
 // Define the shape of a formation in the cart
@@ -94,3 +95,5 @@ export function useCart() {
   }
   return context;
 }
+
+    

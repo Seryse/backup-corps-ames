@@ -313,7 +313,8 @@
         "certificate_not_ready": "Your certificate is not yet available.",
         "back_to_trainings": "Back to all trainings",
         "error_loading_title": "Error loading training",
-        "error_loading_description": "We could not load the details for this training. Please try again."
+        "error_loading_description": "We could not load the details for this training. Please try again.",
+        "open_chapter": "Open Chapter"
     },
     "dashboard_page": {
         "title": "My Dashboard",
@@ -446,3 +447,5 @@
         "no_reports_description": "The reports from your 'Irisphère Harmonia' sessions will appear here once they have been prepared."
     }
 }
+
+    

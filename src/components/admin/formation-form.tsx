@@ -32,7 +32,7 @@ const optionalLocalizedStringSchema = z.object({
   en: z.string().optional(),
   fr: z.string().optional(),
   es: z.string().optional(),
-});
+}).optional();
 
 const formationSchema = z.object({
   name: localizedStringSchema,
@@ -47,6 +47,7 @@ const formationSchema = z.object({
     id: z.string(),
     title: localizedStringSchema,
     description: optionalLocalizedStringSchema,
+    contentUrl: optionalLocalizedStringSchema,
   })).optional(),
 });
 
@@ -78,6 +79,7 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
           chapters: formationToEdit.chapters?.map(c => ({
             ...c,
             description: c.description || { en: '', fr: '', es: '' },
+            contentUrl: c.contentUrl || { en: '', fr: '', es: '' },
           })) || [],
         }
       : {
@@ -172,6 +174,7 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
           chapters: data.chapters?.map(c => ({
               ...c,
               description: c.description || {en:'', fr:'', es:''},
+              contentUrl: c.contentUrl || {en:'', fr:'', es:''},
           })) || [],
         };
 
@@ -327,6 +330,20 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
                 <Label htmlFor={`chapters.${index}.description.es`}>{`Description ${index + 1} (ES)`}</Label>
                 <Textarea id={`chapters.${index}.description.es`} {...register(`chapters.${index}.description.es`)} />
             </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t pt-4">
+                <div>
+                    <Label htmlFor={`chapters.${index}.contentUrl.fr`}>URL Contenu (FR)</Label>
+                    <Input id={`chapters.${index}.contentUrl.fr`} {...register(`chapters.${index}.contentUrl.fr`)} placeholder="https://..." />
+                </div>
+                <div>
+                    <Label htmlFor={`chapters.${index}.contentUrl.en`}>URL Contenu (EN)</Label>
+                    <Input id={`chapters.${index}.contentUrl.en`} {...register(`chapters.${index}.contentUrl.en`)} placeholder="https://..." />
+                </div>
+                <div>
+                    <Label htmlFor={`chapters.${index}.contentUrl.es`}>URL Contenu (ES)</Label>
+                    <Input id={`chapters.${index}.contentUrl.es`} {...register(`chapters.${index}.contentUrl.es`)} placeholder="https://..." />
+                </div>
+            </div>
           </div>
         ))}
         <Button
@@ -335,7 +352,8 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
           onClick={() => append({ 
               id: Date.now().toString(36) + Math.random().toString(36).substring(2), 
               title: { en: '', fr: '', es: '' }, 
-              description: { en: '', fr: '', es: '' }
+              description: { en: '', fr: '', es: '' },
+              contentUrl: { en: '', fr: '', es: '' }
             })}
         >
           <PlusCircle className="mr-2 h-4 w-4" />
@@ -391,3 +409,5 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
     </form>
   );
 }
+
+    
