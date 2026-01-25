@@ -15,10 +15,11 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  ResponsiveContainer,
 } from 'recharts';
 import {
+  ChartContainer,
   ChartTooltipContent,
+  type ChartConfig,
 } from '@/components/ui/chart';
 import {
   Loader2,
@@ -159,6 +160,13 @@ export default function StatsDashboard({
     loadingUserFormations ||
     loadingSessionTypes ||
     loadingAllFormations;
+  
+  const chartConfig = {
+    revenue: {
+      label: statsDict.totalRevenue,
+      color: 'hsl(var(--primary))',
+    },
+  } satisfies ChartConfig;
 
   if (isLoading || !stats) {
     return (
@@ -223,20 +231,18 @@ export default function StatsDashboard({
           <CardTitle>{statsDict.revenueBreakdown}</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="h-[400px] w-full">
-            <ResponsiveContainer>
-              <BarChart data={stats.revenueByProduct} layout="vertical" margin={{ left: 100 }}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis type="number" tickFormatter={formatCurrency} />
-                <YAxis dataKey="name" type="category" width={200} interval={0} tick={{ fontSize: 12 }} />
-                <Tooltip
-                  cursor={{ fill: 'hsl(var(--muted))' }}
-                  content={<ChartTooltipContent formatter={(value) => formatCurrency(value as number)} />}
-                />
-                <Bar dataKey="revenue" fill="hsl(var(--primary))" radius={[0, 4, 4, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+          <ChartContainer config={chartConfig} className="h-[400px] w-full">
+            <BarChart data={stats.revenueByProduct} layout="vertical" margin={{ left: 100 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis type="number" tickFormatter={formatCurrency} />
+              <YAxis dataKey="name" type="category" width={200} interval={0} tick={{ fontSize: 12 }} />
+              <Tooltip
+                cursor={{ fill: 'hsl(var(--muted))' }}
+                content={<ChartTooltipContent />}
+              />
+              <Bar dataKey="revenue" fill="var(--color-revenue)" radius={[0, 4, 4, 0]} />
+            </BarChart>
+          </ChartContainer>
         </CardContent>
       </Card>
     </div>
