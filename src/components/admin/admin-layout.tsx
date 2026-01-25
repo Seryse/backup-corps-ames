@@ -2,7 +2,6 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { SidebarProvider, Sidebar, SidebarInset, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
 import {
   LayoutDashboard,
   BarChart2,
@@ -12,6 +11,7 @@ import {
 } from 'lucide-react';
 import { Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
+import { cn } from '@/lib/utils';
 
 export default function AdminLayout({
   children,
@@ -54,32 +54,30 @@ export default function AdminLayout({
   ];
 
   return (
-    <SidebarProvider>
-        <div className="flex flex-1">
-            <Sidebar>
-                <SidebarContent>
-                    <SidebarMenu>
-                        {navItems.map((item) => (
-                        <SidebarMenuItem key={item.href}>
-                            <SidebarMenuButton
-                            asChild
-                            isActive={pathname === item.href}
-                            tooltip={item.label}
-                            >
-                            <Link href={item.href}>
-                                <item.icon />
-                                <span>{item.label}</span>
-                            </Link>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
-                        ))}
-                    </SidebarMenu>
-                </SidebarContent>
-            </Sidebar>
-            <SidebarInset>
-                {children}
-            </SidebarInset>
+    <div className="flex min-h-screen bg-background">
+      <aside className="w-64 flex-shrink-0 border-r bg-card p-4">
+        <div className="flex h-16 items-center px-2">
+            <h2 className="text-xl font-bold font-headline">Admin</h2>
         </div>
-    </SidebarProvider>
+        <nav className="flex flex-col gap-2">
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary',
+                pathname === item.href && 'bg-primary/10 text-primary font-semibold'
+              )}
+            >
+              <item.icon className="h-5 w-5" />
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+      </aside>
+      <main className="flex-1">
+        {children}
+      </main>
+    </div>
   );
 }
