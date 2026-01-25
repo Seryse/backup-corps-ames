@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, doc, deleteDoc, Query } from 'firebase/firestore';
@@ -27,6 +27,7 @@ import { Locale } from '@/i18n-config';
 import type { LocalizedString } from '@/components/providers/cart-provider';
 import { Badge } from '../ui/badge';
 import Link from 'next/link';
+import { Separator } from '@/components/ui/separator';
 
 const SessionTypeForm = dynamic(() => import('./session-type-form'), {
   loading: () => <div className="flex h-64 items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>,
@@ -52,6 +53,14 @@ interface SessionTypeManagerProps {
   lang: Locale;
 }
 
+const categoriesOrder: (SessionType['category'])[] = [
+    'irisphere-harmonia',
+    'guidances',
+    'energetic-treatments',
+    'dialogue-space',
+    'combined-treatments'
+];
+
 export default function SessionTypeManager({ dictionary, lang }: SessionTypeManagerProps) {
   const firestore = useFirestore();
   const { toast } = useToast();
@@ -64,6 +73,18 @@ export default function SessionTypeManager({ dictionary, lang }: SessionTypeMana
   }, [firestore]);
 
   const { data: sessionTypes, isLoading } = useCollection<SessionType>(sessionTypesQuery);
+
+  const groupedSessionTypes = useMemo(() => {
+    if (!sessionTypes) return {};
+    return sessionTypes.reduce((acc, st) => {
+        const category = st.category || 'other';
+        if (!acc[category]) {
+            acc[category] = [];
+        }
+        acc[category].push(st);
+        return acc;
+    }, {} as Record<string, SessionType[]>);
+  }, [sessionTypes]);
 
   const handleAddNew = () => {
     setSessionTypeToEdit(undefined);
@@ -102,6 +123,71 @@ export default function SessionTypeManager({ dictionary, lang }: SessionTypeMana
     return modelDict[model] || model;
   }
 
+  const SessionTypeCard = ({ st }: { st: SessionType }) => {
+    const localizedName = st.name?.[lang] || st.name?.en || 'Type de séance sans nom';
+    return (
+        <Card key={st.id} className="flex flex-col">
+            <CardHeader>
+                <div className="relative aspect-video bg-muted rounded-t-lg flex items-center justify-center">
+                {st.imageUrl ? (
+                    <Image
+                    src={st.imageUrl}
+                    alt={localizedName}
+                    fill
+                    className="object-cover rounded-t-lg"
+                    />
+                ) : (
+                    <ImageOff className="h-12 w-12 text-muted-foreground" />
+                )}
+                </div>
+                <CardTitle className="pt-4">{localizedName}</CardTitle>
+                <CardDescription>
+                    <Badge variant="secondary">{getModelLabel(st.sessionModel)}</Badge>
+                </CardDescription>
+            </CardHeader>
+            <CardContent className="flex-grow space-y-2">
+                <p className="text-lg font-semibold">
+                {new Intl.NumberFormat(lang, { style: 'currency', currency: st.currency }).format(st.price / 100)}
+                </p>
+                <p className="text-sm text-muted-foreground">{dictionary.form.maxParticipants}: {st.maxParticipants}</p>
+            </CardContent>
+            <CardFooter className="flex justify-end gap-2">
+                <Button variant="secondary" size="sm" asChild>
+                <Link href={`/${lang}/admin/slots/${st.id}`}>
+                    {dictionary.manageSlots}
+                </Link>
+                </Button>
+                <Button variant="outline" size="icon" onClick={() => handleEdit(st)}>
+                <Edit className="h-4 w-4" />
+                <span className="sr-only">Edit</span>
+                </Button>
+                <AlertDialog>
+                <AlertDialogTrigger asChild>
+                    <Button variant="destructive" size="icon">
+                    <Trash2 className="h-4 w-4" />
+                    <span className="sr-only">Delete</span>
+                    </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                    <AlertDialogTitle>{dictionary.deleteSessionTypeConfirmTitle}</AlertDialogTitle>
+                    <AlertDialogDescription>{dictionary.deleteSessionTypeConfirmDescription}</AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => handleDelete(st.id)}>Continue</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+                </AlertDialog>
+            </CardFooter>
+        </Card>
+    );
+  }
+
+  const displayedCategories = useMemo(() => {
+    return categoriesOrder.filter(key => groupedSessionTypes[key]?.length > 0);
+  }, [groupedSessionTypes]);
+
   return (
     <section>
       <div className="flex items-center justify-between mb-8">
@@ -120,67 +206,24 @@ export default function SessionTypeManager({ dictionary, lang }: SessionTypeMana
           <Loader2 className="h-12 w-12 animate-spin text-accent" />
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {sessionTypes?.map((st) => {
-            const localizedName = st.name?.[lang] || st.name?.en || 'Type de séance sans nom';
+        <div className="space-y-8">
+          {displayedCategories.length > 0 ? displayedCategories.map((categoryKey, index) => {
+            const categorySoins = groupedSessionTypes[categoryKey];
+            const categoryTitle = dictionary.sessionCategoryOptions[categoryKey] || categoryKey;
+            
             return (
-              <Card key={st.id} className="flex flex-col">
-                <CardHeader>
-                  <div className="relative aspect-video bg-muted rounded-t-lg flex items-center justify-center">
-                    {st.imageUrl ? (
-                      <Image
-                        src={st.imageUrl}
-                        alt={localizedName}
-                        fill
-                        className="object-cover rounded-t-lg"
-                      />
-                    ) : (
-                      <ImageOff className="h-12 w-12 text-muted-foreground" />
-                    )}
-                  </div>
-                  <CardTitle className="pt-4">{localizedName}</CardTitle>
-                  <CardDescription>
-                     <Badge variant="secondary">{getModelLabel(st.sessionModel)}</Badge>
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="flex-grow space-y-2">
-                  <p className="text-lg font-semibold">
-                    {new Intl.NumberFormat(lang, { style: 'currency', currency: st.currency }).format(st.price / 100)}
-                  </p>
-                  <p className="text-sm text-muted-foreground">{dictionary.form.maxParticipants}: {st.maxParticipants}</p>
-                </CardContent>
-                <CardFooter className="flex justify-end gap-2">
-                  <Button variant="secondary" size="sm" asChild>
-                    <Link href={`/${lang}/admin/slots/${st.id}`}>
-                      {dictionary.manageSlots}
-                    </Link>
-                  </Button>
-                  <Button variant="outline" size="icon" onClick={() => handleEdit(st)}>
-                    <Edit className="h-4 w-4" />
-                    <span className="sr-only">Edit</span>
-                  </Button>
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button variant="destructive" size="icon">
-                        <Trash2 className="h-4 w-4" />
-                        <span className="sr-only">Delete</span>
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>{dictionary.deleteSessionTypeConfirmTitle}</AlertDialogTitle>
-                        <AlertDialogDescription>{dictionary.deleteSessionTypeConfirmDescription}</AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => handleDelete(st.id)}>Continue</AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </CardFooter>
-              </Card>
-            );
-          })}
+                <div key={categoryKey}>
+                    {index > 0 && <Separator className="my-8" />}
+                    <h3 className="text-2xl font-headline mb-6">{categoryTitle}</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {categorySoins.map((st) => (
+                            <SessionTypeCard key={st.id} st={st} />
+                        ))}
+                    </div>
+                </div>
+            )
+          }) : <p className="text-center text-muted-foreground py-8">Aucun type de séance n'a encore été créé.</p>
+        }
         </div>
       )}
 
