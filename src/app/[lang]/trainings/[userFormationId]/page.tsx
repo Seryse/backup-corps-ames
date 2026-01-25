@@ -144,9 +144,9 @@ export default function TrainingPage({ params }: { params: Promise<{ lang: Local
         </Button>
         <h1 className="text-4xl font-headline mb-2 flex items-center gap-3">
           <BookOpen className="h-8 w-8 text-accent"/>
-          {formation.name[lang]}
+          {formation.name?.[lang] || formation.name.fr}
         </h1>
-        <p className="text-lg text-muted-foreground">{formation.description[lang]}</p>
+        <p className="text-lg text-muted-foreground">{formation.description?.[lang] || formation.description.fr}</p>
       </div>
 
       <Card className="mb-8">
@@ -176,9 +176,11 @@ export default function TrainingPage({ params }: { params: Promise<{ lang: Local
                   />
                   <div className="grid gap-1.5 leading-none">
                     <Label htmlFor={`chapter-${chapter.id}`} className="text-base font-medium">
-                      {chapter.title}
+                      {chapter.title?.[lang] || chapter.title?.fr}
                     </Label>
-                    <p className="text-sm text-muted-foreground">{chapter.description}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {chapter.description?.[lang] || chapter.description?.fr}
+                    </p>
                   </div>
                 </div>
               );

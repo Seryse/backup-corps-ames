@@ -11,8 +11,8 @@ export type LocalizedString = {
 
 export type FormationChapter = {
   id: string;
-  title: string;
-  description: string;
+  title: LocalizedString;
+  description: LocalizedString;
 };
 
 // Define the shape of a formation in the cart
@@ -26,6 +26,7 @@ export type Formation = {
   imageUrl: string;
   tokenProductId?: string; // Add this for token generation later
   chapters?: FormationChapter[];
+  videoUrl?: string;
 };
 
 export type CartItem = Formation & {

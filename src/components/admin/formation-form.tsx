@@ -23,9 +23,9 @@ interface FormationFormProps {
 }
 
 const localizedStringSchema = z.object({
-  en: z.string().min(1, 'English name is required'),
-  fr: z.string().min(1, 'French name is required'),
-  es: z.string().min(1, 'Spanish name is required'),
+  en: z.string().min(1, 'English version is required'),
+  fr: z.string().min(1, 'French version is required'),
+  es: z.string().min(1, 'Spanish version is required'),
 });
 
 const optionalLocalizedStringSchema = z.object({
@@ -45,8 +45,8 @@ const formationSchema = z.object({
   imageFile: z.any().optional(),
   chapters: z.array(z.object({
     id: z.string(),
-    title: z.string().min(1, "Chapter title is required"),
-    description: z.string().optional(),
+    title: localizedStringSchema,
+    description: optionalLocalizedStringSchema,
   })).optional(),
 });
 
@@ -58,6 +58,7 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [isTranslating, setIsTranslating] = useState<null | 'name' | 'description' | 'pageContent'>(null);
+  const [isChapterTranslating, setIsChapterTranslating] = useState<{ index: number; field: 'title' | 'description' } | null>(null);
 
   const {
     register,
@@ -74,7 +75,10 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
           price: formationToEdit.price / 100, // Convert from cents for display
           pageContent: formationToEdit.pageContent || { en: '', fr: '', es: '' },
           videoUrl: formationToEdit.videoUrl || '',
-          chapters: formationToEdit.chapters || [],
+          chapters: formationToEdit.chapters?.map(c => ({
+            ...c,
+            description: c.description || { en: '', fr: '', es: '' },
+          })) || [],
         }
       : {
           name: { en: '', fr: '', es: '' },
@@ -116,6 +120,30 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
         setIsTranslating(null);
     }
   };
+  
+  const handleChapterTranslate = async (index: number, fieldName: 'title' | 'description') => {
+    const frenchText = getValues(`chapters.${index}.${fieldName}.fr`);
+    if (!frenchText) {
+        toast({
+            variant: "destructive",
+            title: dictionary.form.nothingToTranslateTitle,
+            description: dictionary.form.nothingToTranslateDescription,
+        });
+        return;
+    }
+    setIsChapterTranslating({ index, field: fieldName });
+    try {
+        const result = await translateTextAction({ text: frenchText });
+        setValue(`chapters.${index}.${fieldName}.en`, result.en);
+        setValue(`chapters.${index}.${fieldName}.es`, result.es);
+        toast({ title: dictionary.success.translationSuccess });
+    } catch (error) {
+        console.error("Chapter translation failed:", error);
+        toast({ variant: "destructive", title: dictionary.form.translationError, description: (error as Error).message });
+    } finally {
+        setIsChapterTranslating(null);
+    }
+  };
 
 
   const onSubmit = (data: FormationFormData) => {
@@ -141,7 +169,10 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
           tokenProductId: data.tokenProductId,
           videoUrl: data.videoUrl,
           imageUrl: imageUrl || 'https://placehold.co/600x400/E6E6FA/333333?text=Image',
-          chapters: data.chapters || [],
+          chapters: data.chapters?.map(c => ({
+              ...c,
+              description: c.description || {en:'', fr:'', es:''},
+          })) || [],
         };
 
         if (formationToEdit?.id) {
@@ -250,26 +281,62 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
        <div className="space-y-4 border-t pt-4">
         <h3 className="text-lg font-medium">Chapitres</h3>
         {fields.map((field, index) => (
-          <div key={field.id} className="grid grid-cols-1 gap-4 rounded-md border p-4 relative">
-            <Input {...register(`chapters.${index}.id`)} type="hidden" />
-            <div className="grid gap-2">
-              <Label>Titre du chapitre {index + 1}</Label>
-              <Input {...register(`chapters.${index}.title`)} placeholder="Titre du chapitre" />
-              {errors.chapters?.[index]?.title && <p className="text-sm text-destructive">{errors.chapters?.[index]?.title?.message}</p>}
-            </div>
-            <div className="grid gap-2">
-              <Label>Description du chapitre {index + 1}</Label>
-              <Textarea {...register(`chapters.${index}.description`)} placeholder="Description (optionnel)" />
-            </div>
+          <div key={field.id} className="space-y-4 rounded-md border p-4 relative">
             <Button type="button" variant="destructive" size="icon" className="absolute top-2 right-2 h-7 w-7" onClick={() => remove(index)}>
               <Trash2 className="h-4 w-4" />
             </Button>
+            <Input {...register(`chapters.${index}.id`)} type="hidden" />
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                    <Label htmlFor={`chapters.${index}.title.en`}>{`Titre ${index + 1} (EN)`}</Label>
+                    <Input id={`chapters.${index}.title.en`} {...register(`chapters.${index}.title.en`)} />
+                    {errors.chapters?.[index]?.title?.en && <p className="text-sm text-destructive">{errors.chapters?.[index]?.title?.en?.message}</p>}
+                </div>
+                 <div>
+                    <div className="flex items-center justify-between">
+                       <Label htmlFor={`chapters.${index}.title.fr`}>{`Titre ${index + 1} (FR)`}</Label>
+                       <Button variant="ghost" size="icon" type="button" onClick={() => handleChapterTranslate(index, 'title')} disabled={isChapterTranslating?.index === index && isChapterTranslating.field === 'title'} className="h-7 w-7">
+                           {isChapterTranslating?.index === index && isChapterTranslating.field === 'title' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Languages className="h-4 w-4" />}
+                       </Button>
+                    </div>
+                    <Input id={`chapters.${index}.title.fr`} {...register(`chapters.${index}.title.fr`)} />
+                    {errors.chapters?.[index]?.title?.fr && <p className="text-sm text-destructive">{errors.chapters?.[index]?.title?.fr?.message}</p>}
+                </div>
+                <div>
+                    <Label htmlFor={`chapters.${index}.title.es`}>{`Titre ${index + 1} (ES)`}</Label>
+                    <Input id={`chapters.${index}.title.es`} {...register(`chapters.${index}.title.es`)} />
+                    {errors.chapters?.[index]?.title?.es && <p className="text-sm text-destructive">{errors.chapters?.[index]?.title?.es?.message}</p>}
+                </div>
+            </div>
+
+            <div>
+                <div className="flex items-center justify-between">
+                    <Label htmlFor={`chapters.${index}.description.fr`}>{`Description ${index + 1} (FR)`}</Label>
+                     <Button variant="ghost" size="icon" type="button" onClick={() => handleChapterTranslate(index, 'description')} disabled={isChapterTranslating?.index === index && isChapterTranslating.field === 'description'} className="h-7 w-7">
+                        {isChapterTranslating?.index === index && isChapterTranslating.field === 'description' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Languages className="h-4 w-4" />}
+                     </Button>
+                </div>
+                <Textarea id={`chapters.${index}.description.fr`} {...register(`chapters.${index}.description.fr`)} />
+            </div>
+             <div>
+                <Label htmlFor={`chapters.${index}.description.en`}>{`Description ${index + 1} (EN)`}</Label>
+                <Textarea id={`chapters.${index}.description.en`} {...register(`chapters.${index}.description.en`)} />
+            </div>
+             <div>
+                <Label htmlFor={`chapters.${index}.description.es`}>{`Description ${index + 1} (ES)`}</Label>
+                <Textarea id={`chapters.${index}.description.es`} {...register(`chapters.${index}.description.es`)} />
+            </div>
           </div>
         ))}
         <Button
           type="button"
           variant="outline"
-          onClick={() => append({ id: Date.now().toString(36) + Math.random().toString(36).substring(2), title: '', description: '' })}
+          onClick={() => append({ 
+              id: Date.now().toString(36) + Math.random().toString(36).substring(2), 
+              title: { en: '', fr: '', es: '' }, 
+              description: { en: '', fr: '', es: '' }
+            })}
         >
           <PlusCircle className="mr-2 h-4 w-4" />
           Ajouter un chapitre
