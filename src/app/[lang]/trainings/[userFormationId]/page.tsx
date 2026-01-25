@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { getDictionary, Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
 import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
-import { doc, DocumentReference } from 'firebase/firestore';
+import { doc, setDoc, DocumentReference } from 'firebase/firestore';
 import { updateFormationProgress } from '@/app/actions';
 import { Formation, FormationChapter } from '@/components/providers/cart-provider';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,6 +16,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Loader2, ArrowLeft, Award, BookOpen } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Input } from '@/components/ui/input';
 
 // Type for the user's specific enrollment in a formation
 type UserFormation = {
@@ -27,6 +28,12 @@ type UserFormation = {
   certificationUrl?: string;
 };
 
+// Simplified user profile type for this page
+type UserProfile = {
+    id: string;
+    certificateName?: string;
+};
+
 export default function TrainingPage({ params }: { params: Promise<{ lang: Locale; userFormationId: string }> }) {
   const { lang, userFormationId } = use(params);
   const [dict, setDict] = useState<Dictionary | null>(null);
@@ -34,6 +41,9 @@ export default function TrainingPage({ params }: { params: Promise<{ lang: Local
   const firestore = useFirestore();
   const router = useRouter();
   const { toast } = useToast();
+  
+  const [certNameInput, setCertNameInput] = useState('');
+  const [isSavingCertName, setIsSavingCertName] = useState(false);
 
   // Fetch dictionary
   useEffect(() => {
@@ -46,7 +56,7 @@ export default function TrainingPage({ params }: { params: Promise<{ lang: Local
     return doc(firestore, 'users', user.uid, 'formations', userFormationId) as DocumentReference<UserFormation>;
   }, [firestore, user, userFormationId]);
   
-  const { data: userFormation, isLoading: isLoadingUserFormation, error: userFormationError } = useDoc<UserFormation>(userFormationRef);
+  const { data: userFormation, isLoading: isLoadingUserFormation } = useDoc<UserFormation>(userFormationRef);
 
   // Memoized reference to the main Formation document, dependent on userFormation data
   const formationRef = useMemoFirebase(() => {
@@ -55,6 +65,21 @@ export default function TrainingPage({ params }: { params: Promise<{ lang: Local
   }, [firestore, userFormation]);
 
   const { data: formation, isLoading: isLoadingFormation } = useDoc<Formation>(formationRef);
+
+  // Memoized reference to the UserProfile document
+  const userProfileRef = useMemoFirebase(() => {
+    if (!firestore || !user) return null;
+    return doc(firestore, 'users', user.uid) as DocumentReference<UserProfile>;
+  }, [firestore, user]);
+  
+  const { data: userProfile, isLoading: isLoadingUserProfile } = useDoc<UserProfile>(userProfileRef);
+
+  // Prefill cert name input if it exists in the profile
+  useEffect(() => {
+    if (userProfile?.certificateName) {
+      setCertNameInput(userProfile.certificateName);
+    }
+  }, [userProfile]);
 
   // Handler for marking a chapter as complete/incomplete
   const handleChapterToggle = async (chapterId: string, currentState: boolean) => {
@@ -68,8 +93,25 @@ export default function TrainingPage({ params }: { params: Promise<{ lang: Local
       });
     }
   };
+  
+  const handleSaveCertName = async () => {
+    if (!userProfileRef || !certNameInput) return;
+    setIsSavingCertName(true);
+    try {
+        await setDoc(userProfileRef, { certificateName: certNameInput }, { merge: true });
+        toast({ title: dict?.training_page.name_saved_success || "Name saved!" });
+    } catch (error: any) {
+        toast({
+            variant: 'destructive',
+            title: dict?.error.generic || 'An error occurred.',
+            description: error.message,
+        });
+    } finally {
+        setIsSavingCertName(false);
+    }
+  };
 
-  const isLoading = isUserLoading || isLoadingUserFormation || isLoadingFormation || !dict;
+  const isLoading = isUserLoading || isLoadingUserFormation || isLoadingFormation || isLoadingUserProfile || !dict;
 
   if (isLoading) {
     return (
@@ -154,13 +196,31 @@ export default function TrainingPage({ params }: { params: Promise<{ lang: Local
           </CardHeader>
           <CardContent className="text-center">
             {userFormation.certificationUrl ? (
-              <Button asChild>
-                <a href={userFormation.certificationUrl} target="_blank" rel="noopener noreferrer">
-                  {trainingDict.download_certificate}
-                </a>
-              </Button>
+                <Button asChild>
+                    <a href={userFormation.certificationUrl} target="_blank" rel="noopener noreferrer">
+                    {trainingDict.download_certificate}
+                    </a>
+                </Button>
+            ) : userProfile?.certificateName ? (
+                 <p className="text-muted-foreground">{trainingDict.certificate_being_prepared.replace('{name}', userProfile.certificateName)}</p>
             ) : (
-              <p className="text-muted-foreground">{trainingDict.certificate_not_ready}</p>
+                <div className="mt-4 space-y-4 max-w-sm mx-auto">
+                    <p className="text-muted-foreground">{trainingDict.certificate_almost_ready}</p>
+                    <div className="grid gap-2 text-left">
+                        <Label htmlFor="certName">{trainingDict.certificate_name_label}</Label>
+                        <Input 
+                            id="certName" 
+                            value={certNameInput}
+                            onChange={(e) => setCertNameInput(e.target.value)}
+                            placeholder={trainingDict.certificate_name_placeholder}
+                        />
+                    </div>
+                    <Button onClick={handleSaveCertName} disabled={isSavingCertName || !certNameInput}>
+                        {isSavingCertName && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                        {trainingDict.save_name_and_generate}
+                    </Button>
+                    <p className="text-xs text-muted-foreground">{trainingDict.certificate_generation_info}</p>
+                </div>
             )}
           </CardContent>
         </Card>

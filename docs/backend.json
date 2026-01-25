@@ -8,6 +8,7 @@
         "displayName": { "type": "string", "description": "The user's display name or nickname." },
         "email": { "type": "string", "format": "email", "description": "The user's primary email address." },
         "photoURL": { "type": "string", "format": "uri", "description": "URL for the user's profile picture." },
+        "certificateName": { "type": "string", "description": "The full name to be printed on certifications." },
         "billingAddress": {
           "type": "object",
           "description": "The user's billing address.",

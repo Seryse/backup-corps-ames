@@ -19,7 +19,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Slider } from '@/components/ui/slider';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, User, KeyRound, Languages, Camera, Home } from 'lucide-react';
+import { Loader2, User, KeyRound, Languages, Camera, Home, Award } from 'lucide-react';
 import LanguageSwitcher from '@/components/layout/language-switcher';
 import Cropper, { Area } from 'react-easy-crop';
 import getCroppedImg from '@/lib/crop-image';
@@ -37,11 +37,13 @@ type UserProfile = {
   email: string;
   photoURL?: string;
   billingAddress?: BillingAddress;
+  certificateName?: string;
 };
 
 // --- Zod Schemas for Validation ---
 const profileSchema = z.object({
   displayName: z.string().min(1, 'Display name is required'),
+  certificateName: z.string().optional(),
 });
 
 const passwordSchema = z.object({
@@ -102,7 +104,10 @@ function AccountPageContent({ lang, dict, user }: { lang: Locale, dict: Dictiona
   // --- Form Hooks ---
   const { register: registerProfile, handleSubmit: handleSubmitProfile, formState: { errors: profileErrors } } = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
-    values: { displayName: userProfile?.displayName || user.displayName || '' },
+    values: { 
+        displayName: userProfile?.displayName || user.displayName || '',
+        certificateName: userProfile?.certificateName || '',
+    },
   });
 
   const { register: registerPassword, handleSubmit: handleSubmitPassword, formState: { errors: passwordErrors }, reset: resetPasswordForm } = useForm<PasswordFormData>({
@@ -123,9 +128,14 @@ function AccountPageContent({ lang, dict, user }: { lang: Locale, dict: Dictiona
   const onProfileSubmit = async (data: ProfileFormData) => {
     setIsUpdatingProfile(true);
     try {
-      await updateProfile(user, { displayName: data.displayName });
+      if (data.displayName !== user.displayName) {
+        await updateProfile(user, { displayName: data.displayName });
+      }
       if (userProfileRef) {
-        await setDoc(userProfileRef, { displayName: data.displayName }, { merge: true });
+        await setDoc(userProfileRef, { 
+            displayName: data.displayName, 
+            certificateName: data.certificateName 
+        }, { merge: true });
       }
       toast({ title: accountDict.success.profile_updated });
     } catch (error: any) {
@@ -239,6 +249,12 @@ function AccountPageContent({ lang, dict, user }: { lang: Locale, dict: Dictiona
               <div className="grid gap-2">
                 <Label htmlFor="email">{accountDict.profile.email_label}</Label>
                 <Input id="email" type="email" value={user.email || ''} readOnly disabled />
+              </div>
+               <div className="grid gap-2">
+                <Label htmlFor="certificateName">{accountDict.profile.certificate_name_label}</Label>
+                <Input id="certificateName" {...registerProfile('certificateName')} placeholder={accountDict.profile.certificate_name_placeholder} />
+                {profileErrors.certificateName && <p className="text-sm text-destructive">{profileErrors.certificateName.message}</p>}
+                <p className="text-xs text-muted-foreground">{accountDict.profile.certificate_name_desc}</p>
               </div>
             </CardContent>
             <CardFooter className="border-t px-6 py-4">

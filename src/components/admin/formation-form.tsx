@@ -226,6 +226,7 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
       
       <div className="space-y-2 border-t pt-4">
         <h3 className="text-lg font-medium">{dictionary.form.pageContentTitle || 'Page Content'}</h3>
+         <p className="text-xs text-muted-foreground">{dictionary.form.pageContentHelp}</p>
         <div>
             <div className="flex items-center justify-between">
                 <Label htmlFor="pageContent.fr">{dictionary.form.pageContentFr || 'Content (FR)'}</Label>
