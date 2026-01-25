@@ -149,7 +149,7 @@
         },
         "grimoire": {
             "manage_button": "Gérer le Grimoire",
-            "edit_button": "Modifier le Rapport",
+            "edit_button": "Modifier le rapport",
             "title": "Télécharger le rapport Grimoire",
             "description": "Téléchargez le PDF du rapport pour l'utilisateur {userName}.",
             "file_label": "Fichier PDF du rapport",
