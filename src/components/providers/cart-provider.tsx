@@ -9,6 +9,12 @@ export type LocalizedString = {
   es: string;
 };
 
+export type FormationChapter = {
+  id: string;
+  title: string;
+  description: string;
+};
+
 // Define the shape of a formation in the cart
 export type Formation = {
   id: string;
@@ -19,6 +25,7 @@ export type Formation = {
   currency: string;
   imageUrl: string;
   tokenProductId?: string; // Add this for token generation later
+  chapters?: FormationChapter[];
 };
 
 export type CartItem = Formation & {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
+import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Button } from '@/components/ui/button';
@@ -12,7 +12,7 @@ import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import type { Formation } from '@/components/providers/cart-provider';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Languages } from 'lucide-react';
+import { Loader2, Languages, Trash2, PlusCircle } from 'lucide-react';
 import { useState } from 'react';
 import { translateTextAction } from '@/app/actions';
 
@@ -43,6 +43,11 @@ const formationSchema = z.object({
   tokenProductId: z.string().min(1, 'Token Product ID is required'),
   videoUrl: z.string().url().optional().or(z.literal('')),
   imageFile: z.any().optional(),
+  chapters: z.array(z.object({
+    id: z.string(),
+    title: z.string().min(1, "Chapter title is required"),
+    description: z.string().optional(),
+  })).optional(),
 });
 
 type FormationFormData = z.infer<typeof formationSchema>;
@@ -57,6 +62,7 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
     getValues,
     setValue,
@@ -68,6 +74,7 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
           price: formationToEdit.price / 100, // Convert from cents for display
           pageContent: formationToEdit.pageContent || { en: '', fr: '', es: '' },
           videoUrl: formationToEdit.videoUrl || '',
+          chapters: formationToEdit.chapters || [],
         }
       : {
           name: { en: '', fr: '', es: '' },
@@ -77,7 +84,13 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
           currency: 'eur',
           tokenProductId: '',
           videoUrl: '',
+          chapters: [],
         },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "chapters",
   });
 
   const handleTranslate = async (fieldName: 'name' | 'description' | 'pageContent') => {
@@ -128,6 +141,7 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
           tokenProductId: data.tokenProductId,
           videoUrl: data.videoUrl,
           imageUrl: imageUrl || 'https://placehold.co/600x400/E6E6FA/333333?text=Image',
+          chapters: data.chapters || [],
         };
 
         if (formationToEdit?.id) {
@@ -230,6 +244,35 @@ export default function FormationForm({ formationToEdit, onClose, dictionary }: 
             <Label htmlFor="pageContent.es">{dictionary.form.pageContentEs || 'Content (ES)'}</Label>
             <Textarea id="pageContent.es" {...register('pageContent.es')} rows={10} />
         </div>
+      </div>
+
+       <div className="space-y-4 border-t pt-4">
+        <h3 className="text-lg font-medium">Chapitres</h3>
+        {fields.map((field, index) => (
+          <div key={field.id} className="grid grid-cols-1 gap-4 rounded-md border p-4 relative">
+            <Input {...register(`chapters.${index}.id`)} type="hidden" />
+            <div className="grid gap-2">
+              <Label>Titre du chapitre {index + 1}</Label>
+              <Input {...register(`chapters.${index}.title`)} placeholder="Titre du chapitre" />
+              {errors.chapters?.[index]?.title && <p className="text-sm text-destructive">{errors.chapters?.[index]?.title?.message}</p>}
+            </div>
+            <div className="grid gap-2">
+              <Label>Description du chapitre {index + 1}</Label>
+              <Textarea {...register(`chapters.${index}.description`)} placeholder="Description (optionnel)" />
+            </div>
+            <Button type="button" variant="destructive" size="icon" className="absolute top-2 right-2 h-7 w-7" onClick={() => remove(index)}>
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </div>
+        ))}
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => append({ id: Date.now().toString(36) + Math.random().toString(36).substring(2), title: '', description: '' })}
+        >
+          <PlusCircle className="mr-2 h-4 w-4" />
+          Ajouter un chapitre
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

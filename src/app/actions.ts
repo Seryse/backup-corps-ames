@@ -1,7 +1,7 @@
 'use server'
 
 import { db } from '@/firebase/server';
-import { doc, getDoc, writeBatch, collection, serverTimestamp, getDocs, query, limit, updateDoc, addDoc } from 'firebase/firestore';
+import { doc, getDoc, writeBatch, collection, serverTimestamp, getDocs, query, limit, updateDoc, addDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import type { CartItem } from '@/components/providers/cart-provider';
 import type { TranslateTextInput } from '@/ai/types';
 import type { SessionType } from '@/components/admin/session-type-manager';
@@ -115,5 +115,34 @@ export async function submitTestimonial(
         console.error("Error submitting testimonial:", error);
         return { success: false, error: error.message };
     }
+}
+
+export async function updateFormationProgress(
+  userId: string,
+  userFormationId: string,
+  chapterId: string,
+  isCompleted: boolean
+): Promise<{ success: boolean; error?: string }> {
+  if (!userId || !userFormationId || !chapterId) {
+    return { success: false, error: 'User, formation, and chapter IDs are required.' };
+  }
+
+  try {
+    const userFormationRef = doc(db, 'users', userId, 'formations', userFormationId);
+
+    const docSnap = await getDoc(userFormationRef);
+    if (!docSnap.exists() || docSnap.data().userId !== userId) {
+      return { success: false, error: 'Formation enrollment not found or access denied.' };
+    }
+
+    await updateDoc(userFormationRef, {
+      completedChapters: isCompleted ? arrayUnion(chapterId) : arrayRemove(chapterId),
+    });
+
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error updating formation progress:', error);
+    return { success: false, error: error.message || 'An unknown error occurred.' };
+  }
 }
     

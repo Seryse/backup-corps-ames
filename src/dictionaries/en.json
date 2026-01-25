@@ -289,7 +289,23 @@
         "token_info": "Use this token to access the dedicated hub for this training.",
         "enrolled_on": "Enrolled on",
         "token_copied": "Token copied to clipboard!",
-        "access_hub": "Access Hub"
+        "access_hub": "Access Hub",
+        "access_formation": "Access Training"
+    },
+    "training_page": {
+        "title": "My Training:",
+        "progress": "Your Progress",
+        "chapters": "Chapters",
+        "completed": "Completed",
+        "mark_as_complete": "Mark as complete",
+        "mark_as_incomplete": "Mark as incomplete",
+        "all_chapters_completed": "All chapters completed!",
+        "congratulations": "Congratulations! You have completed the training.",
+        "download_certificate": "Download Certificate",
+        "certificate_not_ready": "Your certificate is not yet available.",
+        "back_to_trainings": "Back to all trainings",
+        "error_loading_title": "Error loading training",
+        "error_loading_description": "We could not load the details for this training. Please try again."
     },
     "dashboard_page": {
         "title": "My Dashboard",

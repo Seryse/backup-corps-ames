@@ -289,7 +289,23 @@
         "token_info": "Utilisez ce jeton pour accéder au hub dédié à cette formation.",
         "enrolled_on": "Inscrit le",
         "token_copied": "Jeton copié dans le presse-papiers !",
-        "access_hub": "Accéder au Hub"
+        "access_hub": "Accéder au Hub",
+        "access_formation": "Accéder à la formation"
+    },
+    "training_page": {
+        "title": "Ma Formation :",
+        "progress": "Votre Progression",
+        "chapters": "Chapitres",
+        "completed": "Complété",
+        "mark_as_complete": "Marquer comme terminé",
+        "mark_as_incomplete": "Marquer comme non terminé",
+        "all_chapters_completed": "Tous les chapitres sont terminés !",
+        "congratulations": "Félicitations ! Vous avez terminé la formation.",
+        "download_certificate": "Télécharger le certificat",
+        "certificate_not_ready": "Votre certificat n'est pas encore disponible.",
+        "back_to_trainings": "Retour à toutes les formations",
+        "error_loading_title": "Erreur de chargement de la formation",
+        "error_loading_description": "Nous n'avons pas pu charger les détails de cette formation. Veuillez réessayer."
     },
     "dashboard_page": {
         "title": "Mon Tableau de Bord",

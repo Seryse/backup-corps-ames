@@ -289,7 +289,23 @@
         "token_info": "Usa este token para acceder al hub dedicado para esta formación.",
         "enrolled_on": "Inscrito el",
         "token_copied": "¡Token copiado al portapapeles!",
-        "access_hub": "Acceder al Hub"
+        "access_hub": "Acceder al Hub",
+        "access_formation": "Acceder a la Formación"
+    },
+    "training_page": {
+        "title": "Mi Formación:",
+        "progress": "Tu Progreso",
+        "chapters": "Capítulos",
+        "completed": "Completado",
+        "mark_as_complete": "Marcar como completado",
+        "mark_as_incomplete": "Marcar como incompleto",
+        "all_chapters_completed": "¡Todos los capítulos completados!",
+        "congratulations": "¡Felicidades! Has completado la formación.",
+        "download_certificate": "Descargar Certificado",
+        "certificate_not_ready": "Tu certificado aún no está disponible.",
+        "back_to_trainings": "Volver a todas las formaciones",
+        "error_loading_title": "Error al cargar la formación",
+        "error_loading_description": "No pudimos cargar los detalles de esta formación. Por favor, inténtalo de nuevo."
     },
     "dashboard_page": {
         "title": "Mi Panel",
