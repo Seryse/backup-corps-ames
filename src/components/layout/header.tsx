@@ -7,7 +7,7 @@ import LanguageSwitcher from './language-switcher';
 import { Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Menu, ShoppingBag, CalendarDays, Home, Sparkles } from 'lucide-react';
 import { CartNav } from './cart-nav';
 import { useState, useEffect } from 'react';
@@ -54,6 +54,9 @@ export default function Header({ dictionary, lang }: { dictionary: Dictionary['h
                         </Button>
                     </SheetTrigger>
                     <SheetContent side="left" className="pt-12 flex flex-col">
+                        <SheetHeader>
+                          <SheetTitle className="sr-only">Menu</SheetTitle>
+                        </SheetHeader>
                         <nav className="grid gap-4 flex-1">
                             {navLinks.map(({href, label, icon: Icon}) => (
                                 <Link key={href} href={href} className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
