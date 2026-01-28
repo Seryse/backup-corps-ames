@@ -12,7 +12,7 @@ import {
 import { Dictionary, getDictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
 import { cn } from '@/lib/utils';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import { Loader2 } from 'lucide-react';
 
 export default function AdminRootLayout({
@@ -20,9 +20,9 @@ export default function AdminRootLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: { lang: Locale };
+  params: Promise<{ lang: Locale }>;
 }) {
-  const { lang } = params;
+  const { lang } = use(params);
   const pathname = usePathname();
   const [dictionary, setDictionary] = useState<Dictionary | null>(null);
 
