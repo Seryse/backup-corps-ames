@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { format, isPast, isToday } from 'date-fns';
 import { enUS, fr, es } from 'date-fns/locale';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
-import { collection, query, Query, collectionGroup } from 'firebase/firestore';
+import { collection, query, Query } from 'firebase/firestore';
 import { Locale } from '@/i18n-config';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -35,7 +35,7 @@ export default function AdminSessionManager({ lang, dictionary }: { lang: Locale
   // --- Data Fetching ---
   const bookingsQuery = useMemoFirebase(() => {
     if (!firestore) return null;
-    return query(collectionGroup(firestore, 'bookings')) as Query<Booking>;
+    return query(collection(firestore, 'bookings')) as Query<Booking>;
   }, [firestore]);
 
   const sessionTypesQuery = useMemoFirebase(() => {
@@ -136,7 +136,7 @@ export default function AdminSessionManager({ lang, dictionary }: { lang: Locale
             </CardContent>
             <CardFooter className="flex flex-col items-stretch gap-2">
                 <Button asChild className="w-full" variant="outline">
-                    <Link href={`/${lang}/session/${booking.id}?uid=${booking.userId}`}>
+                    <Link href={`/${lang}/session/${booking.id}`}>
                     <LinkIcon className="mr-2 h-4 w-4" />
                     {dictionary.admin.joinCall}
                     </Link>

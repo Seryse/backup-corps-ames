@@ -453,7 +453,7 @@
       "schema": {
         "$ref": "#/entities/UserFormation"
       },
-      "description": "Represents a user's enrollment in a specific formation and their access token. This subcollection uses path-based ownership for simplified security rules."
+      "description": "Represents a user's enrollment in a specific formation."
     },
     "/news/{newsId}": {
       "schema": {
@@ -475,9 +475,9 @@
       "schema": { "$ref": "#/entities/TimeSlot" },
       "description": "Stores all available time slots for all sessions."
     },
-    "/users/{userId}/bookings/{bookingId}": {
+    "/bookings/{bookingId}": {
       "schema": { "$ref": "#/entities/Booking" },
-      "description": "Stores a user's session bookings."
+      "description": "Stores a user's session bookings in a top-level collection for easier querying."
     },
     "/sessions/{sessionId}": {
       "schema": {

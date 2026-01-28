@@ -23,7 +23,7 @@ export async function createBooking(
   try {
     const timeSlotRef = doc(firestore, 'timeSlots', timeSlotId);
     const sessionTypeRef = doc(firestore, 'sessionTypes', sessionTypeId);
-    const userBookingRef = doc(collection(firestore, 'users', userId, 'bookings'));
+    const bookingRef = doc(collection(firestore, 'bookings'));
 
     await runTransaction(firestore, async (transaction) => {
       const timeSlotDoc = await transaction.get(timeSlotRef);
@@ -52,7 +52,7 @@ export async function createBooking(
         4
       )}-${Date.now()}`;
 
-      transaction.set(userBookingRef, {
+      transaction.set(bookingRef, {
         userId,
         timeSlotId,
         sessionTypeId,

@@ -99,7 +99,7 @@ export function GrimoireUploadDialog({ booking, dictionary, className }: Grimoir
             updatePayload.pdfUrl = await getDownloadURL(fileRef);
         }
         
-        const bookingRef = doc(firestore, 'users', booking.userId, 'bookings', booking.id);
+        const bookingRef = doc(firestore, 'bookings', booking.id);
         await updateDoc(bookingRef, updatePayload);
     
         toast({ title: dictionary.admin.grimoire.upload_success_title });

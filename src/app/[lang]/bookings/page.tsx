@@ -4,7 +4,7 @@ import React, { useMemo, useState, useEffect, use } from 'react';
 import { getDictionary, Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
 import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
-import { collection, query, orderBy, Query } from 'firebase/firestore';
+import { collection, query, orderBy, where, Query } from 'firebase/firestore';
 import { Card, CardHeader, CardTitle, CardFooter, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Loader2, Video, Calendar, Clock, ImageOff } from 'lucide-react';
@@ -13,24 +13,8 @@ import Image from 'next/image';
 import { format, isPast } from 'date-fns';
 import { enUS, fr, es } from 'date-fns/locale';
 import type { SessionType } from '@/components/admin/session-type-manager';
+import type { Booking, TimeSlot } from '@/lib/types';
 
-// Duplicated from other files, could be centralized
-type TimeSlot = {
-    id: string;
-    sessionTypeId: string;
-    startTime: any; // Firestore Timestamp
-    endTime: any; // Firestore Timestamp
-    bookedParticipantsCount: number;
-};
-type Booking = {
-    id: string;
-    userId: string;
-    timeSlotId: string;
-    sessionTypeId: string;
-    bookingTime: any; // Firestore Timestamp
-    status: 'confirmed' | 'pending' | 'cancelled';
-    visioToken: string;
-};
 type MergedBooking = Booking & {
     sessionType: SessionType;
     timeSlot: TimeSlot;
@@ -53,7 +37,7 @@ export default function BookingsPage({ params }: { params: Promise<{ lang: Local
   // --- Data Fetching ---
   const bookingsQuery = useMemoFirebase(() => {
     if (!firestore || !user) return null;
-    return query(collection(firestore, 'users', user.uid, 'bookings'), orderBy('bookingTime', 'desc')) as Query<Booking>;
+    return query(collection(firestore, 'bookings'), where('userId', '==', user.uid), orderBy('bookingTime', 'desc')) as Query<Booking>;
   }, [firestore, user]);
 
   const sessionTypesQuery = useMemoFirebase(() => {

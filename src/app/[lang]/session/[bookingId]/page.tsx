@@ -15,19 +15,9 @@ import AudioEngine from '@/components/session/AudioEngine';
 import TestimonialModal from '@/components/session/TestimonialModal';
 import { updateSessionState } from '@/app/actions';
 import { adminEmails } from '@/lib/config';
-import { LiveSession } from '@/lib/types';
+import { LiveSession, Booking } from '@/lib/types';
 import DailyIframe, { DailyCall, DailyParticipant } from '@daily-co/daily-js';
 
-
-type Booking = {
-    id: string;
-    userId: string;
-    timeSlotId: string;
-    sessionTypeId: string;
-    bookingTime: any;
-    status: 'confirmed' | 'pending' | 'cancelled';
-    visioToken: string;
-};
 
 export default function LiveSessionPage({ params }: { params: Promise<{ lang: Locale, bookingId: string }> }) {
   const { lang, bookingId } = use(params);
@@ -35,8 +25,7 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
   const { user, isUserLoading } = useUser();
   const firestore = useFirestore();
   const router = useRouter();
-  const searchParams = useSearchParams();
-
+  
   const [isAdminView, setIsAdminView] = useState(false);
   const [authStatus, setAuthStatus] = useState<'pending' | 'authorized' | 'unauthorized'>('pending');
   const [isTestimonialModalOpen, setTestimonialModalOpen] = useState(false);
@@ -46,22 +35,10 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
   const dailyRef = useRef<DailyCall | null>(null);
 
   // --- Data Fetching ---
-    const bookingRef = useMemoFirebase(() => {
-        if (!firestore || !user || isUserLoading) return null;
-
-        let userIdForBooking: string | null = null;
-        const isUserAdmin = user.email && adminEmails.includes(user.email);
-        
-        if (isUserAdmin) {
-            userIdForBooking = searchParams.get('uid');
-        } else {
-            userIdForBooking = user.uid;
-        }
-        
-        if (!userIdForBooking) return null;
-        
-        return doc(firestore, 'users', userIdForBooking, 'bookings', bookingId) as DocumentReference<Booking>;
-    }, [firestore, user, isUserLoading, bookingId, searchParams]);
+  const bookingRef = useMemoFirebase(() => {
+    if (!firestore || !bookingId) return null;
+    return doc(firestore, 'bookings', bookingId) as DocumentReference<Booking>;
+  }, [firestore, bookingId]);
 
   const { data: booking, isLoading: isLoadingBooking } = useDoc<Booking>(bookingRef);
   
@@ -80,14 +57,19 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
 
   useEffect(() => {
     if (isUserLoading || isLoadingBooking) return;
-    if (!user) {
-        setAuthStatus('unauthorized');
-        return;
-    }
-    const isUserAdmin = user.email && adminEmails.includes(user.email);
-    setIsAdminView(isUserAdmin);
 
-    if (isUserAdmin ? booking : (booking && booking.userId === user.uid)) {
+    const isUserAdmin = user?.email && adminEmails.includes(user.email);
+    setIsAdminView(!!isUserAdmin);
+
+    if (!booking) {
+      if (!isLoadingBooking) { // Only set to unauthorized if loading is finished
+        setAuthStatus('unauthorized');
+      }
+      return;
+    }
+    
+    // An admin can view any session. A user can only view their own.
+    if (isUserAdmin || (user && booking.userId === user.uid)) {
         setAuthStatus('authorized');
     } else {
         setAuthStatus('unauthorized');
@@ -243,7 +225,7 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
              {showSubtitles && <RealtimeSubtitles dictionary={dict} lang={lang} isAdmin={isAdminView} sessionId={bookingId} sessionState={sessionState} />}
         </div>
 
-        {user && <TestimonialModal isOpen={isTestimonialModalOpen} onClose={() => { setTestimonialModalOpen(false); router.push(`/${lang}/dashboard`); }} bookingId={bookingId} userId={user.uid} />}
+        {user && booking && <TestimonialModal isOpen={isTestimonialModalOpen} onClose={() => { setTestimonialModalOpen(false); router.push(`/${lang}/dashboard`); }} bookingId={booking.id} userId={user.uid} />}
       </div>
     );
   };
