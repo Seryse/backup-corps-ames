@@ -375,19 +375,38 @@
           "type": "string",
           "description": "Reference to the booking document."
         },
-        "triggerIntro": {
-          "type": "boolean",
-          "description": "A flag set by the admin to trigger the intro audio on the client side."
+        "status": {
+          "type": "string",
+          "description": "The current status of the session.",
+          "enum": [
+            "WAITING",
+            "INTRO",
+            "HEALING",
+            "OUTRO"
+          ]
+        },
+        "startTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The timestamp when the INTRO or HEALING status began."
+        },
+        "lang": {
+          "type": "string",
+          "description": "The language of the session, used for loading localized assets like intros."
         },
         "activePlaylistUrl": {
           "type": "string",
-          "description": "URL of the background music playlist currently being played by the admin."
+          "description": "URL of the background music playlist currently being played by the admin during the HEALING state."
         },
         "subtitle": {
           "$ref": "#/entities/Subtitle"
         }
       },
-      "required": ["hostId", "bookingId"]
+      "required": [
+        "hostId",
+        "bookingId",
+        "status"
+      ]
     },
     "Testimonial": {
       "title": "Testimonial",
@@ -486,5 +505,3 @@
     }
   }
 }
-
-    

@@ -1,4 +1,5 @@
 import type { SessionType } from '@/components/admin/session-type-manager';
+import { Locale } from '@/i18n-config';
 
 export type TimeSlot = {
     id: string;
@@ -25,3 +26,14 @@ export type MergedBooking = Booking & {
     sessionType: SessionType;
     timeSlot: TimeSlot;
 };
+
+export interface LiveSession {
+    id: string;
+    hostId: string;
+    bookingId: string;
+    status: 'WAITING' | 'INTRO' | 'HEALING' | 'OUTRO';
+    startTime?: any; // Firestore Timestamp
+    lang?: Locale;
+    activePlaylistUrl?: string;
+    subtitle?: any;
+}

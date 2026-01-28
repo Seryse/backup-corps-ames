@@ -4,7 +4,7 @@ import { db } from '@/firebase/server';
 import { doc, getDoc, writeBatch, collection, serverTimestamp, getDocs, query, limit, updateDoc, addDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import type { CartItem } from '@/components/providers/cart-provider';
 import type { TranslateTextInput } from '@/ai/types';
-import type { SessionType } from '@/components/admin/session-type-manager';
+import type { LiveSession } from '@/lib/types';
 import { randomBytes } from 'crypto';
 
 // This function now checks if the user has purchased at least one formation.
@@ -65,7 +65,7 @@ export async function translateTextAction(input: TranslateTextInput) {
   return await translateText(input);
 }
 
-export async function updateSessionState(sessionId: string, data: { triggerIntro?: boolean, activePlaylistUrl?: string }) {
+export async function updateSessionState(sessionId: string, data: Partial<LiveSession>) {
     if (!sessionId) return { success: false, error: 'Session ID is required.' };
     
     try {

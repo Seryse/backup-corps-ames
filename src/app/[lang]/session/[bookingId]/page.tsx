@@ -5,18 +5,20 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { getDictionary, Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
 import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
-import { doc, setDoc, DocumentReference } from 'firebase/firestore';
+import { doc, setDoc, serverTimestamp, DocumentReference } from 'firebase/firestore';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Loader2, AlertTriangle, Play, Music, Mic, Headphones, VolumeX, Video } from 'lucide-react';
+import { Loader2, AlertTriangle, Play, Music, Mic, Headphones, Square, Video, Settings } from 'lucide-react';
 import RealtimeSubtitles from '@/components/session/realtime-subtitles';
 import FileLister from '@/components/admin/file-lister';
 import AudioEngine from '@/components/session/AudioEngine';
 import TestimonialModal from '@/components/session/TestimonialModal';
 import { updateSessionState } from '@/app/actions';
 import { adminEmails } from '@/lib/config';
+import { LiveSession } from '@/lib/types';
+import DailyIframe, { DailyCall, DailyParticipant } from '@daily-co/daily-js';
 
-// From backend.json
+
 type Booking = {
     id: string;
     userId: string;
@@ -26,18 +28,6 @@ type Booking = {
     status: 'confirmed' | 'pending' | 'cancelled';
     visioToken: string;
 };
-
-// This should match the LiveSession entity in backend.json
-interface LiveSession {
-    id: string;
-    triggerIntro?: boolean;
-    activePlaylistUrl?: string;
-    hostId: string;
-}
-
-// Simplified Daily.co call object
-type DailyCall = any;
-
 
 export default function LiveSessionPage({ params }: { params: Promise<{ lang: Locale, bookingId: string }> }) {
   const { lang, bookingId } = use(params);
@@ -50,11 +40,10 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
   const [isAdminView, setIsAdminView] = useState(false);
   const [authStatus, setAuthStatus] = useState<'pending' | 'authorized' | 'unauthorized'>('pending');
   const [isTestimonialModalOpen, setTestimonialModalOpen] = useState(false);
+  const [participants, setParticipants] = useState<DailyParticipant[]>([]);
   
-  // --- Video Call State ---
   const callFrameRef = useRef<HTMLDivElement>(null);
   const dailyRef = useRef<DailyCall | null>(null);
-  const hasJoinedRef = useRef(false); // Lock to prevent re-joining
 
   // --- Data Fetching ---
     const bookingRef = useMemoFirebase(() => {
@@ -75,12 +64,7 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
     }, [firestore, user, isUserLoading, bookingId, searchParams]);
 
   const { data: booking, isLoading: isLoadingBooking } = useDoc<Booking>(bookingRef);
-
-  const bookingExists = !!booking;
-  const bookingUserId = booking?.userId;
-  const visioToken = booking?.visioToken;
-
-
+  
   const sessionRef = useMemoFirebase(() => {
     if (!firestore) return null;
     return doc(firestore, 'sessions', bookingId) as DocumentReference<LiveSession>;
@@ -95,88 +79,64 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
   }, [lang]);
 
   useEffect(() => {
-    if (isUserLoading || isLoadingBooking) {
-      setAuthStatus('pending');
-      return;
-    }
-
+    if (isUserLoading || isLoadingBooking) return;
     if (!user) {
-      setAuthStatus('unauthorized');
-      return;
+        setAuthStatus('unauthorized');
+        return;
     }
-    
     const isUserAdmin = user.email && adminEmails.includes(user.email);
     setIsAdminView(isUserAdmin);
 
-    if (isUserAdmin) {
-      if (bookingExists) {
+    if (isUserAdmin ? booking : (booking && booking.userId === user.uid)) {
         setAuthStatus('authorized');
-      } else {
-        setAuthStatus('unauthorized');
-      }
     } else {
-      if (bookingExists && bookingUserId === user.uid) {
-        setAuthStatus('authorized');
-      } else {
         setAuthStatus('unauthorized');
-      }
     }
-  }, [user, isUserLoading, isLoadingBooking, bookingExists, bookingUserId]);
+  }, [user, isUserLoading, isLoadingBooking, booking]);
 
 
   useEffect(() => {
       if (isAdminView && authStatus === 'authorized' && firestore && user) {
           const sessionRef = doc(firestore, 'sessions', bookingId);
-          setDoc(sessionRef, { hostId: user.uid, bookingId }, { merge: true });
+          setDoc(sessionRef, { hostId: user.uid, bookingId: bookingId, status: 'WAITING' }, { merge: true });
       }
   },[isAdminView, authStatus, firestore, bookingId, user])
 
   // --- Daily.co SDK Integration ---
   useEffect(() => {
-    // Only run if authorized and the call frame is available
-    if (authStatus !== 'authorized' || !callFrameRef.current) return;
-    
-    // If an instance already exists, don't create a new one
-    if (dailyRef.current) return;
+    if (authStatus !== 'authorized' || !callFrameRef.current || dailyRef.current) return;
 
     const setupCall = async () => {
         const roomUrl = "https://corps-et-ames.daily.co/corps-et-ames";
-        const DailyIframe = (await import('@daily-co/daily-js')).default;
-        
-        const dailyOptions: any = {
+        const callObject = DailyIframe.createFrame(callFrameRef.current, {
             url: roomUrl,
             showLeaveButton: true,
-            iframeStyle: {
-                position: 'absolute',
-                top: '0',
-                left: '0',
-                width: '100%',
-                height: '100%',
-                border: '0',
-            },
-        };
-
-        const callObject = DailyIframe.createFrame(callFrameRef.current!, dailyOptions);
+            iframeStyle: { position: 'absolute', top: '0', left: '0', width: '100%', height: '100%', border: '0' },
+        });
         dailyRef.current = callObject;
 
-        callObject.on('left-meeting', () => {
-            if (!isAdminView) {
-                setTestimonialModalOpen(true);
-            } else {
-                router.push(`/${lang}/dashboard`);
-            }
-        });
+        const handleJoined = () => setParticipants(Object.values(callObject.participants()));
+        const handleParticipantJoined = (event: any) => setParticipants(prev => [...prev, event.participant]);
+        const handleParticipantLeft = (event: any) => setParticipants(prev => prev.filter(p => p.session_id !== event.participant.session_id));
+        const handleLeftMeeting = () => {
+            if (!isAdminView) setTestimonialModalOpen(true);
+            else router.push(`/${lang}/dashboard`);
+        };
 
+        callObject
+            .on('joined-meeting', handleJoined)
+            .on('participant-joined', handleParticipantJoined)
+            .on('participant-left', handleParticipantLeft)
+            .on('left-meeting', handleLeftMeeting);
+        
         try {
             await callObject.join();
         } catch (error) {
             console.error("Failed to join Daily.co call:", error);
         }
     };
-
     setupCall();
     
-    // Cleanup function
     return () => {
         if (dailyRef.current) {
             dailyRef.current.destroy();
@@ -185,8 +145,31 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
     }
   }, [authStatus, isAdminView, lang, router]);
 
-  const handleTriggerIntro = () => updateSessionState(bookingId, { triggerIntro: true, activePlaylistUrl: '' });
-  const handlePlaylistSelect = (url: string) => updateSessionState(bookingId, { activePlaylistUrl: url, triggerIntro: false });
+  // --- Anti-Ducking Logic ---
+  useEffect(() => {
+    const callObject = dailyRef.current;
+    if (!callObject || isAdminView) return; // Logic is for clients only
+
+    const remoteParticipants = participants.filter(p => !p.local);
+    const shouldMuteRemote = sessionState?.status === 'INTRO';
+
+    remoteParticipants.forEach(p => {
+      callObject.updateParticipant(p.session_id, { setAudio: !shouldMuteRemote });
+    });
+  }, [sessionState?.status, participants, isAdminView]);
+
+
+  // --- Admin Controls ---
+  const handleStateChange = (status: LiveSession['status']) => {
+    const data: Partial<LiveSession> = { status };
+    if(status === 'INTRO' || status === 'HEALING') {
+        data.startTime = serverTimestamp();
+        data.lang = lang;
+    }
+    updateSessionState(bookingId, data);
+  };
+  const handlePlaylistSelect = (url: string) => updateSessionState(bookingId, { status: 'HEALING', activePlaylistUrl: url, startTime: serverTimestamp() });
+
 
   const renderContent = () => {
     if (authStatus === 'pending' || !dict) {
@@ -216,19 +199,14 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
     
     return (
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <AudioEngine 
-            introUrl={`https://firebasestorage.googleapis.com/v0/b/corps-et-ames-adc60.appspot.com/o/intros%2Fintro_${lang}.mp3?alt=media`}
-            triggerIntro={sessionState?.triggerIntro}
-            playlistUrl={sessionState?.activePlaylistUrl}
-            isAdmin={isAdminView}
-        />
-
+        <AudioEngine sessionState={sessionState ?? null} lang={lang} isAdmin={isAdminView} />
+        
         <div className="lg:col-span-2">
             <Card className="h-full">
                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Video className="h-6 w-6"/>
-                      {dict?.title || 'Live Session'}
+                    <CardTitle className="flex items-center justify-between">
+                      <span className="flex items-center gap-2"><Video className="h-6 w-6"/>{dict?.title || 'Live Session'}</span>
+                      {sessionState?.status && <span className="text-sm font-medium text-muted-foreground bg-muted px-3 py-1 rounded-full">{sessionState.status}</span>}
                     </CardTitle>
                  </CardHeader>
                  <CardContent>
@@ -243,13 +221,16 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
                 <Card>
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2 text-xl font-headline">
-                            <Music className="h-5 w-5"/> Audio Controls
+                            <Settings className="h-5 w-5"/> Session Control
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        <Button onClick={handleTriggerIntro} variant="outline" className="w-full"><Play className="mr-2"/> Play Intro</Button>
+                        <div className="grid grid-cols-2 gap-2">
+                            <Button onClick={() => handleStateChange('INTRO')} disabled={sessionState?.status === 'INTRO'}><Play className="mr-2"/> Start Intro</Button>
+                            <Button onClick={() => handleStateChange('OUTRO')} disabled={sessionState?.status === 'OUTRO'} variant="destructive"><Square className="mr-2"/> End Session</Button>
+                        </div>
                         <FileLister 
-                            title="Playlists" 
+                            title="Playlists (Starts Healing)" 
                             path="/playlists" 
                             icon={Music} 
                             noFilesFoundText="No playlists found."
