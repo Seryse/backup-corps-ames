@@ -15,6 +15,7 @@ import { Skeleton } from '../ui/skeleton';
 
 export default function Header({ dictionary, lang }: { dictionary: Dictionary['header'], lang: Locale }) {
   const [isMounted, setIsMounted] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
@@ -46,7 +47,7 @@ export default function Header({ dictionary, lang }: { dictionary: Dictionary['h
           {/* Mobile Navigation - Render only on client */}
           <div className="md:hidden">
             {isMounted ? (
-                <Sheet>
+                <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
                     <SheetTrigger asChild>
                         <Button variant="ghost" size="icon">
                             <Menu className="h-6 w-6" />
@@ -59,7 +60,7 @@ export default function Header({ dictionary, lang }: { dictionary: Dictionary['h
                         </SheetHeader>
                         <nav className="grid gap-4 flex-1">
                             {navLinks.map(({href, label, icon: Icon}) => (
-                                <Link key={href} href={href} className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
+                                <Link key={href} href={href} className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary" onClick={() => setIsMobileMenuOpen(false)}>
                                     <Icon className="h-5 w-5" />
                                     {label}
                                 </Link>
