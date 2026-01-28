@@ -9,12 +9,15 @@ import { Locale } from '@/i18n-config';
 import { translateTextAction } from '@/app/actions';
 import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { doc, updateDoc, DocumentReference } from 'firebase/firestore';
+import { LiveSession } from '@/lib/types';
+
 
 interface RealtimeSubtitlesProps {
     dictionary: any;
     lang: Locale;
     isAdmin: boolean;
     sessionId: string;
+    sessionState: LiveSession | null;
 }
 
 interface SubtitleData {
@@ -26,22 +29,13 @@ interface SubtitleData {
     timestamp: number;
 }
 
-interface LiveSession {
-    subtitle?: SubtitleData;
-}
-
-export default function RealtimeSubtitles({ dictionary, lang, isAdmin, sessionId }: RealtimeSubtitlesProps) {
-    const [isListening, setIsListening] = useState(isAdmin);
+export default function RealtimeSubtitles({ dictionary, lang, isAdmin, sessionId, sessionState }: RealtimeSubtitlesProps) {
+    const [isListening, setIsListening] = useState(false);
     const recognitionRef = useRef<any>(null);
     const firestore = useFirestore();
-
-    const sessionRef = useMemoFirebase(() => {
-        if (!firestore || !sessionId) return null;
-        return doc(firestore, 'sessions', sessionId) as DocumentReference<LiveSession>;
-    }, [firestore, sessionId]);
     
-    const { data: sessionState } = useDoc<LiveSession>(sessionRef);
     const subtitle = sessionState?.subtitle;
+    const canBroadcast = isAdmin && (sessionState?.status === 'INTRO' || sessionState?.status === 'OUTRO');
 
     const handleTranscript = useCallback(async (transcript: string) => {
         if (!firestore || !sessionId || !transcript.trim()) return;
@@ -68,16 +62,17 @@ export default function RealtimeSubtitles({ dictionary, lang, isAdmin, sessionId
 
     useEffect(() => {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SpeechRecognition) {
-            console.warn('Speech recognition not supported in this browser.');
+        if (!SpeechRecognition || !isAdmin) {
             return;
         }
+        
+        const shouldBeListening = isListening && canBroadcast;
 
-        if (isListening && !recognitionRef.current) {
+        if (shouldBeListening && !recognitionRef.current) {
             const recognition = new SpeechRecognition();
             recognition.continuous = true;
             recognition.interimResults = true;
-            recognition.lang = 'fr-FR'; // Admin's language is French
+            recognition.lang = 'fr-FR';
 
             recognition.onresult = (event: any) => {
                 let finalTranscript = '';
@@ -97,21 +92,36 @@ export default function RealtimeSubtitles({ dictionary, lang, isAdmin, sessionId
             };
             
             recognition.onend = () => {
-                if (isListening) {
+                // Only restart if we are still in a broadcasting state
+                if (isListening && (sessionState?.status === 'INTRO' || sessionState?.status === 'OUTRO')) {
                     recognition.start();
+                } else {
+                    setIsListening(false);
                 }
             };
 
             recognition.start();
             recognitionRef.current = recognition;
-        } else if (!isListening && recognitionRef.current) {
+        } else if (!shouldBeListening && recognitionRef.current) {
             recognitionRef.current.stop();
             recognitionRef.current = null;
         }
-    }, [isListening, handleTranscript]);
+
+        // Cleanup on unmount
+        return () => {
+            if (recognitionRef.current) {
+                recognitionRef.current.stop();
+                recognitionRef.current = null;
+            }
+        };
+
+    }, [isListening, canBroadcast, handleTranscript, isAdmin, sessionState?.status]);
+
 
     const toggleListening = () => {
-        setIsListening(prev => !prev);
+        if (canBroadcast) {
+            setIsListening(prev => !prev);
+        }
     };
     
     // Display logic based on user role and language
@@ -119,7 +129,6 @@ export default function RealtimeSubtitles({ dictionary, lang, isAdmin, sessionId
         ? subtitle?.original
         : subtitle?.translations?.[lang] || subtitle?.original;
 
-    // Show secondary text ONLY if the translation was successful and we are a client
     const wasTranslationSuccessful = !(isAdmin || lang === 'fr') && subtitle?.translations?.[lang];
     const secondaryText = wasTranslationSuccessful ? `(${subtitle.original})` : null;
 
@@ -133,7 +142,13 @@ export default function RealtimeSubtitles({ dictionary, lang, isAdmin, sessionId
             </CardHeader>
             <CardContent className="space-y-4">
                 {isAdmin && (
-                    <Button onClick={toggleListening} className="w-full justify-start gap-2" variant={isListening ? 'destructive' : 'default'}>
+                    <Button 
+                        onClick={toggleListening} 
+                        className="w-full justify-start gap-2" 
+                        variant={isListening ? 'destructive' : 'default'}
+                        disabled={!canBroadcast}
+                        title={!canBroadcast ? "Broadcasting is only available during INTRO and OUTRO phases" : ""}
+                    >
                         {isListening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
                         {isListening ? (dictionary.stopRecognition || 'Stop Recognition') : (dictionary.startRecognition || 'Start Recognition')}
                     </Button>

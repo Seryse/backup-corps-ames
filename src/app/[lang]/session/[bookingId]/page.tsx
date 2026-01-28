@@ -170,6 +170,7 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
   };
   const handlePlaylistSelect = (url: string) => updateSessionState(bookingId, { status: 'HEALING', activePlaylistUrl: url, startTime: serverTimestamp() });
 
+  const showSubtitles = isAdminView || sessionState?.status === 'INTRO' || sessionState?.status === 'OUTRO';
 
   const renderContent = () => {
     if (authStatus === 'pending' || !dict) {
@@ -239,7 +240,7 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
                     </CardContent>
                 </Card>
             )}
-             <RealtimeSubtitles dictionary={dict} lang={lang} isAdmin={isAdminView} sessionId={bookingId} />
+             {showSubtitles && <RealtimeSubtitles dictionary={dict} lang={lang} isAdmin={isAdminView} sessionId={bookingId} sessionState={sessionState} />}
         </div>
 
         {user && <TestimonialModal isOpen={isTestimonialModalOpen} onClose={() => { setTestimonialModalOpen(false); router.push(`/${lang}/dashboard`); }} bookingId={bookingId} userId={user.uid} />}

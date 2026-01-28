@@ -135,14 +135,12 @@ export default function AdminSessionManager({ lang, dictionary }: { lang: Locale
                 )}
             </CardContent>
             <CardFooter className="flex flex-col items-stretch gap-2">
-                {!sessionHasEnded && (
-                    <Button asChild className="w-full" variant="outline">
-                        <Link href={`/${lang}/session/${booking.id}?token=${booking.visioToken}&uid=${booking.userId}`}>
-                        <LinkIcon className="mr-2 h-4 w-4" />
-                        {dictionary.admin.joinCall}
-                        </Link>
-                    </Button>
-                )}
+                <Button asChild className="w-full" variant="outline">
+                    <Link href={`/${lang}/session/${booking.id}?uid=${booking.userId}`}>
+                    <LinkIcon className="mr-2 h-4 w-4" />
+                    {dictionary.admin.joinCall}
+                    </Link>
+                </Button>
 
                 {sessionHasEnded && isGrimoireEligible && (
                     <>
