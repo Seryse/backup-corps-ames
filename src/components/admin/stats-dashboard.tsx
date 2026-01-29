@@ -54,7 +54,7 @@ export default function StatsDashboard({
     [firestore]
   );
   const bookingsQuery = useMemoFirebase(
-    () => (firestore ? collectionGroup(firestore, 'bookings') as Query<Booking> : null),
+    () => (firestore ? collection(firestore, 'bookings') as Query<Booking> : null),
     [firestore]
   );
   const userFormationsQuery = useMemoFirebase(
