@@ -66,21 +66,21 @@ service cloud.firestore {
     }
 
     match /bookings/{bookingId} {
-      // Admins can perform any operation on any booking document.
-      // The `read` permission covers the collection `list` operation.
-      allow read, write: if isAdmin();
-      
-      // The following rules apply to non-admin authenticated users.
-      
-      // Allow users to read their own booking documents. This covers both
-      // single document `get` and queried `list` operations (with a where clause).
-      allow read: if request.auth != null && request.auth.uid == resource.data.userId;
-
-      // Allow users to create new bookings for themselves.
+      // --- WRITE RULES ---
+      // Admin can write anything.
+      allow write: if isAdmin();
+      // User can create their own booking.
       allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
-
-      // Allow users to update or delete their own existing bookings.
+      // User can update/delete their own booking.
       allow update, delete: if request.auth != null && request.auth.uid == resource.data.userId;
+
+      // --- READ RULES ---
+      // GET: an admin can get any doc, a user can get their own.
+      allow get: if isAdmin() || (request.auth != null && request.auth.uid == resource.data.userId);
+
+      // LIST: An admin can list the entire collection.
+      // User's constrained list queries are implicitly allowed by the `get` rule.
+      allow list: if isAdmin();
     }
 
     match /sessions/{sessionId} {
