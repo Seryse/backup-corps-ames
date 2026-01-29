@@ -66,9 +66,12 @@ service cloud.firestore {
     }
 
     match /bookings/{bookingId} {
-      // Admins can read any booking. Users can only read their own.
-      // This also allows users to LIST bookings if the query is constrained by their UID.
-      allow read: if isAdmin() || (request.auth != null && resource.data.userId == request.auth.uid);
+      // Admins can list all bookings.
+      allow list: if isAdmin();
+      
+      // Admins can get any single booking document.
+      // Users can only get their own booking documents.
+      allow get: if isAdmin() || (request.auth != null && resource.data.userId == request.auth.uid);
 
       // Admins can create any booking.
       // Users can create a booking for themselves.
