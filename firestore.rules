@@ -66,19 +66,17 @@ service cloud.firestore {
     }
 
     match /bookings/{bookingId} {
-        // A user can GET their own document. An admin can GET any document.
-        allow get: if (request.auth != null && resource.data.userId == request.auth.uid) || isAdmin();
-        
-        // Admins can list all bookings.
-        // For non-admins, client queries MUST use a 'where("userId", "==", auth.uid)' clause.
-        // This is enforced implicitly by the 'get' rule above.
-        allow list: if request.auth != null;
+      // Admins can read any booking. Users can only read their own.
+      // This also allows users to LIST bookings if the query is constrained by their UID.
+      allow read: if isAdmin() || (request.auth != null && resource.data.userId == request.auth.uid);
 
-        // A user can WRITE to their own document. An admin can WRITE to any document.
-        allow write: if (request.auth != null && resource.data.userId == request.auth.uid) || isAdmin();
+      // Admins can create any booking.
+      // Users can create a booking for themselves.
+      allow create: if isAdmin() || (request.auth != null && request.resource.data.userId == request.auth.uid);
 
-        // A user can CREATE a booking for themselves.
-        allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+      // Admins can update/delete any booking.
+      // Users can update/delete their own bookings.
+      allow update, delete: if isAdmin() || (request.auth != null && resource.data.userId == request.auth.uid);
     }
 
     match /sessions/{sessionId} {
