@@ -4,7 +4,7 @@ import React, { useMemo, useState, useEffect, use } from 'react';
 import { getDictionary, Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
 import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
-import { collection, query, where } from 'firebase/firestore';
+import { collection, query, where, Query } from 'firebase/firestore';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Loader2, BookHeart, BookOpen, ImageOff, Download } from 'lucide-react';
@@ -35,7 +35,8 @@ export default function GrimoirePage({ params }: { params: Promise<{ lang: Local
   const bookingsQuery = useMemoFirebase(() => {
     if (!firestore || !user) return null;
     return query(
-        collection(firestore, 'users', user.uid, 'bookings'), 
+        collection(firestore, 'bookings'), 
+        where('userId', '==', user.uid),
         where('reportStatus', '==', 'available')
     ) as Query<Booking>;
   }, [firestore, user]);
