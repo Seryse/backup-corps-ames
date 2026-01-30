@@ -1,0 +1,98 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      // seryse@live.be, jael@live.fr, selvura@gmail.com
+      return request.auth != null && 
+        (request.auth.uid == 'HvsOFzrOwFTHWTBVBextpZtV5I53');
+    }
+
+    function isBookingIncrement(before, after) {
+      return after.bookedParticipantsCount == before.bookedParticipantsCount + 1
+          && after.sessionTypeId == before.sessionTypeId
+          && after.startTime == before.startTime
+          && after.endTime == before.endTime
+          && after.keys().hasAll(['sessionTypeId', 'startTime', 'endTime', 'bookedParticipantsCount'])
+          && after.keys().size() == 4;
+    }
+
+    match /formations/{formationId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /users/{userId} {
+      allow get, write: if isOwner(userId) || isAdmin();
+      allow list: if isAdmin();
+    }
+
+    match /users/{userId}/formations/{userFormationId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow write: if isOwner(userId);
+    }
+
+    match /{path=**}/formations/{userFormationId} {
+      allow read: if isAdmin();
+    }
+
+    match /news/{newsId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /subtitles/{sessionId} {
+      allow read: if request.auth != null;
+      allow write: if isAdmin();
+    }
+
+    match /sessionTypes/{sessionTypeId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /timeSlots/{timeSlotId} {
+      allow read: if true;
+      // Admin has full write access
+      allow write: if isAdmin();
+      // Any authenticated user can update a time slot IF they are just incrementing the count
+      allow update: if request.auth != null && isBookingIncrement(resource.data, request.resource.data);
+    }
+
+     match /bookings/{bookingId} {
+        // Admins can read the entire collection and write anything.
+        allow list, write: if isAdmin();
+
+        // A user can GET a document if they are the owner.
+        // This rule also covers constrained LIST queries (e.g., where('userId', '==', auth.uid))
+        allow get: if request.auth.uid == resource.data.userId;
+
+        // A user can create a booking for themselves.
+        allow create: if request.auth.uid == request.resource.data.userId;
+        
+        // A user can update/delete their own booking.
+        allow update, delete: if request.auth.uid == resource.data.userId;
+    }
+
+
+    match /sessions/{sessionId} {
+      allow read: if request.auth != null;
+      allow write: if isAdmin();
+    }
+
+    match /testimonials/{testimonialId} {
+      allow read: if isAdmin();
+      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+    }
+
+    match /coupons/{couponId} {
+      allow get: if isAdmin() || (request.auth != null && resource.data.userId == request.auth.uid);
+      allow list: if isAdmin();
+    }
+  }
+}
