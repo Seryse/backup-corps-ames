@@ -10,9 +10,7 @@ service cloud.firestore {
     function isAdmin() {
       // seryse@live.be, jael@live.fr, selvura@gmail.com
       return request.auth != null && 
-        (request.auth.uid == 'HvsOFzrOwFTHWTBVBextpZtV5I53' || 
-         request.auth.uid == 'anotherAdminUid1' || 
-         request.auth.uid == 'anotherAdminUid2');
+        (request.auth.uid == 'HvsOFzrOwFTHWTBVBextpZtV5I53');
     }
 
     function isBookingIncrement(before, after) {
@@ -30,7 +28,8 @@ service cloud.firestore {
     }
 
     match /users/{userId} {
-      allow read, write: if isOwner(userId) || isAdmin();
+      allow get, write: if isOwner(userId) || isAdmin();
+      allow list: if isAdmin();
     }
 
     match /users/{userId}/formations/{userFormationId} {
@@ -65,13 +64,15 @@ service cloud.firestore {
       allow update: if request.auth != null && isBookingIncrement(resource.data, request.resource.data);
     }
 
-    match /bookings/{bookingId} {
+     match /bookings/{bookingId} {
         // Admins can do anything
         allow read, write: if isAdmin();
 
-        // Users can read, create, update, and delete their own bookings
-        allow read, create: if request.auth.uid == request.resource.data.userId;
+        // Users can create/update/delete their own bookings
+        allow create: if request.auth.uid == request.resource.data.userId;
         allow update, delete: if request.auth.uid == resource.data.userId;
+        // Users can only read their own bookings. This allows list queries filtered by userId.
+        allow read: if request.auth.uid == resource.data.userId;
     }
 
 
