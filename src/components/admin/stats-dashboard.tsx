@@ -57,6 +57,7 @@ export default function StatsDashboard({
     () => (firestore ? collection(firestore, 'bookings') as Query<Booking> : null),
     [firestore]
   );
+  // Correctly query the 'formations' subcollection across all 'users'
   const userFormationsQuery = useMemoFirebase(
     () => (firestore ? collectionGroup(firestore, 'formations') as Query<UserFormation> : null),
     [firestore]
@@ -65,7 +66,7 @@ export default function StatsDashboard({
     () => (firestore ? collection(firestore, 'sessionTypes') as Query<SessionType> : null),
     [firestore]
   );
-  const formationsQuery = useMemoFirebase(
+  const allFormationsQuery = useMemoFirebase(
     () => (firestore ? collection(firestore, 'formations') as Query<Formation> : null),
     [firestore]
   );
@@ -74,7 +75,7 @@ export default function StatsDashboard({
   const { data: bookings, isLoading: loadingBookings } = useCollection<Booking>(bookingsQuery);
   const { data: userFormations, isLoading: loadingUserFormations } = useCollection<UserFormation>(userFormationsQuery);
   const { data: sessionTypes, isLoading: loadingSessionTypes } = useCollection<SessionType>(sessionTypesQuery);
-  const { data: allFormations, isLoading: loadingAllFormations } = useCollection<Formation>(formationsQuery);
+  const { data: allFormations, isLoading: loadingAllFormations } = useCollection<Formation>(allFormationsQuery);
 
   const stats = useMemo(() => {
     if (

@@ -3,91 +3,100 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    function isOwner(userId) {
-      return request.auth != null && request.auth.uid == userId;
+    // --- Fonctions d'aide ---
+
+    function isAuth() {
+      return request.auth != null;
     }
 
+    // L'UID 'HvsOFzrOwFTHWTBVBextpZtV5I53' correspond à seryse@live.be
     function isAdmin() {
-      // seryse@live.be, jael@live.fr, selvura@gmail.com
-      return request.auth != null && 
-        (request.auth.uid == 'HvsOFzrOwFTHWTBVBextpZtV5I53');
+      return isAuth() && request.auth.uid == 'HvsOFzrOwFTHWTBVBextpZtV5I53';
     }
 
+    function isOwner(userId) {
+      return isAuth() && request.auth.uid == userId;
+    }
+    
     function isBookingIncrement(before, after) {
       return after.bookedParticipantsCount == before.bookedParticipantsCount + 1
           && after.sessionTypeId == before.sessionTypeId
           && after.startTime == before.startTime
-          && after.endTime == before.endTime
-          && after.keys().hasAll(['sessionTypeId', 'startTime', 'endTime', 'bookedParticipantsCount'])
-          && after.keys().size() == 4;
+          && after.endTime == before.endTime;
     }
 
+    // --- Règles par Collection ---
+
+    // Utilisateurs (UserProfile)
+    match /users/{userId} {
+      allow get, update, write: if isOwner(userId);
+      // L'admin peut lister tous les utilisateurs (pour les statistiques) et lire n'importe quel profil.
+      allow list, get: if isAdmin();
+    }
+
+    // Formations acquises par l'utilisateur (UserFormation)
+    match /users/{userId}/formations/{userFormationId} {
+      allow read, write: if isOwner(userId) || isAdmin();
+    }
+
+    // Règle pour la requête collectionGroup sur 'formations' (pour les statistiques)
+    match /{path=**}/formations/{userFormationId} {
+      allow read: if isAdmin();
+    }
+
+    // Catalogue des Formations
     match /formations/{formationId} {
       allow read: if true;
       allow write: if isAdmin();
     }
 
-    match /users/{userId} {
-      allow get, write: if isOwner(userId);
-      allow list: if isAdmin();
-    }
-
-    match /users/{userId}/formations/{userFormationId} {
-      allow read: if isOwner(userId) || isAdmin();
-      allow write: if isOwner(userId);
-    }
-
-    match /{path=**}/formations/{userFormationId} {
-      allow read: if isAdmin();
-    }
-
+    // Actualités (NewsArticle)
     match /news/{newsId} {
       allow read: if true;
       allow write: if isAdmin();
     }
 
-    match /subtitles/{sessionId} {
-      allow read: if request.auth != null;
-      allow write: if isAdmin();
-    }
-
+    // Types de session (SessionType)
     match /sessionTypes/{sessionTypeId} {
       allow read: if true;
       allow write: if isAdmin();
     }
 
+    // Créneaux horaires (TimeSlot)
     match /timeSlots/{timeSlotId} {
       allow read: if true;
-      // Admin has full write access
       allow write: if isAdmin();
-      // Any authenticated user can update a time slot IF they are just incrementing the count
-      allow update: if request.auth != null && isBookingIncrement(resource.data, request.resource.data);
+      allow update: if isAuth() && isBookingIncrement(resource.data, request.resource.data);
     }
 
+    // Réservations (Booking)
     match /bookings/{bookingId} {
-        // Admins can do anything
-        allow read, write: if isAdmin();
-
-        // Users can create/update/delete their own bookings
-        allow create: if request.auth.uid == request.resource.data.userId;
-        allow update, delete: if request.auth.uid == resource.data.userId;
-        // Users can only read their own bookings. This allows list queries filtered by userId.
-        allow read: if request.auth != null && request.auth.uid == resource.data.userId;
-    }
-
-
-    match /sessions/{sessionId} {
-      allow read: if request.auth != null;
+      // Seul l'admin peut lister TOUTE la collection
+      allow list: if isAdmin();
+      // Un utilisateur peut lire une réservation si c'est la sienne. L'admin aussi.
+      allow get: if isAdmin() || (isAuth() && resource.data.userId == request.auth.uid);
+      // Un utilisateur peut créer/modifier/supprimer ses propres réservations.
+      allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isAuth() && resource.data.userId == request.auth.uid;
+       // L'admin peut écrire/modifier/supprimer n'importe quelle réservation.
       allow write: if isAdmin();
     }
 
+    // État de la session en direct (LiveSession)
+    match /sessions/{sessionId} {
+      allow read: if isAuth();
+      allow write: if isAdmin();
+    }
+
+    // Témoignages (Testimonial)
     match /testimonials/{testimonialId} {
       allow read: if isAdmin();
-      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+      allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
     }
 
+    // Coupons
     match /coupons/{couponId} {
-      allow get: if isAdmin() || (request.auth != null && resource.data.userId == request.auth.uid);
+      allow get: if isAdmin() || (isAuth() && resource.data.userId == request.auth.uid);
       allow list: if isAdmin();
     }
   }
