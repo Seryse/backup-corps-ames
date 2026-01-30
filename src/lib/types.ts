@@ -30,6 +30,7 @@ export type MergedBooking = Booking & {
 export interface LiveSession {
     id: string;
     hostId: string;
+    userId: string;
     bookingId: string;
     status: 'WAITING' | 'INTRO' | 'HEALING' | 'OUTRO';
     startTime?: any; // Firestore Timestamp
