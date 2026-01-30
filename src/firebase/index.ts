@@ -1,6 +1,7 @@
 'use client';
 
-import { firebaseConfig } from '@/firebase/config';
+// J'ai mis un chemin simple './config' pour être sûr qu'il trouve le fichier
+import { firebaseConfig } from './config';
 import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
@@ -11,27 +12,13 @@ export function initializeFirebase() {
     return getSdks(getApp());
   }
   
-  let app: FirebaseApp;
-  // This logic is crucial. In a deployed App Hosting environment,
-  // this environment variable will be set automatically.
-  // In local development, it will be undefined, and we'll use our local config.
-  if (process.env.NEXT_PUBLIC_FIREBASE_CONFIG) {
-      try {
-        const config = JSON.parse(process.env.NEXT_PUBLIC_FIREBASE_CONFIG);
-        app = initializeApp(config);
-      } catch (e) {
-          console.error("Invalid NEXT_PUBLIC_FIREBASE_CONFIG:", e);
-          // Fallback to hardcoded config on parse error
-          app = initializeApp(firebaseConfig);
-      }
-  } else {
-      // Fallback for local development
-      app = initializeApp(firebaseConfig);
-  }
-
+  // VERSION BAZOOKA : ON FORCE LA CONFIG
+  console.log("💣 BAZOOKA ACTIVÉ : Connexion forcée à corps-et-ames-adc60");
+  const app = initializeApp(firebaseConfig);
   return getSdks(app);
 }
 
+// J'ai ajouté ": FirebaseApp" ici pour calmer les lignes rouges
 export function getSdks(firebaseApp: FirebaseApp) {
   return {
     firebaseApp,
