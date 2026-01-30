@@ -32,7 +32,7 @@ export default function BookingsPage({ params }: { params: Promise<{ lang: Local
   // --- Data Fetching ---
   const sessionsQuery = useMemoFirebase(() => {
     if (!firestore || !user) return null;
-    // CORRECTION : Filtre strict par userId pour passer la sécurité
+    // SECURITY FIX: Filter by userId to satisfy Firestore Rules
     return query(collection(firestore, 'sessions'), where('userId', '==', user.uid), orderBy('bookingTime', 'desc')) as Query<LiveSession>;
   }, [firestore, user]);
 
