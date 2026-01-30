@@ -28,7 +28,7 @@ service cloud.firestore {
     }
 
     match /users/{userId} {
-      allow get, write: if isOwner(userId) || isAdmin();
+      allow get, write: if isOwner(userId);
       allow list: if isAdmin();
     }
 
@@ -64,19 +64,15 @@ service cloud.firestore {
       allow update: if request.auth != null && isBookingIncrement(resource.data, request.resource.data);
     }
 
-     match /bookings/{bookingId} {
-        // Admins can read the entire collection and write anything.
-        allow list, write: if isAdmin();
+    match /bookings/{bookingId} {
+        // Admins can do anything
+        allow read, write: if isAdmin();
 
-        // A user can GET a document if they are the owner.
-        // This rule also covers constrained LIST queries (e.g., where('userId', '==', auth.uid))
-        allow get: if request.auth.uid == resource.data.userId;
-
-        // A user can create a booking for themselves.
+        // Users can create/update/delete their own bookings
         allow create: if request.auth.uid == request.resource.data.userId;
-        
-        // A user can update/delete their own booking.
         allow update, delete: if request.auth.uid == resource.data.userId;
+        // Users can only read their own bookings. This allows list queries filtered by userId.
+        allow read: if request.auth != null && request.auth.uid == resource.data.userId;
     }
 
 

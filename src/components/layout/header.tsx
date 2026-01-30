@@ -67,10 +67,12 @@ export default function Header({ dictionary, lang }: { dictionary: Dictionary['h
                             ))}
                         </nav>
                         <div className="flex flex-col gap-2">
-                            <LanguageSwitcher lang={lang} />
-                            <div className="flex items-center gap-2">
-                                <UserNav dictionary={dictionary} lang={lang} />
-                                <CartNav />
+                           <div className="flex justify-between items-center px-4 py-2 border-t">
+                                <LanguageSwitcher lang={lang} />
+                                <div className="flex items-center gap-2">
+                                    <CartNav />
+                                    <UserNav dictionary={dictionary} lang={lang} />
+                                </div>
                             </div>
                         </div>
                     </SheetContent>
@@ -90,7 +92,7 @@ export default function Header({ dictionary, lang }: { dictionary: Dictionary['h
                 </>
               ) : (
                 <>
-                  <Skeleton className="h-10 w-10" />
+                  <Skeleton className="h-10 w-24" />
                   <Skeleton className="h-10 w-10" />
                   <Skeleton className="h-10 w-10 rounded-full" />
                 </>
