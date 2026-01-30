@@ -32,7 +32,7 @@ import { Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
 import type { SessionType } from './session-type-manager';
 import type { Formation } from '../providers/cart-provider';
-import type { Booking } from '@/lib/types';
+import type { LiveSession } from '@/lib/types';
 
 // Simplified types for this component
 type UserProfile = { id: string };
@@ -53,8 +53,8 @@ export default function StatsDashboard({
     () => (firestore ? collection(firestore, 'users') as Query<UserProfile> : null),
     [firestore]
   );
-  const bookingsQuery = useMemoFirebase(
-    () => (firestore ? collection(firestore, 'bookings') as Query<Booking> : null),
+  const sessionsQuery = useMemoFirebase(
+    () => (firestore ? collection(firestore, 'sessions') as Query<LiveSession> : null),
     [firestore]
   );
   // Correctly query the 'formations' subcollection across all 'users'
@@ -72,7 +72,7 @@ export default function StatsDashboard({
   );
 
   const { data: users, isLoading: loadingUsers } = useCollection<UserProfile>(usersQuery);
-  const { data: bookings, isLoading: loadingBookings } = useCollection<Booking>(bookingsQuery);
+  const { data: sessions, isLoading: loadingSessions } = useCollection<LiveSession>(sessionsQuery);
   const { data: userFormations, isLoading: loadingUserFormations } = useCollection<UserFormation>(userFormationsQuery);
   const { data: sessionTypes, isLoading: loadingSessionTypes } = useCollection<SessionType>(sessionTypesQuery);
   const { data: allFormations, isLoading: loadingAllFormations } = useCollection<Formation>(allFormationsQuery);
@@ -80,7 +80,7 @@ export default function StatsDashboard({
   const stats = useMemo(() => {
     if (
       !users ||
-      !bookings ||
+      !sessions ||
       !userFormations ||
       !sessionTypes ||
       !allFormations
@@ -91,8 +91,8 @@ export default function StatsDashboard({
     const sessionTypeMap = new Map(sessionTypes.map((st) => [st.id, st]));
     const formationMap = new Map(allFormations.map((f) => [f.id, f]));
 
-    const bookingsRevenue = bookings.reduce((acc, booking) => {
-      const sessionType = sessionTypeMap.get(booking.sessionTypeId);
+    const sessionsRevenue = sessions.reduce((acc, session) => {
+      const sessionType = sessionTypeMap.get(session.sessionTypeId);
       return acc + (sessionType?.price || 0);
     }, 0);
 
@@ -101,18 +101,18 @@ export default function StatsDashboard({
       return acc + (formation?.price || 0);
     }, 0);
 
-    const totalRevenue = (bookingsRevenue + formationsRevenue) / 100;
+    const totalRevenue = (sessionsRevenue + formationsRevenue) / 100;
     const totalUsers = users.length;
-    const grimoireDownloads = bookings.filter(
-      (b) => b.reportStatus === 'available'
+    const grimoireDownloads = sessions.filter(
+      (s) => s.reportStatus === 'available'
     ).length;
 
     // Revenue breakdown for chart
     const revenueByProduct: { name: string; revenue: number }[] = [];
 
     // By Session Type
-    bookings.forEach((booking) => {
-      const sessionType = sessionTypeMap.get(booking.sessionTypeId);
+    sessions.forEach((session) => {
+      const sessionType = sessionTypeMap.get(session.sessionTypeId);
       if (sessionType) {
         const name = sessionType.name[lang] || sessionType.name.en;
         const price = sessionType.price / 100;
@@ -148,7 +148,7 @@ export default function StatsDashboard({
     };
   }, [
     users,
-    bookings,
+    sessions,
     userFormations,
     sessionTypes,
     allFormations,
@@ -157,7 +157,7 @@ export default function StatsDashboard({
 
   const isLoading =
     loadingUsers ||
-    loadingBookings ||
+    loadingSessions ||
     loadingUserFormations ||
     loadingSessionTypes ||
     loadingAllFormations;
