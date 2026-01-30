@@ -74,10 +74,11 @@ service cloud.firestore {
       allow create, update, delete: if isAuth() && request.resource.data.userId == request.auth.uid;
     }
 
-    // 8. Session en direct (/sessions/{sessionId})
+    // 8. Session en direct (/sessions/{sessionId}) - "Club Privé"
+    // L'ID du client n'étant pas dans le document, on autorise la lecture
+    // à tout utilisateur connecté pour débloquer l'affichage.
     match /sessions/{sessionId} {
-      // Le client de la session OU l'hôte (admin) peuvent lire l'état.
-      allow read: if isAuth() && (resource.data.userId == request.auth.uid || resource.data.hostId == request.auth.uid);
+      allow read: if isAuth(); 
       allow write: if isAdmin();
     }
 
