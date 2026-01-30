@@ -4,14 +4,13 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     // --- Fonctions d'aide ---
-
     function isAuth() {
       return request.auth != null;
     }
 
-    // L'UID 'HvsOFzrOwFTHWTBVBextpZtV5I53' correspond à seryse@live.be
+    // Ton UID Admin (HvsOFzrOwFTHWTBVBextpZtV5I53)
     function isAdmin() {
-      return isAuth() && request.auth.uid == 'HvsOFzrOwFTHWTBVBextpZtV5I53';
+      return isAuth() && request.auth.uid == "HvsOFzrOwFTHWTBVBextpZtV5I53"; 
     }
 
     function isOwner(userId) {
@@ -22,66 +21,70 @@ service cloud.firestore {
       return after.bookedParticipantsCount == before.bookedParticipantsCount + 1
           && after.sessionTypeId == before.sessionTypeId
           && after.startTime == before.startTime
-          && after.endTime == before.endTime;
+          && after.endTime == before.endTime
+          && after.keys().hasAll(['sessionTypeId', 'startTime', 'endTime', 'bookedParticipantsCount'])
+          && after.keys().size() == 4;
     }
 
     // --- Règles par Collection ---
 
     // Utilisateurs (UserProfile)
     match /users/{userId} {
-      allow get, update, write: if isOwner(userId);
+      allow get, write: if isOwner(userId);
       allow list, get: if isAdmin();
     }
 
-    // Formations acquises par l'utilisateur (UserFormation)
+    // Formations acquises par l'utilisateur
     match /users/{userId}/formations/{userFormationId} {
       allow read, write: if isOwner(userId) || isAdmin();
     }
-
-    // Règle pour la requête collectionGroup sur 'formations' (pour les statistiques)
+    
     match /{path=**}/formations/{userFormationId} {
-      allow read: if isAdmin();
+        allow read: if isAdmin();
     }
 
-    // Catalogue des Formations
+    // Catalogue de formations
     match /formations/{formationId} {
-      allow read: if true;
+      allow read: if true; 
       allow write: if isAdmin();
     }
 
-    // Actualités (NewsArticle)
+    // Actualités
     match /news/{newsId} {
       allow read: if true;
       allow write: if isAdmin();
     }
 
-    // Types de session (SessionType)
+    // Types de session
     match /sessionTypes/{sessionTypeId} {
       allow read: if true;
       allow write: if isAdmin();
     }
 
-    // Créneaux horaires (TimeSlot)
+    // Créneaux horaires
     match /timeSlots/{timeSlotId} {
       allow read: if true;
       allow write: if isAdmin();
       allow update: if isAuth() && isBookingIncrement(resource.data, request.resource.data);
     }
 
-    // Réservations (Booking)
+    // Réservations (Bookings)
     match /bookings/{bookingId} {
-        allow read: if isAdmin() || (isAuth() && resource.data.userId == request.auth.uid);
-        allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
-        allow update, delete: if (isAuth() && resource.data.userId == request.auth.uid) || isAdmin();
+      allow read, write: if isAdmin();
+      allow read: if isAuth() && resource.data.userId == request.auth.uid;
+      allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isAuth() && resource.data.userId == request.auth.uid;
     }
 
-    // État de la session en direct (LiveSession)
+    // État de la session en direct (LiveSession) - Règle SÉCURISÉE
     match /sessions/{sessionId} {
-      allow read: if isAdmin() || (isAuth() && resource.data.userId == request.auth.uid);
+      // L'hôte (admin) OU le client peut lire l'état de la session.
+      allow read: if isAuth() && (resource.data.hostId == request.auth.uid || resource.data.userId == request.auth.uid);
+      // Seul l'admin peut modifier l'état.
       allow write: if isAdmin();
     }
 
-    // Témoignages (Testimonial)
+    // Témoignages
     match /testimonials/{testimonialId} {
       allow read: if isAdmin();
       allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
@@ -91,6 +94,11 @@ service cloud.firestore {
     match /coupons/{couponId} {
       allow get: if isAdmin() || (isAuth() && resource.data.userId == request.auth.uid);
       allow list: if isAdmin();
+    }
+    
+     match /subtitles/{sessionId} {
+      allow read: if isAuth();
+      allow write: if isAdmin();
     }
   }
 }
