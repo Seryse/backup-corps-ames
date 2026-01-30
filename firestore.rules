@@ -71,12 +71,16 @@ service cloud.firestore {
     match /sessions/{sessionId} {
       // Lecture : Autorisée si on est le propriétaire (client) de la session, ou l'hôte (admin).
       allow get: if isAuth() && (resource.data.userId == request.auth.uid || resource.data.hostId == request.auth.uid);
-      // Liste : Autorisée si on filtre par son propre userId, ou si on est admin.
+      
+      // Liste : Autorisée si on filtre par son propre userId, OU si on est admin.
       allow list: if (isAuth() && request.query.where.get('userId', null) == request.auth.uid) || isAdmin();
+      
       // Création : Autorisée si on crée une session pour soi-même.
       allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
+      
       // Mise à jour : Seul l'admin (hôte) peut modifier l'état d'une session en cours.
       allow update: if isAdmin();
+      
       // Suppression : Seul l'admin peut supprimer une session.
       allow delete: if isAdmin();
     }
