@@ -66,19 +66,12 @@ service cloud.firestore {
     }
 
     match /bookings/{bookingId} {
-        // --- WRITE RULES ---
-        allow write: if isAdmin();
-        allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
-        allow update, delete: if request.auth != null && request.auth.uid == resource.data.userId;
+        // Admins can do anything
+        allow read, write: if isAdmin();
 
-        // --- READ RULES ---
-        // GET: An admin can get any document. A user can get their own.
-        allow get: if isAdmin() || (request.auth != null && request.auth.uid == resource.data.userId);
-        
-        // LIST: An admin can list the entire collection for the admin panel.
-        // User-side queries are implicitly allowed by the 'get' rule above, 
-        // as Firestore checks if the query constraints match the rule for every document.
-        allow list: if isAdmin();
+        // Users can read, create, update, and delete their own bookings
+        allow read, create: if request.auth.uid == request.resource.data.userId;
+        allow update, delete: if request.auth.uid == resource.data.userId;
     }
 
 
