@@ -6,7 +6,7 @@ import {
   useCollection,
   useMemoFirebase,
 } from '@/firebase';
-import { collection, query, Query } from 'firebase/firestore';
+import { collection, query, Query, collectionGroup } from 'firebase/firestore';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import {
   BarChart,
@@ -58,7 +58,7 @@ export default function StatsDashboard({
     [firestore]
   );
   const userFormationsQuery = useMemoFirebase(
-    () => (firestore ? collection(firestore, 'users').doc().collection('formations') as Query<UserFormation> : null),
+    () => (firestore ? collectionGroup(firestore, 'formations') as Query<UserFormation> : null),
     [firestore]
   );
   const sessionTypesQuery = useMemoFirebase(
