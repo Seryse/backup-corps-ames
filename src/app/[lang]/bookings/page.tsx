@@ -32,6 +32,7 @@ export default function BookingsPage({ params }: { params: Promise<{ lang: Local
   // --- Data Fetching ---
   const sessionsQuery = useMemoFirebase(() => {
     if (!firestore || !user) return null;
+    // CORRECTION : Filtre strict par userId pour passer la sécurité
     return query(collection(firestore, 'sessions'), where('userId', '==', user.uid), orderBy('bookingTime', 'desc')) as Query<LiveSession>;
   }, [firestore, user]);
 
@@ -113,7 +114,7 @@ export default function BookingsPage({ params }: { params: Promise<{ lang: Local
                 </div>
             </CardHeader>
             {isUpcoming && (
-                 <CardFooter>
+                  <CardFooter>
                     <Button asChild className="w-full">
                        <Link href={`/${lang}/session/${session.id}`}>
                          <Video className="mr-2 h-4 w-4" />
