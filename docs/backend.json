@@ -408,9 +408,9 @@
       },
       "required": [
         "hostId",
+        "userId",
         "bookingId",
-        "status",
-        "userId"
+        "status"
       ]
     },
     "Testimonial": {
