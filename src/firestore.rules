@@ -30,7 +30,6 @@ service cloud.firestore {
     // Utilisateurs (UserProfile)
     match /users/{userId} {
       allow get, update, write: if isOwner(userId);
-      // L'admin peut lister tous les utilisateurs (pour les statistiques) et lire n'importe quel profil.
       allow list, get: if isAdmin();
     }
 
@@ -71,20 +70,14 @@ service cloud.firestore {
 
     // Réservations (Booking)
     match /bookings/{bookingId} {
-      // Seul l'admin peut lister TOUTE la collection
-      allow list: if isAdmin();
-      // Un utilisateur peut lire une réservation si c'est la sienne. L'admin aussi.
-      allow get: if isAdmin() || (isAuth() && resource.data.userId == request.auth.uid);
-      // Un utilisateur peut créer/modifier/supprimer ses propres réservations.
-      allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
-      allow update, delete: if isAuth() && resource.data.userId == request.auth.uid;
-       // L'admin peut écrire/modifier/supprimer n'importe quelle réservation.
-      allow write: if isAdmin();
+        allow read: if isAdmin() || (isAuth() && resource.data.userId == request.auth.uid);
+        allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
+        allow update, delete: if (isAuth() && resource.data.userId == request.auth.uid) || isAdmin();
     }
 
     // État de la session en direct (LiveSession)
     match /sessions/{sessionId} {
-      allow read: if isAuth();
+      allow read: if isAdmin() || (isAuth() && resource.data.userId == request.auth.uid);
       allow write: if isAdmin();
     }
 

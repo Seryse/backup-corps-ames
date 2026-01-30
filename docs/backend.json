@@ -371,6 +371,10 @@
           "type": "string",
           "description": "The UID of the host (praticien)."
         },
+        "userId": {
+          "type": "string",
+          "description": "The UID of the client/user attending the session."
+        },
         "bookingId": {
           "type": "string",
           "description": "Reference to the booking document."
@@ -405,7 +409,8 @@
       "required": [
         "hostId",
         "bookingId",
-        "status"
+        "status",
+        "userId"
       ]
     },
     "Testimonial": {

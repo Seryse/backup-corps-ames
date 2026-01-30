@@ -78,11 +78,16 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
 
 
   useEffect(() => {
-      if (isAdminView && authStatus === 'authorized' && firestore && user) {
+      if (isAdminView && authStatus === 'authorized' && firestore && user && booking) {
           const sessionRef = doc(firestore, 'sessions', bookingId);
-          setDoc(sessionRef, { hostId: user.uid, bookingId: bookingId, status: 'WAITING' }, { merge: true });
+          setDoc(sessionRef, { 
+              hostId: user.uid, 
+              bookingId: bookingId, 
+              status: 'WAITING',
+              userId: booking.userId
+          }, { merge: true });
       }
-  },[isAdminView, authStatus, firestore, bookingId, user])
+  },[isAdminView, authStatus, firestore, bookingId, user, booking])
 
   // --- Daily.co SDK Integration ---
   useEffect(() => {
