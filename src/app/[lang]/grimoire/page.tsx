@@ -12,10 +12,10 @@ import Image from 'next/image';
 import { format } from 'date-fns';
 import { enUS, fr, es } from 'date-fns/locale';
 import type { SessionType } from '@/components/admin/session-type-manager';
-import type { Booking, TimeSlot, MergedBooking } from '@/lib/types';
+import type { LiveSession, TimeSlot, MergedSession } from '@/lib/types';
 
-// This will be a filtered list of bookings that have available reports
-type GrimoireEntry = MergedBooking & {
+// This will be a filtered list of sessions that have available reports
+type GrimoireEntry = MergedSession & {
     pdfUrl: string;
     pdfThumbnail?: string | null;
 };
@@ -34,18 +34,16 @@ export default function GrimoirePage({ params }: { params: Promise<{ lang: Local
   const dateFnsLocale = localesDateFns[lang] || enUS;
 
   // --- Data Fetching ---
-  // 1. Get user's bookings where a report is available
-  const bookingsQuery = useMemoFirebase(() => {
+  const sessionsQuery = useMemoFirebase(() => {
     if (!firestore || !user) return null;
     return query(
-        collection(firestore, 'bookings'), 
+        collection(firestore, 'sessions'), 
         where('userId', '==', user.uid),
         where('reportStatus', '==', 'available'),
         orderBy('bookingTime', 'desc')
-    ) as Query<Booking>;
+    ) as Query<LiveSession>;
   }, [firestore, user]);
 
-  // 2. Get all session types and time slots to merge data
   const sessionTypesQuery = useMemoFirebase(() => {
     if (!firestore) return null;
     return collection(firestore, 'sessionTypes') as Query<SessionType>;
@@ -56,33 +54,31 @@ export default function GrimoirePage({ params }: { params: Promise<{ lang: Local
     return collection(firestore, 'timeSlots') as Query<TimeSlot>;
   }, [firestore]);
 
-  const { data: bookings, isLoading: isLoadingBookings } = useCollection<Booking>(bookingsQuery);
+  const { data: sessions, isLoading: isLoadingSessions } = useCollection<LiveSession>(sessionsQuery);
   const { data: sessionTypes, isLoading: isLoadingSessionTypes } = useCollection<SessionType>(sessionTypesQuery);
   const { data: timeSlots, isLoading: isLoadingTimeSlots } = useCollection<TimeSlot>(timeSlotsQuery);
 
-  // 3. Merge and filter the data
   const grimoireEntries = useMemo((): GrimoireEntry[] => {
-    if (!bookings || !sessionTypes || !timeSlots) return [];
+    if (!sessions || !sessionTypes || !timeSlots) return [];
 
     const sessionTypeMap = new Map(sessionTypes.map(st => [st.id, st]));
     const timeSlotMap = new Map(timeSlots.map(ts => [ts.id, ts]));
 
-    return bookings
-      .map(booking => {
-        const sessionType = sessionTypeMap.get(booking.sessionTypeId);
-        const timeSlot = timeSlotMap.get(booking.timeSlotId);
-        // Ensure all parts exist and it's the correct category with a PDF URL
-        if (!sessionType || !timeSlot || sessionType.category !== 'irisphere-harmonia' || !booking.pdfUrl) {
+    return sessions
+      .map(session => {
+        const sessionType = sessionTypeMap.get(session.sessionTypeId);
+        const timeSlot = timeSlotMap.get(session.timeSlotId);
+        if (!sessionType || !timeSlot || sessionType.category !== 'irisphere-harmonia' || !session.pdfUrl) {
             return null;
         }
-        return { ...booking, sessionType, timeSlot } as GrimoireEntry;
+        return { ...session, sessionType, timeSlot } as GrimoireEntry;
       })
-      .filter((b): b is GrimoireEntry => b !== null);
+      .filter((s): s is GrimoireEntry => s !== null);
 
-  }, [bookings, sessionTypes, timeSlots]);
+  }, [sessions, sessionTypes, timeSlots]);
 
 
-  const isLoading = isUserLoading || isLoadingBookings || isLoadingSessionTypes || isLoadingTimeSlots || !dict;
+  const isLoading = isUserLoading || isLoadingSessions || isLoadingSessionTypes || isLoadingTimeSlots || !dict;
 
   if (isLoading || !dict) {
     return (
@@ -120,7 +116,7 @@ export default function GrimoirePage({ params }: { params: Promise<{ lang: Local
                             </CardContent>
                             <div className="p-4 pt-0">
                                 <Button asChild className="w-full">
-                                   <a href={entry.pdfUrl} download target="_blank" rel="noopener noreferrer">
+                                   <a href={entry.pdfUrl!} download target="_blank" rel="noopener noreferrer">
                                      <Download className="mr-2 h-4 w-4" />
                                      {dict.open_button}
                                    </a>

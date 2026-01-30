@@ -24,13 +24,10 @@ export async function createBooking(
   }
 
   try {
-    // References to the documents we'll be working with.
     const timeSlotRef = doc(firestore, 'timeSlots', timeSlotId);
     const sessionTypeRef = doc(firestore, 'sessionTypes', sessionTypeId);
-    // Create a reference for a new booking document with a unique ID.
-    const bookingRef = doc(collection(firestore, 'bookings'));
-    // The session document will have the same ID as the booking for easy correlation.
-    const sessionRef = doc(firestore, 'sessions', bookingRef.id);
+    // Create a reference for a new document in the `sessions` collection
+    const sessionRef = doc(collection(firestore, 'sessions'));
 
     await runTransaction(firestore, async (transaction) => {
       const timeSlotDoc = await transaction.get(timeSlotRef);
@@ -46,7 +43,6 @@ export async function createBooking(
       const timeSlotData = timeSlotDoc.data();
       const sessionTypeData = sessionTypeDoc.data() as SessionType;
 
-      // Check if the slot is full.
       if (timeSlotData.bookedParticipantsCount >= sessionTypeData.maxParticipants) {
         throw new Error('This time slot is now full.');
       }
@@ -56,41 +52,36 @@ export async function createBooking(
         bookedParticipantsCount: increment(1),
       });
 
-      // 2. Create the booking document.
+      // 2. Create the unified session document.
       const visioToken = `VISIO-${userId.substring(0, 4)}-${timeSlotId.substring(
         0,
         4
       )}-${Date.now()}`;
-      transaction.set(bookingRef, {
+      
+      transaction.set(sessionRef, {
+        // Booking-related fields
         userId,
         timeSlotId,
         sessionTypeId,
         bookingTime: serverTimestamp(),
-        status: 'confirmed',
-        visioToken: visioToken,
+        bookingStatus: 'confirmed',
+        visioToken,
         reportStatus: 'pending',
         pdfUrl: null,
         pdfThumbnail: null,
+        // Session state fields
+        hostId: ADMIN_UID,
+        sessionStatus: 'WAITING',
+        startTime: null,
+        lang: null,
+        activePlaylistUrl: null,
+        subtitle: null,
       });
-
-       // 3. Create the corresponding session document proactively.
-      transaction.set(sessionRef, {
-          hostId: ADMIN_UID,
-          userId: userId,
-          bookingId: bookingRef.id,
-          status: 'WAITING',
-          // Initialize other fields to null or default values
-          startTime: null,
-          lang: null,
-          activePlaylistUrl: null,
-          subtitle: null,
-      });
-
     });
 
     return { success: true };
   } catch (error: any) {
-    console.error('Error creating booking and session:', error);
+    console.error('Error creating session:', error);
     return {
       success: false,
       error: error.message || 'An unknown error occurred during booking.',

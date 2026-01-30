@@ -37,7 +37,7 @@ export default function TestimonialModal({ isOpen, onClose, bookingId, userId }:
             }
         } catch (error: any) {
             toast({ variant: 'destructive', title: 'Submission Failed', description: error.message });
-            setIsSubmitting(false); // Allow retry if submission fails
+            setIsSubmitting(false);
         }
     };
     
@@ -75,7 +75,6 @@ export default function TestimonialModal({ isOpen, onClose, bookingId, userId }:
                             onChange={(e) => setFeedback(e.target.value)}
                             rows={6}
                         />
-                        {/* TODO: Add controls for Audio/Video upload */}
                         <Button onClick={handleSubmit} disabled={isSubmitting} className="w-full">
                             {isSubmitting ? <Loader2 className="animate-spin" /> : <Send />}
                             <span className="ml-2">Submit Feedback</span>

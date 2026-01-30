@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '../ui/badge';
 import { Loader2, Video, Calendar, Clock, Users, Link as LinkIcon, BookHeart, Download } from 'lucide-react';
 import type { SessionType } from '@/components/admin/session-type-manager';
-import type { Booking, MergedBooking, TimeSlot } from '@/lib/types';
+import type { LiveSession, MergedSession, TimeSlot } from '@/lib/types';
 import { GrimoireUploadDialog } from './GrimoireUploadDialog';
 
 type UserProfile = {
@@ -22,7 +22,7 @@ type UserProfile = {
     email?: string;
 };
 
-type AdminMergedBooking = MergedBooking & {
+type AdminMergedSession = MergedSession & {
     user: UserProfile;
 }
 
@@ -33,9 +33,9 @@ export default function AdminSessionManager({ lang, dictionary }: { lang: Locale
   const dateFnsLocale = localesDateFns[lang] || enUS;
 
   // --- Data Fetching ---
-  const bookingsQuery = useMemoFirebase(() => {
+  const sessionsQuery = useMemoFirebase(() => {
     if (!firestore) return null;
-    return query(collection(firestore, 'bookings')) as Query<Booking>;
+    return query(collection(firestore, 'sessions')) as Query<LiveSession>;
   }, [firestore]);
 
   const sessionTypesQuery = useMemoFirebase(() => {
@@ -53,42 +53,42 @@ export default function AdminSessionManager({ lang, dictionary }: { lang: Locale
     return collection(firestore, 'users') as Query<UserProfile>;
   }, [firestore]);
 
-  const { data: bookings, isLoading: isLoadingBookings } = useCollection<Booking>(bookingsQuery);
+  const { data: sessions, isLoading: isLoadingSessions } = useCollection<LiveSession>(sessionsQuery);
   const { data: sessionTypes, isLoading: isLoadingSessionTypes } = useCollection<SessionType>(sessionTypesQuery);
   const { data: timeSlots, isLoading: isLoadingTimeSlots } = useCollection<TimeSlot>(timeSlotsQuery);
   const { data: users, isLoading: isLoadingUsers } = useCollection<UserProfile>(usersQuery);
 
-  const { todaysBookings, pastBookings } = useMemo(() => {
-    if (!bookings || !sessionTypes || !timeSlots || !users) return { todaysBookings: [], pastBookings: [] };
+  const { todaysSessions, pastSessions } = useMemo(() => {
+    if (!sessions || !sessionTypes || !timeSlots || !users) return { todaysSessions: [], pastSessions: [] };
 
     const sessionTypeMap = new Map(sessionTypes.map(st => [st.id, st]));
     const timeSlotMap = new Map(timeSlots.map(ts => [ts.id, ts]));
     const userMap = new Map(users.map(u => [u.id, u]));
 
-    const allMerged = bookings
-      .map(booking => {
-        const sessionType = sessionTypeMap.get(booking.sessionTypeId);
-        const timeSlot = timeSlotMap.get(booking.timeSlotId);
-        const user = userMap.get(booking.userId);
+    const allMerged = sessions
+      .map(session => {
+        const sessionType = sessionTypeMap.get(session.sessionTypeId);
+        const timeSlot = timeSlotMap.get(session.timeSlotId);
+        const user = userMap.get(session.userId);
         if (!sessionType || !timeSlot || !user) return null;
-        return { ...booking, sessionType, timeSlot, user };
+        return { ...session, sessionType, timeSlot, user };
       })
-      .filter((b): b is AdminMergedBooking => b !== null);
+      .filter((s): s is AdminMergedSession => s !== null);
     
-    const todays = allMerged.filter(b => {
-        const startTime = b.timeSlot.startTime.toDate();
+    const todays = allMerged.filter(s => {
+        const startTime = s.timeSlot.startTime.toDate();
         return isToday(startTime);
     }).sort((a,b) => a.timeSlot.startTime.toMillis() - b.timeSlot.startTime.toMillis());
 
-    const past = allMerged.filter(b => {
-        const endTime = b.timeSlot.endTime.toDate();
-        return isPast(endTime) && !isToday(b.timeSlot.startTime.toDate());
+    const past = allMerged.filter(s => {
+        const endTime = s.timeSlot.endTime.toDate();
+        return isPast(endTime) && !isToday(s.timeSlot.startTime.toDate());
     }).sort((a,b) => b.timeSlot.startTime.toMillis() - a.timeSlot.startTime.toMillis());
 
-    return { todaysBookings: todays, pastBookings: past };
-  }, [bookings, sessionTypes, timeSlots, users]);
+    return { todaysSessions: todays, pastSessions: past };
+  }, [sessions, sessionTypes, timeSlots, users]);
 
-  const isLoading = isLoadingBookings || isLoadingSessionTypes || isLoadingTimeSlots || isLoadingUsers;
+  const isLoading = isLoadingSessions || isLoadingSessionTypes || isLoadingTimeSlots || isLoadingUsers;
 
   if (isLoading) {
     return (
@@ -98,17 +98,17 @@ export default function AdminSessionManager({ lang, dictionary }: { lang: Locale
     );
   }
   
-  const SessionCard = ({ booking }: { booking: AdminMergedBooking }) => {
-    const { sessionType, timeSlot, user } = booking;
+  const SessionCard = ({ session }: { session: AdminMergedSession }) => {
+    const { sessionType, timeSlot, user } = session;
     const localizedName = sessionType.name?.[lang] || sessionType.name?.en;
     const startTime = timeSlot.startTime.toDate();
     const sessionHasEnded = isPast(timeSlot.endTime.toDate());
 
     const isGrimoireEligible = sessionType.category === 'irisphere-harmonia' && sessionType.sessionModel === 'private';
-    const userIdentifier = user.displayName || user.email || booking.userId;
+    const userIdentifier = user.displayName || user.email || session.userId;
 
     return (
-        <Card key={booking.id} className="flex flex-col">
+        <Card key={session.id} className="flex flex-col">
             <CardHeader>
                 <CardTitle>{localizedName}</CardTitle>
                 <CardDescription className="flex items-center gap-2 pt-1 text-muted-foreground">
@@ -123,10 +123,10 @@ export default function AdminSessionManager({ lang, dictionary }: { lang: Locale
                 </div>
                 {isGrimoireEligible && (
                     <div>
-                        {booking.reportStatus === 'available' && <Badge variant="secondary">{dictionary.admin.grimoire.report_sent}</Badge>}
+                        {session.reportStatus === 'available' && <Badge variant="secondary">{dictionary.admin.grimoire.report_sent}</Badge>}
                         <div className="relative aspect-[3/4] w-28 mt-2 bg-muted rounded-md flex items-center justify-center">
-                            {booking.pdfThumbnail ? (
-                                <Image src={booking.pdfThumbnail} alt="Grimoire thumbnail" fill className="object-cover rounded-md" />
+                            {session.pdfThumbnail ? (
+                                <Image src={session.pdfThumbnail} alt="Grimoire thumbnail" fill className="object-cover rounded-md" />
                             ) : (
                                 <BookHeart className="h-10 w-10 text-muted-foreground" />
                             )}
@@ -136,7 +136,7 @@ export default function AdminSessionManager({ lang, dictionary }: { lang: Locale
             </CardContent>
             <CardFooter className="flex flex-col items-stretch gap-2">
                 <Button asChild className="w-full" variant="outline">
-                    <Link href={`/${lang}/session/${booking.id}`}>
+                    <Link href={`/${lang}/session/${session.id}`}>
                     <LinkIcon className="mr-2 h-4 w-4" />
                     {dictionary.admin.joinCall}
                     </Link>
@@ -144,15 +144,15 @@ export default function AdminSessionManager({ lang, dictionary }: { lang: Locale
 
                 {sessionHasEnded && isGrimoireEligible && (
                     <>
-                        {booking.reportStatus === 'available' && booking.pdfUrl && (
+                        {session.reportStatus === 'available' && session.pdfUrl && (
                              <Button asChild variant="secondary">
-                               <a href={booking.pdfUrl} download target="_blank" rel="noopener noreferrer">
+                               <a href={session.pdfUrl} download target="_blank" rel="noopener noreferrer">
                                  <Download className="mr-2 h-4 w-4" />
                                  {dictionary.admin.grimoire.download_button || 'Download'}
                                </a>
                             </Button>
                         )}
-                        <GrimoireUploadDialog booking={booking} dictionary={dictionary} />
+                        <GrimoireUploadDialog session={session} dictionary={dictionary} />
                     </>
                 )}
             </CardFooter>
@@ -167,9 +167,9 @@ export default function AdminSessionManager({ lang, dictionary }: { lang: Locale
                 <Video className="h-8 w-8 text-accent" />
                 <h2 className="text-3xl font-headline">{dictionary.admin.todaysSessions}</h2>
             </div>
-            {todaysBookings.length > 0 ? (
+            {todaysSessions.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {todaysBookings.map(booking => <SessionCard key={booking.id} booking={booking} />)}
+                {todaysSessions.map(session => <SessionCard key={session.id} session={session} />)}
             </div>
             ) : (
                 <div className="text-center py-16 border-2 border-dashed rounded-lg">
@@ -184,9 +184,9 @@ export default function AdminSessionManager({ lang, dictionary }: { lang: Locale
                 <Calendar className="h-8 w-8 text-accent" />
                 <h2 className="text-3xl font-headline">{dictionary.admin.pastSessions}</h2>
             </div>
-            {pastBookings.length > 0 ? (
+            {pastSessions.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {pastBookings.map(booking => <SessionCard key={booking.id} booking={booking} />)}
+                {pastSessions.map(session => <SessionCard key={session.id} session={session} />)}
             </div>
             ) : (
                 <div className="text-center py-10 border-2 border-dashed rounded-lg">

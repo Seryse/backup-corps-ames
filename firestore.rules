@@ -67,37 +67,30 @@ service cloud.firestore {
       allow update: if isAuth() && isBookingIncrement(resource.data, request.resource.data);
     }
 
-    // 7. Réservations (/bookings/{bookingId})
-    match /bookings/{bookingId} {
-      allow read, write: if isAdmin();
-      allow read: if isAuth() && resource.data.userId == request.auth.uid;
-      allow create, update, delete: if isAuth() && request.resource.data.userId == request.auth.uid;
-    }
-
-    // 8. Session en direct (/sessions/{sessionId}) - **Règle sécurisée**
+    // 7. SESSIONS (Rendez-vous et état live)
     match /sessions/{sessionId} {
-      // Le client de la session OU l'hôte (admin) peuvent lire l'état.
-      allow read: if isAuth() && (resource.data.userId == request.auth.uid || resource.data.hostId == request.auth.uid);
-      // Seul l'admin peut modifier l'état.
-      allow write: if isAdmin();
+      // Lecture : Autorisée si on est le propriétaire (client) de la session, ou l'hôte (admin).
+      allow get: if isAuth() && (resource.data.userId == request.auth.uid || resource.data.hostId == request.auth.uid);
+      // Liste : Autorisée si on filtre par son propre userId, ou si on est admin.
+      allow list: if (isAuth() && request.query.where.get('userId', null) == request.auth.uid) || isAdmin();
+      // Création : Autorisée si on crée une session pour soi-même.
+      allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
+      // Mise à jour : Seul l'admin (hôte) peut modifier l'état d'une session en cours.
+      allow update: if isAdmin();
+      // Suppression : Seul l'admin peut supprimer une session.
+      allow delete: if isAdmin();
     }
 
-    // 9. Témoignages (/testimonials/{testimonialId})
+    // 8. Témoignages (/testimonials/{testimonialId})
     match /testimonials/{testimonialId} {
       allow read: if isAdmin();
       allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
     }
 
-    // 10. Coupons (/coupons/{couponId})
+    // 9. Coupons (/coupons/{couponId})
     match /coupons/{couponId} {
       allow get: if isAdmin() || (isAuth() && resource.data.userId == request.auth.uid);
       allow list: if isAdmin();
-    }
-
-    // 11. Sous-titres (/subtitles/{sessionId}) - Déprécié mais sécurisé
-    match /subtitles/{sessionId} {
-      allow read: if isAuth();
-      allow write: if isAdmin();
     }
   }
 }

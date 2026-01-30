@@ -13,12 +13,7 @@ import Image from 'next/image';
 import { format, isPast } from 'date-fns';
 import { enUS, fr, es } from 'date-fns/locale';
 import type { SessionType } from '@/components/admin/session-type-manager';
-import type { Booking, TimeSlot } from '@/lib/types';
-
-type MergedBooking = Booking & {
-    sessionType: SessionType;
-    timeSlot: TimeSlot;
-};
+import type { LiveSession, TimeSlot, MergedSession } from '@/lib/types';
 
 export default function BookingsPage({ params }: { params: Promise<{ lang: Locale }> }) {
   const { lang } = use(params);
@@ -35,9 +30,9 @@ export default function BookingsPage({ params }: { params: Promise<{ lang: Local
   const dateFnsLocale = localesDateFns[lang] || enUS;
 
   // --- Data Fetching ---
-  const bookingsQuery = useMemoFirebase(() => {
+  const sessionsQuery = useMemoFirebase(() => {
     if (!firestore || !user) return null;
-    return query(collection(firestore, 'bookings'), where('userId', '==', user.uid), orderBy('bookingTime', 'desc')) as Query<Booking>;
+    return query(collection(firestore, 'sessions'), where('userId', '==', user.uid), orderBy('bookingTime', 'desc')) as Query<LiveSession>;
   }, [firestore, user]);
 
   const sessionTypesQuery = useMemoFirebase(() => {
@@ -50,36 +45,36 @@ export default function BookingsPage({ params }: { params: Promise<{ lang: Local
     return collection(firestore, 'timeSlots') as Query<TimeSlot>;
   }, [firestore]);
 
-  const { data: bookings, isLoading: isLoadingBookings } = useCollection<Booking>(bookingsQuery);
+  const { data: sessions, isLoading: isLoadingSessions } = useCollection<LiveSession>(sessionsQuery);
   const { data: sessionTypes, isLoading: isLoadingSessionTypes } = useCollection<SessionType>(sessionTypesQuery);
   const { data: timeSlots, isLoading: isLoadingTimeSlots } = useCollection<TimeSlot>(timeSlotsQuery);
 
-  const { upcomingBookings, pastBookings } = useMemo(() => {
-    if (!bookings || !sessionTypes || !timeSlots) return { upcomingBookings: [], pastBookings: [] };
+  const { upcomingSessions, pastSessions } = useMemo(() => {
+    if (!sessions || !sessionTypes || !timeSlots) return { upcomingSessions: [], pastSessions: [] };
 
     const sessionTypeMap = new Map(sessionTypes.map(st => [st.id, st]));
     const timeSlotMap = new Map(timeSlots.map(ts => [ts.id, ts]));
 
-    const allMerged = bookings
-      .map(booking => {
-        const sessionType = sessionTypeMap.get(booking.sessionTypeId);
-        const timeSlot = timeSlotMap.get(booking.timeSlotId);
+    const allMerged = sessions
+      .map(session => {
+        const sessionType = sessionTypeMap.get(session.sessionTypeId);
+        const timeSlot = timeSlotMap.get(session.timeSlotId);
         if (!sessionType || !timeSlot) return null;
-        return { ...booking, sessionType, timeSlot };
+        return { ...session, sessionType, timeSlot };
       })
-      .filter((b): b is MergedBooking => b !== null)
+      .filter((s): s is MergedSession => s !== null)
       .sort((a, b) => b.timeSlot.startTime.toMillis() - a.timeSlot.startTime.toMillis());
     
     const now = new Date();
-    const upcoming = allMerged.filter(b => !isPast(b.timeSlot.endTime.toDate()));
-    const past = allMerged.filter(b => isPast(b.timeSlot.endTime.toDate()));
+    const upcoming = allMerged.filter(s => !isPast(s.timeSlot.endTime.toDate()));
+    const past = allMerged.filter(s => isPast(s.timeSlot.endTime.toDate()));
 
-    return { upcomingBookings: [...upcoming].reverse(), pastBookings: past };
+    return { upcomingSessions: [...upcoming].reverse(), pastSessions: past };
 
-  }, [bookings, sessionTypes, timeSlots]);
+  }, [sessions, sessionTypes, timeSlots]);
 
 
-  const isLoading = isUserLoading || isLoadingBookings || isLoadingSessionTypes || isLoadingTimeSlots || !dict;
+  const isLoading = isUserLoading || isLoadingSessions || isLoadingSessionTypes || isLoadingTimeSlots || !dict;
 
   if (isLoading || !bookingsDict) {
     return (
@@ -89,14 +84,14 @@ export default function BookingsPage({ params }: { params: Promise<{ lang: Local
     );
   }
   
-  const BookingCard = ({ booking }: { booking: MergedBooking }) => {
-      const { sessionType, timeSlot } = booking;
+  const SessionCard = ({ session }: { session: MergedSession }) => {
+      const { sessionType, timeSlot } = session;
       const localizedName = sessionType.name?.[lang] || sessionType.name?.en;
       const startTime = timeSlot.startTime.toDate();
       const isUpcoming = !isPast(startTime);
 
       return (
-        <Card key={booking.id} className="flex flex-col">
+        <Card key={session.id} className="flex flex-col">
             <CardHeader className="flex-row gap-4 items-start">
                 <div className="relative aspect-square w-24 h-24 bg-muted rounded-lg flex items-center justify-center shrink-0">
                     {sessionType.imageUrl ? (
@@ -120,7 +115,7 @@ export default function BookingsPage({ params }: { params: Promise<{ lang: Local
             {isUpcoming && (
                  <CardFooter>
                     <Button asChild className="w-full">
-                       <Link href={`/${lang}/session/${booking.id}`}>
+                       <Link href={`/${lang}/session/${session.id}`}>
                          <Video className="mr-2 h-4 w-4" />
                          {bookingsDict.join_button}
                        </Link>
@@ -141,9 +136,9 @@ export default function BookingsPage({ params }: { params: Promise<{ lang: Local
         <div className="space-y-12">
             <section>
                 <h2 className="text-2xl font-headline mb-4">{bookingsDict.upcoming_title}</h2>
-                {upcomingBookings.length > 0 ? (
+                {upcomingSessions.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {upcomingBookings.map(booking => <BookingCard key={booking.id} booking={booking} />)}
+                        {upcomingSessions.map(session => <SessionCard key={session.id} session={session} />)}
                     </div>
                 ) : (
                     <div className="text-center py-10 border-2 border-dashed rounded-lg">
@@ -156,9 +151,9 @@ export default function BookingsPage({ params }: { params: Promise<{ lang: Local
             </section>
             <section>
                 <h2 className="text-2xl font-headline mb-4">{bookingsDict.past_title}</h2>
-                {pastBookings.length > 0 ? (
+                {pastSessions.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {pastBookings.map(booking => <BookingCard key={booking.id} booking={booking} />)}
+                        {pastSessions.map(session => <SessionCard key={session.id} session={session} />)}
                     </div>
                 ) : (
                      <div className="text-center py-10 border-2 border-dashed rounded-lg">

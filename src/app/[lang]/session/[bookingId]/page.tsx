@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef, use } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { getDictionary, Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
 import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
@@ -15,12 +15,12 @@ import AudioEngine from '@/components/session/AudioEngine';
 import TestimonialModal from '@/components/session/TestimonialModal';
 import { updateSessionState } from '@/app/actions';
 import { adminEmails } from '@/lib/config';
-import { LiveSession, Booking } from '@/lib/types';
+import { LiveSession } from '@/lib/types';
 import DailyIframe, { DailyCall, DailyParticipant } from '@daily-co/daily-js';
 
 
 export default function LiveSessionPage({ params }: { params: Promise<{ lang: Locale, bookingId: string }> }) {
-  const { lang, bookingId } = use(params);
+  const { lang, bookingId: sessionId } = use(params);
   const [dict, setDict] = useState<Dictionary['session'] | null>(null);
   const { user, isUserLoading } = useUser();
   const firestore = useFirestore();
@@ -35,19 +35,12 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
   const dailyRef = useRef<DailyCall | null>(null);
 
   // --- Data Fetching ---
-  const bookingRef = useMemoFirebase(() => {
-    if (!firestore || !bookingId) return null;
-    return doc(firestore, 'bookings', bookingId) as DocumentReference<Booking>;
-  }, [firestore, bookingId]);
-
-  const { data: booking, isLoading: isLoadingBooking } = useDoc<Booking>(bookingRef);
-  
   const sessionRef = useMemoFirebase(() => {
     if (!firestore) return null;
-    return doc(firestore, 'sessions', bookingId) as DocumentReference<LiveSession>;
-  }, [firestore, bookingId]);
+    return doc(firestore, 'sessions', sessionId) as DocumentReference<LiveSession>;
+  }, [firestore, sessionId]);
 
-  const { data: sessionState } = useDoc<LiveSession>(sessionRef);
+  const { data: sessionState, isLoading: isLoadingSession } = useDoc<LiveSession>(sessionRef);
 
 
   // --- Authorization and Session Setup ---
@@ -56,38 +49,25 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
   }, [lang]);
 
   useEffect(() => {
-    if (isUserLoading || isLoadingBooking) return;
+    if (isUserLoading || isLoadingSession) return;
 
     const isUserAdmin = user?.email && adminEmails.includes(user.email);
     setIsAdminView(!!isUserAdmin);
 
-    if (!booking) {
-      if (!isLoadingBooking) { // Only set to unauthorized if loading is finished
+    if (!sessionState) {
+      if (!isLoadingSession) { // Only set to unauthorized if loading is finished
         setAuthStatus('unauthorized');
       }
       return;
     }
     
     // An admin can view any session. A user can only view their own.
-    if (isUserAdmin || (user && booking.userId === user.uid)) {
+    if (isUserAdmin || (user && sessionState.userId === user.uid)) {
         setAuthStatus('authorized');
     } else {
         setAuthStatus('unauthorized');
     }
-  }, [user, isUserLoading, isLoadingBooking, booking]);
-
-
-  useEffect(() => {
-      if (isAdminView && authStatus === 'authorized' && firestore && user && booking) {
-          const sessionRef = doc(firestore, 'sessions', bookingId);
-          setDoc(sessionRef, { 
-              hostId: user.uid, 
-              bookingId: bookingId, 
-              status: 'WAITING',
-              userId: booking.userId
-          }, { merge: true });
-      }
-  },[isAdminView, authStatus, firestore, bookingId, user, booking])
+  }, [user, isUserLoading, isLoadingSession, sessionState]);
 
   // --- Daily.co SDK Integration ---
   useEffect(() => {
@@ -95,7 +75,7 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
 
     const setupCall = async () => {
         const roomUrl = "https://corps-et-ames.daily.co/corps-et-ames";
-        const callObject = DailyIframe.createFrame(callFrameRef.current, {
+        const callObject = DailyIframe.createFrame(callFrameRef.current!, {
             url: roomUrl,
             showLeaveButton: true,
             iframeStyle: { position: 'absolute', top: '0', left: '0', width: '100%', height: '100%', border: '0' },
@@ -138,26 +118,26 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
     if (!callObject || isAdminView) return; // Logic is for clients only
 
     const remoteParticipants = participants.filter(p => !p.local);
-    const shouldMuteRemote = sessionState?.status === 'INTRO';
+    const shouldMuteRemote = sessionState?.sessionStatus === 'INTRO';
 
     remoteParticipants.forEach(p => {
       callObject.updateParticipant(p.session_id, { setAudio: !shouldMuteRemote });
     });
-  }, [sessionState?.status, participants, isAdminView]);
+  }, [sessionState?.sessionStatus, participants, isAdminView]);
 
 
   // --- Admin Controls ---
-  const handleStateChange = (status: LiveSession['status']) => {
-    const data: Partial<LiveSession> = { status };
+  const handleStateChange = (status: LiveSession['sessionStatus']) => {
+    const data: Partial<LiveSession> = { sessionStatus: status };
     if(status === 'INTRO' || status === 'HEALING') {
         data.startTime = serverTimestamp();
         data.lang = lang;
     }
-    updateSessionState(bookingId, data);
+    updateSessionState(sessionId, data);
   };
-  const handlePlaylistSelect = (url: string) => updateSessionState(bookingId, { status: 'HEALING', activePlaylistUrl: url, startTime: serverTimestamp() });
+  const handlePlaylistSelect = (url: string) => updateSessionState(sessionId, { sessionStatus: 'HEALING', activePlaylistUrl: url, startTime: serverTimestamp() });
 
-  const showSubtitles = isAdminView || sessionState?.status === 'INTRO' || sessionState?.status === 'OUTRO';
+  const showSubtitles = isAdminView || sessionState?.sessionStatus === 'INTRO' || sessionState?.sessionStatus === 'OUTRO';
 
   const renderContent = () => {
     if (authStatus === 'pending' || !dict) {
@@ -194,7 +174,7 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
                  <CardHeader>
                     <CardTitle className="flex items-center justify-between">
                       <span className="flex items-center gap-2"><Video className="h-6 w-6"/>{dict?.title || 'Live Session'}</span>
-                      {sessionState?.status && <span className="text-sm font-medium text-muted-foreground bg-muted px-3 py-1 rounded-full">{sessionState.status}</span>}
+                      {sessionState?.sessionStatus && <span className="text-sm font-medium text-muted-foreground bg-muted px-3 py-1 rounded-full">{sessionState.sessionStatus}</span>}
                     </CardTitle>
                  </CardHeader>
                  <CardContent>
@@ -214,8 +194,8 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="grid grid-cols-2 gap-2">
-                            <Button onClick={() => handleStateChange('INTRO')} disabled={sessionState?.status === 'INTRO'}><Play className="mr-2"/> Start Intro</Button>
-                            <Button onClick={() => handleStateChange('OUTRO')} disabled={sessionState?.status === 'OUTRO'} variant="destructive"><Square className="mr-2"/> End Session</Button>
+                            <Button onClick={() => handleStateChange('INTRO')} disabled={sessionState?.sessionStatus === 'INTRO'}><Play className="mr-2"/> Start Intro</Button>
+                            <Button onClick={() => handleStateChange('OUTRO')} disabled={sessionState?.sessionStatus === 'OUTRO'} variant="destructive"><Square className="mr-2"/> End Session</Button>
                         </div>
                         <FileLister 
                             title="Playlists (Starts Healing)" 
@@ -227,10 +207,10 @@ export default function LiveSessionPage({ params }: { params: Promise<{ lang: Lo
                     </CardContent>
                 </Card>
             )}
-             {showSubtitles && <RealtimeSubtitles dictionary={dict} lang={lang} isAdmin={isAdminView} sessionId={bookingId} sessionState={sessionState} />}
+             {showSubtitles && <RealtimeSubtitles dictionary={dict} lang={lang} isAdmin={isAdminView} sessionId={sessionId} sessionState={sessionState} />}
         </div>
 
-        {user && booking && <TestimonialModal isOpen={isTestimonialModalOpen} onClose={() => { setTestimonialModalOpen(false); router.push(`/${lang}/dashboard`); }} bookingId={booking.id} userId={user.uid} />}
+        {user && sessionState && <TestimonialModal isOpen={isTestimonialModalOpen} onClose={() => { setTestimonialModalOpen(false); router.push(`/${lang}/dashboard`); }} bookingId={sessionState.id} userId={user.uid} />}
       </div>
     );
   };

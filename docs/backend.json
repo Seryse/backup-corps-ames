@@ -30,54 +30,25 @@
         "name": {
           "type": "object",
           "description": "Localized name of the formation.",
-          "properties": {
-            "en": { "type": "string" },
-            "fr": { "type": "string" },
-            "es": { "type": "string" }
-          },
+          "properties": { "en": { "type": "string" }, "fr": { "type": "string" }, "es": { "type": "string" } },
           "required": ["en", "fr", "es"]
         },
         "description": {
           "type": "object",
           "description": "Localized detailed description of the formation.",
-          "properties": {
-            "en": { "type": "string" },
-            "fr": { "type": "string" },
-            "es": { "type": "string" }
-          },
+          "properties": { "en": { "type": "string" }, "fr": { "type": "string" }, "es": { "type": "string" } },
           "required": ["en", "fr", "es"]
         },
         "pageContent": {
           "type": "object",
           "description": "Localized long-form content for the formation's detail page.",
-          "properties": {
-            "en": { "type": "string" },
-            "fr": { "type": "string" },
-            "es": { "type": "string" }
-          }
+          "properties": { "en": { "type": "string" }, "fr": { "type": "string" }, "es": { "type": "string" } }
         },
-        "videoUrl": {
-          "type": "string",
-          "description": "URL of the formation's presentation video.",
-          "format": "uri"
-        },
-        "tokenProductId": {
-          "type": "string",
-          "description": "Identifier for the access token product."
-        },
-        "price": {
-          "type": "number",
-          "description": "Price of the formation in the smallest currency unit (e.g., cents)."
-        },
-        "currency": {
-          "type": "string",
-          "description": "Currency for the price (e.g., eur, usd)."
-        },
-        "imageUrl": {
-          "type": "string",
-          "description": "URL of the formation's image, hosted on Firebase Storage.",
-          "format": "uri"
-        },
+        "videoUrl": { "type": "string", "description": "URL of the formation's presentation video.", "format": "uri" },
+        "tokenProductId": { "type": "string", "description": "Identifier for the access token product." },
+        "price": { "type": "number", "description": "Price of the formation in the smallest currency unit (e.g., cents)." },
+        "currency": { "type": "string", "description": "Currency for the price (e.g., eur, usd)." },
+        "imageUrl": { "type": "string", "description": "URL of the formation's image, hosted on Firebase Storage.", "format": "uri" },
         "chapters": {
             "type": "array",
             "description": "The chapters of the formation.",
@@ -85,123 +56,39 @@
               "type": "object",
               "properties": {
                 "id": { "type": "string", "description": "Unique identifier for the chapter (e.g., a slug or UUID)." },
-                "title": { 
-                    "type": "object", 
-                    "description": "Localized title of the chapter.",
-                    "properties": {
-                       "en": { "type": "string" },
-                       "fr": { "type": "string" },
-                       "es": { "type": "string" }
-                    },
-                    "required": ["fr"]
-                },
-                "description": { 
-                    "type": "object",
-                    "description": "Localized brief description of the chapter.",
-                    "properties": {
-                       "en": { "type": "string" },
-                       "fr": { "type": "string" },
-                       "es": { "type": "string" }
-                    }
-                },
-                "contentUrl": {
-                    "type": "object",
-                    "description": "Localized URL to the chapter content (e.g., PDF).",
-                    "properties": {
-                       "en": { "type": "string", "format": "uri" },
-                       "fr": { "type": "string", "format": "uri" },
-                       "es": { "type": "string", "format": "uri" }
-                    }
-                }
+                "title": { "type": "object", "description": "Localized title of the chapter.", "properties": { "en": { "type": "string" }, "fr": { "type": "string" }, "es": { "type": "string" } }, "required": ["fr"] },
+                "description": { "type": "object", "description": "Localized brief description of the chapter.", "properties": { "en": { "type": "string" }, "fr": { "type": "string" }, "es": { "type": "string" } } },
+                "contentUrl": { "type": "object", "description": "Localized URL to the chapter content (e.g., PDF).", "properties": { "en": { "type": "string", "format": "uri" }, "fr": { "type": "string", "format": "uri" }, "es": { "type": "string", "format": "uri" } } }
               },
               "required": ["id", "title"]
             }
           }
       },
-      "required": [
-        "name",
-        "description",
-        "tokenProductId",
-        "price",
-        "currency",
-        "imageUrl"
-      ]
+      "required": ["name", "description", "tokenProductId", "price", "currency", "imageUrl"]
     },
     "UserFormation": {
       "title": "UserFormation",
       "type": "object",
       "description": "Represents a user's enrollment in a specific formation and their access token.",
       "properties": {
-        "userId": {
-          "type": "string",
-          "description": "Reference to User. (Relationship: User 1:N UserFormation)"
-        },
-        "formationId": {
-          "type": "string",
-          "description": "Reference to Formation. (Relationship: Formation 1:N UserFormation)"
-        },
-        "accessToken": {
-          "type": "string",
-          "description": "Token granting access to the dedicated hub/content for the formation."
-        },
-        "enrollmentDate": {
-          "type": "string",
-          "description": "Date when the user enrolled in the formation.",
-          "format": "date-time"
-        },
-        "completedChapters": {
-            "type": "array",
-            "description": "List of completed chapter IDs for this user's enrollment.",
-            "items": { "type": "string" }
-        },
-        "certificationUrl": {
-            "type": "string",
-            "format": "uri",
-            "description": "URL to the user's completion certificate for this formation, if earned."
-        }
+        "userId": { "type": "string", "description": "Reference to User. (Relationship: User 1:N UserFormation)" },
+        "formationId": { "type": "string", "description": "Reference to Formation. (Relationship: Formation 1:N UserFormation)" },
+        "accessToken": { "type": "string", "description": "Token granting access to the dedicated hub/content for the formation." },
+        "enrollmentDate": { "type": "string", "description": "Date when the user enrolled in the formation.", "format": "date-time" },
+        "completedChapters": { "type": "array", "description": "List of completed chapter IDs for this user's enrollment.", "items": { "type": "string" } },
+        "certificationUrl": { "type": "string", "format": "uri", "description": "URL to the user's completion certificate for this formation, if earned." }
       },
-      "required": [
-        "userId",
-        "formationId",
-        "accessToken",
-        "enrollmentDate"
-      ]
+      "required": ["userId", "formationId", "accessToken", "enrollmentDate"]
     },
     "NewsArticle": {
       "title": "News Article",
       "type": "object",
       "description": "Represents a single news article or blog post.",
       "properties": {
-        "title": {
-          "type": "object",
-          "description": "Localized title of the article.",
-          "properties": {
-            "en": { "type": "string" },
-            "fr": { "type": "string" },
-            "es": { "type": "string" }
-          },
-          "required": ["en", "fr", "es"]
-        },
-        "content": {
-          "type": "object",
-          "description": "Localized content of the article.",
-          "properties": {
-            "en": { "type": "string" },
-            "fr": { "type": "string" },
-            "es": { "type": "string" }
-          },
-          "required": ["en", "fr", "es"]
-        },
-        "imageUrl": {
-          "type": "string",
-          "description": "URL of the article's image, hosted on Firebase Storage.",
-          "format": "uri"
-        },
-        "createdAt": {
-          "type": "string",
-          "description": "Date when the article was created.",
-          "format": "date-time"
-        }
+        "title": { "type": "object", "description": "Localized title of the article.", "properties": { "en": { "type": "string" }, "fr": { "type": "string" }, "es": { "type": "string" } }, "required": ["en", "fr", "es"] },
+        "content": { "type": "object", "description": "Localized content of the article.", "properties": { "en": { "type": "string" }, "fr": { "type": "string" }, "es": { "type": "string" } }, "required": ["en", "fr", "es"] },
+        "imageUrl": { "type": "string", "description": "URL of the article's image, hosted on Firebase Storage.", "format": "uri" },
+        "createdAt": { "type": "string", "description": "Date when the article was created.", "format": "date-time" }
       },
       "required": ["title", "content", "imageUrl", "createdAt"]
     },
@@ -210,18 +97,9 @@
       "type": "object",
       "description": "Represents a single subtitle entry with its translation for a live session.",
       "properties": {
-        "original": {
-          "type": "string",
-          "description": "The original text captured from speech."
-        },
-        "translated": {
-          "type": "string",
-          "description": "The translated text in the target language."
-        },
-        "timestamp": {
-          "type": "number",
-          "description": "The timestamp when the subtitle was generated."
-        }
+        "original": { "type": "string", "description": "The original text captured from speech." },
+        "translated": { "type": "string", "description": "The translated text in the target language." },
+        "timestamp": { "type": "number", "description": "The timestamp when the subtitle was generated." }
       },
       "required": ["original", "translated", "timestamp"]
     },
@@ -230,77 +108,17 @@
       "type": "object",
       "description": "Represents a type of session that can be booked.",
       "properties": {
-        "name": {
-          "type": "object",
-          "description": "Localized name of the session type.",
-          "properties": {
-            "en": { "type": "string" },
-            "fr": { "type": "string" },
-            "es": { "type": "string" }
-          },
-          "required": ["en", "fr", "es"]
-        },
-        "description": {
-          "type": "object",
-          "description": "Localized description of the session type.",
-          "properties": {
-            "en": { "type": "string" },
-            "fr": { "type": "string" },
-            "es": { "type": "string" }
-          },
-          "required": ["en", "fr", "es"]
-        },
-        "pageContent": {
-          "type": "object",
-          "description": "Localized long-form content for the session type's detail page.",
-          "properties": {
-            "en": { "type": "string" },
-            "fr": { "type": "string" },
-            "es": { "type": "string" }
-          }
-        },
-        "videoUrl": {
-          "type": "string",
-          "description": "URL of the session type's presentation video.",
-          "format": "uri"
-        },
-        "sessionModel": {
-          "type": "string",
-          "enum": ["private", "small_group", "large_group"],
-          "description": "Defines the capacity of the session."
-        },
-        "maxParticipants": {
-          "type": "number",
-          "description": "Maximum number of participants. 1 for private, up to 5 for small_group, etc."
-        },
-        "price": {
-          "type": "number",
-          "description": "Price in smallest currency unit."
-        },
-        "currency": {
-          "type": "string",
-          "description": "Currency code (e.g., eur)."
-        },
-        "tokenProductId": {
-          "type": "string",
-          "description": "Identifier for the access token product for this session type."
-        },
-        "imageUrl": {
-          "type": "string",
-          "description": "URL of the session type's image, hosted on Firebase Storage.",
-          "format": "uri"
-        },
-        "category": {
-            "type": "string",
-            "description": "The category of the session type.",
-            "enum": [
-                "irisphere-harmonia",
-                "guidances",
-                "energetic-treatments",
-                "dialogue-space",
-                "combined-treatments"
-            ]
-        }
+        "name": { "type": "object", "description": "Localized name of the session type.", "properties": { "en": { "type": "string" }, "fr": { "type": "string" }, "es": { "type": "string" } }, "required": ["en", "fr", "es"] },
+        "description": { "type": "object", "description": "Localized description of the session type.", "properties": { "en": { "type": "string" }, "fr": { "type": "string" }, "es": { "type": "string" } }, "required": ["en", "fr", "es"] },
+        "pageContent": { "type": "object", "description": "Localized long-form content for the session type's detail page.", "properties": { "en": { "type": "string" }, "fr": { "type": "string" }, "es": { "type": "string" } } },
+        "videoUrl": { "type": "string", "description": "URL of the session type's presentation video.", "format": "uri" },
+        "sessionModel": { "type": "string", "enum": ["private", "small_group", "large_group"], "description": "Defines the capacity of the session." },
+        "maxParticipants": { "type": "number", "description": "Maximum number of participants. 1 for private, up to 5 for small_group, etc." },
+        "price": { "type": "number", "description": "Price in smallest currency unit." },
+        "currency": { "type": "string", "description": "Currency code (e.g., eur)." },
+        "tokenProductId": { "type": "string", "description": "Identifier for the access token product for this session type." },
+        "imageUrl": { "type": "string", "description": "URL of the session type's image, hosted on Firebase Storage.", "format": "uri" },
+        "category": { "type": "string", "description": "The category of the session type.", "enum": ["irisphere-harmonia", "guidances", "energetic-treatments", "dialogue-space", "combined-treatments"] }
       },
       "required": ["name", "description", "sessionModel", "maxParticipants", "price", "currency", "tokenProductId", "category"]
     },
@@ -309,109 +127,35 @@
       "type": "object",
       "description": "Represents an available time slot for a session.",
       "properties": {
-        "sessionTypeId": {
-          "type": "string",
-          "description": "Reference to SessionType."
-        },
-        "startTime": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The start time of the session."
-        },
-        "endTime": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The end time of the session."
-        },
-        "bookedParticipantsCount": {
-          "type": "number",
-          "description": "Number of participants already booked for this slot."
-        }
+        "sessionTypeId": { "type": "string", "description": "Reference to SessionType." },
+        "startTime": { "type": "string", "format": "date-time", "description": "The start time of the session." },
+        "endTime": { "type": "string", "format": "date-time", "description": "The end time of the session." },
+        "bookedParticipantsCount": { "type": "number", "description": "Number of participants already booked for this slot." }
       },
       "required": ["sessionTypeId", "startTime", "endTime", "bookedParticipantsCount"]
     },
-    "Booking": {
-      "title": "Booking",
+    "LiveSession": {
+      "title": "Live Session State & Booking",
       "type": "object",
-      "description": "Represents a user's booking for a specific time slot.",
+      "description": "Stores the real-time state of a live video session and its associated booking information.",
       "properties": {
-        "userId": { "type": "string" },
+        "userId": { "type": "string", "description": "The UID of the client/user attending the session." },
+        "hostId": { "type": "string", "description": "The UID of the host (praticien)." },
         "timeSlotId": { "type": "string" },
         "sessionTypeId": { "type": "string" },
         "bookingTime": { "type": "string", "format": "date-time" },
-        "status": { "type": "string", "enum": ["confirmed", "pending", "cancelled"] },
-        "visioToken": {
-          "type": "string",
-          "description": "The unique token granting access to the live video session for this booking."
-        },
-        "reportStatus": {
-          "type": "string",
-          "enum": ["pending", "available"],
-          "description": "Status of the Grimoire PDF report for this booking."
-        },
-        "pdfUrl": {
-          "type": "string",
-          "format": "uri",
-          "description": "URL of the generated Grimoire PDF report."
-        },
-        "pdfThumbnail": {
-          "type": "string",
-          "format": "uri",
-          "description": "URL of the thumbnail for the Grimoire PDF report."
-        }
+        "bookingStatus": { "type": "string", "enum": ["confirmed", "pending", "cancelled"] },
+        "visioToken": { "type": "string", "description": "The unique token granting access to the live video session." },
+        "reportStatus": { "type": "string", "enum": ["pending", "available"], "description": "Status of the Grimoire PDF report." },
+        "pdfUrl": { "type": "string", "format": "uri", "description": "URL of the generated Grimoire PDF report." },
+        "pdfThumbnail": { "type": "string", "format": "uri", "description": "URL of the thumbnail for the Grimoire PDF." },
+        "sessionStatus": { "type": "string", "description": "The current status of the session.", "enum": [ "WAITING", "INTRO", "HEALING", "OUTRO" ] },
+        "startTime": { "type": "string", "format": "date-time", "description": "The timestamp when the INTRO or HEALING status began." },
+        "lang": { "type": "string", "description": "The language of the session, used for loading localized assets." },
+        "activePlaylistUrl": { "type": "string", "description": "URL of the background music playlist." },
+        "subtitle": { "$ref": "#/entities/Subtitle" }
       },
-      "required": ["userId", "timeSlotId", "sessionTypeId", "bookingTime", "status", "visioToken", "reportStatus"]
-    },
-    "LiveSession": {
-      "title": "Live Session State",
-      "type": "object",
-      "description": "Stores the real-time state of a live video session.",
-      "properties": {
-        "hostId": {
-          "type": "string",
-          "description": "The UID of the host (praticien)."
-        },
-        "userId": {
-          "type": "string",
-          "description": "The UID of the client/user attending the session."
-        },
-        "bookingId": {
-          "type": "string",
-          "description": "Reference to the booking document."
-        },
-        "status": {
-          "type": "string",
-          "description": "The current status of the session.",
-          "enum": [
-            "WAITING",
-            "INTRO",
-            "HEALING",
-            "OUTRO"
-          ]
-        },
-        "startTime": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The timestamp when the INTRO or HEALING status began."
-        },
-        "lang": {
-          "type": "string",
-          "description": "The language of the session, used for loading localized assets like intros."
-        },
-        "activePlaylistUrl": {
-          "type": "string",
-          "description": "URL of the background music playlist currently being played by the admin during the HEALING state."
-        },
-        "subtitle": {
-          "$ref": "#/entities/Subtitle"
-        }
-      },
-      "required": [
-        "hostId",
-        "userId",
-        "bookingId",
-        "status"
-      ]
+      "required": [ "userId", "hostId", "timeSlotId", "sessionTypeId", "bookingTime", "bookingStatus", "visioToken", "reportStatus", "sessionStatus" ]
     },
     "Testimonial": {
       "title": "Testimonial",
@@ -419,7 +163,7 @@
       "description": "User feedback provided after a session.",
       "properties": {
         "userId": { "type": "string" },
-        "bookingId": { "type": "string" },
+        "bookingId": { "type": "string", "description": "The ID of the session document this testimonial refers to." },
         "submittedAt": { "type": "string", "format": "date-time" },
         "feedbackText": { "type": "string" },
         "mediaUrl": { "type": "string", "format": "uri" },
@@ -449,28 +193,16 @@
   },
   "firestore": {
     "/formations/{formationId}": {
-      "schema": {
-        "$ref": "#/entities/Formation"
-      },
-      "description": "Stores information about each formation. 'formationId' is the unique identifier for the formation."
+      "schema": { "$ref": "#/entities/Formation" },
+      "description": "Stores information about each formation."
     },
     "/users/{userId}/formations/{userFormationId}": {
-      "schema": {
-        "$ref": "#/entities/UserFormation"
-      },
+      "schema": { "$ref": "#/entities/UserFormation" },
       "description": "Represents a user's enrollment in a specific formation."
     },
     "/news/{newsId}": {
-      "schema": {
-        "$ref": "#/entities/NewsArticle"
-      },
+      "schema": { "$ref": "#/entities/NewsArticle" },
       "description": "Stores all news articles."
-    },
-    "/subtitles/{sessionId}": {
-      "schema": {
-        "$ref": "#/entities/Subtitle"
-      },
-      "description": "[DEPRECATED] Stores the current subtitle for a live session. This is now part of the /sessions/{sessionId} document."
     },
     "/sessionTypes/{sessionTypeId}": {
       "schema": { "$ref": "#/entities/SessionType" },
@@ -480,33 +212,21 @@
       "schema": { "$ref": "#/entities/TimeSlot" },
       "description": "Stores all available time slots for all sessions."
     },
-    "/bookings/{bookingId}": {
-      "schema": { "$ref": "#/entities/Booking" },
-      "description": "Stores a user's session bookings in a top-level collection for easier querying."
-    },
     "/sessions/{sessionId}": {
-      "schema": {
-        "$ref": "#/entities/LiveSession"
-      },
-      "description": "Stores the real-time state for a specific live session. The sessionId is typically the bookingId."
+      "schema": { "$ref": "#/entities/LiveSession" },
+      "description": "Stores a user's session booking and its live state. The document ID is the unique identifier for the session/booking."
     },
     "/testimonials/{testimonialId}": {
-      "schema": {
-        "$ref": "#/entities/Testimonial"
-      },
+      "schema": { "$ref": "#/entities/Testimonial" },
       "description": "Stores user testimonials submitted after sessions."
     },
     "/coupons/{couponId}": {
-      "schema": {
-        "$ref": "#/entities/Coupon"
-      },
+      "schema": { "$ref": "#/entities/Coupon" },
       "description": "Stores generated coupon codes for users."
     },
     "/users/{userId}": {
-      "schema": {
-        "$ref": "#/entities/UserProfile"
-      },
-      "description": "Stores user profile information, including billing address. The document ID is the same as the user's authentication UID."
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Stores user profile information."
     }
   }
 }

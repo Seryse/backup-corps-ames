@@ -13,13 +13,9 @@ export async function checkSessionAccess(userId: string): Promise<boolean> {
 
   try {
     const userFormationsRef = collection(db, 'users', userId, 'formations');
-    // We only need to know if at least one exists, so we limit the query to 1.
     const q = query(userFormationsRef, limit(1));
     const querySnapshot = await getDocs(q);
-    
-    // If the snapshot is not empty, it means the user has at least one formation.
     return !querySnapshot.empty;
-
   } catch (error) {
     console.error("Error checking session access:", error);
     return false;
@@ -36,9 +32,6 @@ export async function processCheckout(userId: string, items: CartItem[]): Promis
 
         items.forEach(item => {
             const userFormationRef = doc(collection(db, 'users', userId, 'formations'));
-            
-            // This is a placeholder token generation strategy.
-            // In a real-world scenario, you would use a more secure and meaningful token generation method.
             const accessToken = `${item.tokenProductId}-${userId.substring(0, 5)}-${Date.now()}`;
 
             batch.set(userFormationRef, {
@@ -46,6 +39,7 @@ export async function processCheckout(userId: string, items: CartItem[]): Promis
                 formationId: item.id,
                 accessToken: accessToken,
                 enrollmentDate: serverTimestamp(),
+                completedChapters: [],
             });
         });
 
@@ -59,8 +53,6 @@ export async function processCheckout(userId: string, items: CartItem[]): Promis
 }
 
 export async function translateTextAction(input: TranslateTextInput) {
-  // Dynamically import the flow to ensure it's not bundled on the client
-  // and only loaded when the action is executed.
   const { translateText } = await import('@/ai/flows/translate-text');
   return await translateText(input);
 }
@@ -86,17 +78,15 @@ export async function submitTestimonial(
     try {
         const batch = writeBatch(db);
 
-        // 1. Save the testimonial
         const testimonialRef = doc(collection(db, 'testimonials'));
         batch.set(testimonialRef, {
             userId,
-            bookingId,
+            bookingId, // This is now the session ID
             feedbackText: feedbackText || '',
             mediaUrl: mediaUrl || '',
             submittedAt: serverTimestamp(),
         });
         
-        // 2. Generate and save the coupon
         const couponCode = `MERCI-${randomBytes(3).toString('hex').toUpperCase()}`;
         const couponRef = doc(collection(db, 'coupons'));
         batch.set(couponRef, {
@@ -145,4 +135,3 @@ export async function updateFormationProgress(
     return { success: false, error: error.message || 'An unknown error occurred.' };
   }
 }
-    

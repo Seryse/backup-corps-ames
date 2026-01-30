@@ -1,5 +1,5 @@
-import type { SessionType } from '@/components/admin/session-type-manager';
 import { Locale } from '@/i18n-config';
+import type { SessionType } from '@/components/admin/session-type-manager';
 
 export type TimeSlot = {
     id: string;
@@ -9,32 +9,35 @@ export type TimeSlot = {
     bookedParticipantsCount: number;
 };
 
-export type Booking = {
+// This type now represents the single source of truth for a booked session.
+export interface LiveSession {
     id: string;
+    
+    // Booking Info
     userId: string;
     timeSlotId: string;
     sessionTypeId: string;
     bookingTime: any; // Firestore Timestamp
-    status: 'confirmed' | 'pending' | 'cancelled';
+    bookingStatus: 'confirmed' | 'pending' | 'cancelled';
     visioToken: string;
+    
+    // Grimoire / Report Info
     reportStatus: 'pending' | 'available';
     pdfUrl?: string | null;
     pdfThumbnail?: string | null;
-};
 
-export type MergedBooking = Booking & {
-    sessionType: SessionType;
-    timeSlot: TimeSlot;
-};
-
-export interface LiveSession {
-    id: string;
+    // Live Session State
     hostId: string;
-    userId: string;
-    bookingId: string;
-    status: 'WAITING' | 'INTRO' | 'HEALING' | 'OUTRO';
-    startTime?: any; // Firestore Timestamp
+    sessionStatus: 'WAITING' | 'INTRO' | 'HEALING' | 'OUTRO';
+    startTime?: any; // Firestore Timestamp for session phase
     lang?: Locale;
     activePlaylistUrl?: string;
     subtitle?: any;
 }
+
+
+// This type merges the session with its related data for display purposes.
+export type MergedSession = LiveSession & {
+    sessionType: SessionType;
+    timeSlot: TimeSlot;
+};

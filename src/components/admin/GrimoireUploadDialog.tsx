@@ -22,29 +22,28 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, BookHeart, Upload } from 'lucide-react';
-import type { MergedBooking } from '@/lib/types';
+import type { MergedSession } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
 interface GrimoireUploadDialogProps {
-  booking: MergedBooking;
+  session: MergedSession;
   dictionary: any;
   className?: string;
 }
 
-export function GrimoireUploadDialog({ booking, dictionary, className }: GrimoireUploadDialogProps) {
+export function GrimoireUploadDialog({ session, dictionary, className }: GrimoireUploadDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const firestore = useFirestore();
   const storage = useStorage();
   const { toast } = useToast();
   
-  const hasExistingReport = booking.reportStatus === 'available' && booking.pdfUrl;
+  const hasExistingReport = session.reportStatus === 'available' && session.pdfUrl;
 
   const schema = z.object({
     pdfFile: z.any().optional(),
     pdfThumbnailFile: z.any().optional(),
   }).refine(data => {
-      // If there is no existing report, a new PDF file is mandatory.
       if (!hasExistingReport) {
           return data.pdfFile && data.pdfFile.length === 1;
       }
@@ -66,7 +65,7 @@ export function GrimoireUploadDialog({ booking, dictionary, className }: Grimoir
   });
 
   const onSubmit = async (data: GrimoireFormData) => {
-    if (!firestore || !storage || !booking) return;
+    if (!firestore || !storage || !session) return;
 
     const pdfFile = data.pdfFile?.[0];
     const thumbnailFile = data.pdfThumbnailFile?.[0];
@@ -86,21 +85,21 @@ export function GrimoireUploadDialog({ booking, dictionary, className }: Grimoir
         };
 
         if (thumbnailFile) {
-            const thumbnailPath = `reports/${booking.userId}/${booking.id}_thumb.jpg`;
+            const thumbnailPath = `reports/${session.userId}/${session.id}_thumb.jpg`;
             const thumbnailFileRef = ref(storage, thumbnailPath);
             await uploadBytes(thumbnailFileRef, thumbnailFile);
             updatePayload.pdfThumbnail = await getDownloadURL(thumbnailFileRef);
         }
 
         if (pdfFile) {
-            const filePath = `reports/${booking.userId}/${booking.id}.pdf`;
+            const filePath = `reports/${session.userId}/${session.id}.pdf`;
             const fileRef = ref(storage, filePath);
             await uploadBytes(fileRef, pdfFile);
             updatePayload.pdfUrl = await getDownloadURL(fileRef);
         }
         
-        const bookingRef = doc(firestore, 'bookings', booking.id);
-        await updateDoc(bookingRef, updatePayload);
+        const sessionRef = doc(firestore, 'sessions', session.id);
+        await updateDoc(sessionRef, updatePayload);
     
         toast({ title: dictionary.admin.grimoire.upload_success_title });
         setIsOpen(false);
@@ -130,16 +129,16 @@ export function GrimoireUploadDialog({ booking, dictionary, className }: Grimoir
         <DialogHeader>
           <DialogTitle>{dictionary.admin.grimoire.title}</DialogTitle>
           <DialogDescription>
-            {dictionary.admin.grimoire.description.replace('{userName}', booking.userId.substring(0,8))}
+            {dictionary.admin.grimoire.description.replace('{userName}', session.userId.substring(0,8))}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 
-           {booking.pdfThumbnail && (
+           {session.pdfThumbnail && (
              <div className="grid gap-2">
                 <Label>{dictionary.admin.grimoire.current_thumbnail_label}</Label>
                 <div className="relative aspect-[3/4] w-28 mt-1 bg-muted rounded-md flex items-center justify-center">
-                  <Image src={booking.pdfThumbnail} alt="Current Grimoire thumbnail" fill className="object-cover rounded-md" />
+                  <Image src={session.pdfThumbnail} alt="Current Grimoire thumbnail" fill className="object-cover rounded-md" />
                 </div>
             </div>
            )}
