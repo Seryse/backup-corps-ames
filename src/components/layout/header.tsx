@@ -82,14 +82,15 @@ export default function Header({ dictionary, lang }: { dictionary: Dictionary['h
 
           {/* Desktop items */}
           <div className="hidden md:flex items-center space-x-2">
-              <LanguageSwitcher lang={lang} />
               {isMounted ? (
                 <>
+                  <LanguageSwitcher lang={lang} />
                   <CartNav />
                   <UserNav dictionary={dictionary} lang={lang} />
                 </>
               ) : (
                 <>
+                  <Skeleton className="h-10 w-10" />
                   <Skeleton className="h-10 w-10" />
                   <Skeleton className="h-10 w-10 rounded-full" />
                 </>
