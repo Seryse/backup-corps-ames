@@ -6,7 +6,7 @@ import {
   useCollection,
   useMemoFirebase,
 } from '@/firebase';
-import { collection, query, collectionGroup, Query } from 'firebase/firestore';
+import { collection, query, Query } from 'firebase/firestore';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import {
   BarChart,
@@ -32,7 +32,7 @@ import { Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
 import type { SessionType } from './session-type-manager';
 import type { Formation } from '../providers/cart-provider';
-import type { Booking, TimeSlot } from '@/lib/types';
+import type { Booking } from '@/lib/types';
 
 // Simplified types for this component
 type UserProfile = { id: string };
@@ -58,7 +58,7 @@ export default function StatsDashboard({
     [firestore]
   );
   const userFormationsQuery = useMemoFirebase(
-    () => (firestore ? collectionGroup(firestore, 'formations') as Query<UserFormation> : null),
+    () => (firestore ? collection(firestore, 'users').doc().collection('formations') as Query<UserFormation> : null),
     [firestore]
   );
   const sessionTypesQuery = useMemoFirebase(

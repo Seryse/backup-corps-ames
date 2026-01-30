@@ -8,12 +8,11 @@ service cloud.firestore {
     }
 
     function isAdmin() {
-      return request.auth != null && (
-        request.auth.uid == 'HvsOFzrOwFTHWTBVBextpZtV5I53' || // seryse@live.be
-        request.auth.token.email == 'jael@live.fr' ||
-        request.auth.token.email == 'selvura@gmail.com' ||
-        request.auth.token.email == 'seryse@live.be'
-      );
+      // seryse@live.be, jael@live.fr, selvura@gmail.com
+      return request.auth != null && 
+        (request.auth.uid == 'HvsOFzrOwFTHWTBVBextpZtV5I53' || 
+         request.auth.uid == 'anotherAdminUid1' || 
+         request.auth.uid == 'anotherAdminUid2');
     }
 
     function isBookingIncrement(before, after) {
@@ -67,22 +66,21 @@ service cloud.firestore {
     }
 
     match /bookings/{bookingId} {
-      // --- WRITE RULES ---
-      // Admin can write anything.
-      allow write: if isAdmin();
-      // User can create their own booking.
-      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
-      // User can update/delete their own booking.
-      allow update, delete: if request.auth != null && request.auth.uid == resource.data.userId;
+        // --- WRITE RULES ---
+        allow write: if isAdmin();
+        allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+        allow update, delete: if request.auth != null && request.auth.uid == resource.data.userId;
 
-      // --- READ RULES ---
-      // GET: an admin can get any doc, a user can get their own.
-      allow get: if isAdmin() || (request.auth != null && request.auth.uid == resource.data.userId);
-
-      // LIST: An admin can list the entire collection.
-      // User's constrained list queries are implicitly allowed by the `get` rule.
-      allow list: if isAdmin();
+        // --- READ RULES ---
+        // GET: An admin can get any document. A user can get their own.
+        allow get: if isAdmin() || (request.auth != null && request.auth.uid == resource.data.userId);
+        
+        // LIST: An admin can list the entire collection for the admin panel.
+        // User-side queries are implicitly allowed by the 'get' rule above, 
+        // as Firestore checks if the query constraints match the rule for every document.
+        allow list: if isAdmin();
     }
+
 
     match /sessions/{sessionId} {
       allow read: if request.auth != null;
