@@ -1,5 +1,4 @@
 'use client';
-
 import React, { useMemo, useState, useEffect, use } from 'react';
 import { getDictionary, Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
@@ -29,10 +28,8 @@ export default function BookingsPage({ params }: { params: Promise<{ lang: Local
   const localesDateFns: { [key: string]: any } = { en: enUS, fr, es };
   const dateFnsLocale = localesDateFns[lang] || enUS;
 
-  // --- Data Fetching ---
   const sessionsQuery = useMemoFirebase(() => {
     if (!firestore || !user) return null;
-    // SECURITY FIX: Filter by userId to satisfy Firestore Rules
     return query(collection(firestore, 'sessions'), where('userId', '==', user.uid), orderBy('bookingTime', 'desc')) as Query<LiveSession>;
   }, [firestore, user]);
 
@@ -52,10 +49,8 @@ export default function BookingsPage({ params }: { params: Promise<{ lang: Local
 
   const { upcomingSessions, pastSessions } = useMemo(() => {
     if (!sessions || !sessionTypes || !timeSlots) return { upcomingSessions: [], pastSessions: [] };
-
     const sessionTypeMap = new Map(sessionTypes.map(st => [st.id, st]));
     const timeSlotMap = new Map(timeSlots.map(ts => [ts.id, ts]));
-
     const allMerged = sessions
       .map(session => {
         const sessionType = sessionTypeMap.get(session.sessionTypeId);
@@ -65,15 +60,11 @@ export default function BookingsPage({ params }: { params: Promise<{ lang: Local
       })
       .filter((s): s is MergedSession => s !== null)
       .sort((a, b) => b.timeSlot.startTime.toMillis() - a.timeSlot.startTime.toMillis());
-    
     const now = new Date();
     const upcoming = allMerged.filter(s => !isPast(s.timeSlot.endTime.toDate()));
     const past = allMerged.filter(s => isPast(s.timeSlot.endTime.toDate()));
-
     return { upcomingSessions: [...upcoming].reverse(), pastSessions: past };
-
   }, [sessions, sessionTypes, timeSlots]);
-
 
   const isLoading = isUserLoading || isLoadingSessions || isLoadingSessionTypes || isLoadingTimeSlots || !dict;
 
@@ -116,7 +107,7 @@ export default function BookingsPage({ params }: { params: Promise<{ lang: Local
             {isUpcoming && (
                   <CardFooter>
                     <Button asChild className="w-full">
-                       <Link href={`/${lang}/session/${session.id}`}>
+                       <Link href={}>
                          <Video className="mr-2 h-4 w-4" />
                          {bookingsDict.join_button}
                        </Link>
@@ -133,7 +124,6 @@ export default function BookingsPage({ params }: { params: Promise<{ lang: Local
             <h1 className="text-4xl font-headline">{bookingsDict.title}</h1>
             <p className="text-lg text-muted-foreground">{bookingsDict.subtitle}</p>
         </div>
-
         <div className="space-y-12">
             <section>
                 <h2 className="text-2xl font-headline mb-4">{bookingsDict.upcoming_title}</h2>
@@ -145,7 +135,7 @@ export default function BookingsPage({ params }: { params: Promise<{ lang: Local
                     <div className="text-center py-10 border-2 border-dashed rounded-lg">
                         <p className="text-muted-foreground">{bookingsDict.no_upcoming}</p>
                         <Button asChild className="mt-4">
-                            <Link href={`/${lang}/agenda`}>{bookingsDict.book_now}</Link>
+                            <Link href={}>{bookingsDict.book_now}</Link>
                         </Button>
                     </div>
                 )}
