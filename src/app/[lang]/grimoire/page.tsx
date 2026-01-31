@@ -4,17 +4,16 @@ import React, { useMemo, useState, useEffect, use } from 'react';
 import { getDictionary, Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
 import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
-import { collection, query, where, orderBy, Query } from 'firebase/firestore';
+import { collection, query, where, Query } from 'firebase/firestore'; // Pas de orderBy ici
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Loader2, BookHeart, Download, ImageOff } from 'lucide-react';
+import { Loader2, BookHeart, Download } from 'lucide-react';
 import Image from 'next/image';
 import { format } from 'date-fns';
 import { enUS, fr, es } from 'date-fns/locale';
 import type { SessionType } from '@/components/admin/session-type-manager';
 import type { LiveSession, TimeSlot, MergedSession } from '@/lib/types';
 
-// This will be a filtered list of sessions that have available reports
 type GrimoireEntry = MergedSession & {
     pdfUrl: string;
     pdfThumbnail?: string | null;
@@ -33,14 +32,17 @@ export default function GrimoirePage({ params }: { params: Promise<{ lang: Local
   const localesDateFns: { [key: string]: any } = { en: enUS, fr, es };
   const dateFnsLocale = localesDateFns[lang] || enUS;
 
-  // --- Data Fetching ---
+  // --- Data Fetching SÉCURISÉ ---
   const sessionsQuery = useMemoFirebase(() => {
-    if (!firestore || !user) return null;
+    // Si pas de user, on retourne null pour ne pas crasher
+    if (!firestore || !user?.uid) return null;
+    
+    // On demande juste les sessions de l'utilisateur qui ont un rapport.
+    // PAS de 'orderBy' ici pour éviter l'erreur d'index composite manquant.
     return query(
         collection(firestore, 'sessions'), 
         where('userId', '==', user.uid),
-        where('reportStatus', '==', 'available'),
-        orderBy('bookingTime', 'desc')
+        where('reportStatus', '==', 'available')
     ) as Query<LiveSession>;
   }, [firestore, user]);
 
@@ -68,12 +70,15 @@ export default function GrimoirePage({ params }: { params: Promise<{ lang: Local
       .map(session => {
         const sessionType = sessionTypeMap.get(session.sessionTypeId);
         const timeSlot = timeSlotMap.get(session.timeSlotId);
+        
         if (!sessionType || !timeSlot || sessionType.category !== 'irisphere-harmonia' || !session.pdfUrl) {
             return null;
         }
         return { ...session, sessionType, timeSlot } as GrimoireEntry;
       })
-      .filter((s): s is GrimoireEntry => s !== null);
+      .filter((s): s is GrimoireEntry => s !== null)
+      // LE TRI SE FAIT ICI (Côté Client = Zéro risque d'erreur)
+      .sort((a,b) => b.timeSlot.startTime.toMillis() - a.timeSlot.startTime.toMillis());
 
   }, [sessions, sessionTypes, timeSlots]);
 

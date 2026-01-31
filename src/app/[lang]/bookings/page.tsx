@@ -1,9 +1,10 @@
 'use client';
+
 import React, { useMemo, useState, useEffect, use } from 'react';
 import { getDictionary, Dictionary } from '@/lib/dictionaries';
 import { Locale } from '@/i18n-config';
 import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
-import { collection, query, orderBy, where, Query } from 'firebase/firestore';
+import { collection, query, where, Query } from 'firebase/firestore'; // J'ai retiré orderBy ici
 import { Card, CardHeader, CardTitle, CardFooter, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Loader2, Video, Calendar, Clock, ImageOff } from 'lucide-react';
@@ -28,9 +29,18 @@ export default function BookingsPage({ params }: { params: Promise<{ lang: Local
   const localesDateFns: { [key: string]: any } = { en: enUS, fr, es };
   const dateFnsLocale = localesDateFns[lang] || enUS;
 
+  // --- Data Fetching ---
   const sessionsQuery = useMemoFirebase(() => {
-    if (!firestore || !user) return null;
-    return query(collection(firestore, 'sessions'), where('userId', '==', user.uid), orderBy('bookingTime', 'desc')) as Query<LiveSession>;
+    // Si pas de user, on renvoie null pour ne pas provoquer d'erreur
+    if (!firestore || !user?.uid) return null;
+    
+    // SECURITÉ : On filtre par userId.
+    // OPTIMISATION : J'ai retiré 'orderBy' pour éviter l'erreur "Missing Index" de Firestore.
+    // Le tri se fera en JavaScript juste après, c'est plus sûr.
+    return query(
+      collection(firestore, 'sessions'), 
+      where('userId', '==', user.uid)
+    ) as Query<LiveSession>;
   }, [firestore, user]);
 
   const sessionTypesQuery = useMemoFirebase(() => {
@@ -49,8 +59,10 @@ export default function BookingsPage({ params }: { params: Promise<{ lang: Local
 
   const { upcomingSessions, pastSessions } = useMemo(() => {
     if (!sessions || !sessionTypes || !timeSlots) return { upcomingSessions: [], pastSessions: [] };
+
     const sessionTypeMap = new Map(sessionTypes.map(st => [st.id, st]));
     const timeSlotMap = new Map(timeSlots.map(ts => [ts.id, ts]));
+
     const allMerged = sessions
       .map(session => {
         const sessionType = sessionTypeMap.get(session.sessionTypeId);
@@ -59,12 +71,17 @@ export default function BookingsPage({ params }: { params: Promise<{ lang: Local
         return { ...session, sessionType, timeSlot };
       })
       .filter((s): s is MergedSession => s !== null)
+      // C'est ICI qu'on fait le tri proprement (par date de séance)
       .sort((a, b) => b.timeSlot.startTime.toMillis() - a.timeSlot.startTime.toMillis());
-    const now = new Date();
+    
     const upcoming = allMerged.filter(s => !isPast(s.timeSlot.endTime.toDate()));
     const past = allMerged.filter(s => isPast(s.timeSlot.endTime.toDate()));
+
+    // On inverse 'upcoming' pour avoir la prochaine séance en premier (et pas la plus lointaine)
     return { upcomingSessions: [...upcoming].reverse(), pastSessions: past };
+
   }, [sessions, sessionTypes, timeSlots]);
+
 
   const isLoading = isUserLoading || isLoadingSessions || isLoadingSessionTypes || isLoadingTimeSlots || !dict;
 
@@ -107,7 +124,7 @@ export default function BookingsPage({ params }: { params: Promise<{ lang: Local
             {isUpcoming && (
                   <CardFooter>
                     <Button asChild className="w-full">
-                       <Link href={}>
+                       <Link href={`/${lang}/session/${session.id}`}>
                          <Video className="mr-2 h-4 w-4" />
                          {bookingsDict.join_button}
                        </Link>
@@ -124,6 +141,7 @@ export default function BookingsPage({ params }: { params: Promise<{ lang: Local
             <h1 className="text-4xl font-headline">{bookingsDict.title}</h1>
             <p className="text-lg text-muted-foreground">{bookingsDict.subtitle}</p>
         </div>
+
         <div className="space-y-12">
             <section>
                 <h2 className="text-2xl font-headline mb-4">{bookingsDict.upcoming_title}</h2>
@@ -135,7 +153,7 @@ export default function BookingsPage({ params }: { params: Promise<{ lang: Local
                     <div className="text-center py-10 border-2 border-dashed rounded-lg">
                         <p className="text-muted-foreground">{bookingsDict.no_upcoming}</p>
                         <Button asChild className="mt-4">
-                            <Link href={}>{bookingsDict.book_now}</Link>
+                            <Link href={`/${lang}/agenda`}>{bookingsDict.book_now}</Link>
                         </Button>
                     </div>
                 )}

@@ -53,10 +53,10 @@ export default function StatsDashboard({
     () => (firestore ? collection(firestore, 'users') as Query<UserProfile> : null),
     [firestore]
   );
-  const sessionsQuery = useMemoFirebase(
-    () => (firestore ? collection(firestore, 'sessions') as Query<LiveSession> : null),
-    [firestore]
-  );
+  // AVANT C'ETAIT : collection(firestore, 'sessions') ...
+// MAINTENANT TU METS :
+const sessionsQuery = useMemoFirebase(() => null, []);
+  
   // Correctly query the 'formations' subcollection across all 'users'
   const userFormationsQuery = useMemoFirebase(
     () => (firestore ? collectionGroup(firestore, 'formations') as Query<UserFormation> : null),
