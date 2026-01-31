@@ -14,14 +14,16 @@ export default async function RootLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: { lang: Locale };
+  params: Promise<{ lang: Locale }>; 
 }) {
-  const dictionary = await getDictionary(params.lang);
+  const { lang } = await params;
+  
+  const dictionary = await getDictionary(lang);
 
   return (
     <FirebaseClientProvider>
       <CartProvider>
-        <Header dictionary={dictionary.header} lang={params.lang} />
+        <Header dictionary={dictionary.header} lang={lang} />
         <main className="flex-1">
           {children}
         </main>
