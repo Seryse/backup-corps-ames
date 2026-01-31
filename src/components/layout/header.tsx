@@ -12,24 +12,10 @@ import { Menu, ShoppingBag, CalendarDays, Home, Sparkles } from 'lucide-react';
 import { CartNav } from './cart-nav';
 import { useState, useEffect } from 'react';
 import { Skeleton } from '../ui/skeleton';
-import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
-import { collection, query, where } from 'firebase/firestore';
 
 export default function Header({ dictionary, lang }: { dictionary: Dictionary['header'], lang: Locale }) {
   const [isMounted, setIsMounted] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const { user } = useUser();
-  const firestore = useFirestore();
-
-  // CORRECTION : Requête sécurisée pour éviter l'erreur de permission
-  const sessionsQuery = useMemoFirebase(() => {
-    if (!firestore || !user) return null;
-    return query(collection(firestore, 'sessions'), where('userId', '==', user.uid));
-  }, [firestore, user]);
-  
-  // Note: Cette donnée est récupérée pour satisfaire une exigence de sécurité, même si non affichée ici.
-  const { data: sessions } = useCollection(sessionsQuery);
 
   useEffect(() => {
     setIsMounted(true);
