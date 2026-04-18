@@ -1,0 +1,21 @@
+{
+    "agenda": {
+      "title": "Agenda",
+      "description": "Réservez votre séance",
+      "availableSlots": "Créneaux Disponibles",
+      "noSlots": "Aucun créneau disponible pour cette date.",
+      "selectDate": "Veuillez sélectionner une date sur le calendrier.",
+      "bookNow": "Réserver maintenant",
+      "sessionDetails": "Détails de la séance",
+      "bookThisSlot": "Réserver ce créneau",
+      "bookingInProgress": "Réservation en cours...",
+      "bookingSuccessTitle": "Réservation Confirmée !",
+      "bookingSuccessDescription": "Votre séance a bien été réservée. Vous pouvez la consulter dans 'Mes Réservations'.",
+      "bookingErrorTitle": "Échec de la réservation",
+      "bookingErrorFull": "Ce créneau est maintenant complet.",
+      "bookingErrorGeneric": "Une erreur est survenue lors de la réservation. Veuillez réessayer.",
+      "loginToBook": "Se connecter pour réserver",
+      "previousMonth": "Mois précédent",
+      "nextMonth": "Mois suivant"
+    }
+  }

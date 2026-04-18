@@ -1,0 +1,116 @@
+
+{
+    "dashboard_page": {
+      "title": "Mon Espace Personnel",
+      "subtitle": "Bonjour, {name}",
+      "account": {
+        "title": "Mon Compte",
+        "description": "Gérez votre profil, mot de passe et préférences de langue."
+      },
+      "trainings": {
+        "title": "Mes Formations",
+        "description": "Accédez à toutes les formations que vous avez achetées."
+      },
+      "bookings": {
+        "title": "Mes Rendez-vous",
+        "description": "Consultez vos séances à venir et passées."
+      },
+      "hub": {
+        "title": "Hub Communautaire",
+        "description": "Rejoignez les forums de discussion pour vos formations et séances."
+      },
+      "grimoire": {
+        "title": "Mon Grimoire Personnel",
+        "description": "Retrouvez ici les rapports symboliques de vos voyages."
+      },
+      "admin": {
+        "title": "Console d'Administration",
+        "description": "Gérer les formations, les actualités et les sessions."
+      }
+    },
+    "gratitude_wallet_reward": {
+      "title": "Récolte de Gratitude",
+      "description": "Votre Arbre de Vie est pleinement épanoui !",
+      "offer": "Transformez l'énergie de votre arbre en une récompense de 40€.",
+      "cta": "Récolter les fruits (40€)",
+      "success_title": "Félicitations !",
+      "success_description": "Votre gratitude a porté ses fruits. 40€ ont été ajoutés à votre compte.",
+      "progression_label": "Progression de l'Arbre",
+      "growing_label": "Arbre en croissance...",
+      "error_not_full": "L'arbre n'est pas encore totalement épanoui.",
+      "error_generic": "Une erreur est survenue lors de la récolte."
+    },
+    "account_page": {
+      "title": "Mon Compte",
+      "subtitle": "Mettez à jour vos informations personnelles et paramètres de sécurité.",
+      "profile": {
+        "title": "Informations du Profil",
+        "description": "Maintenez vos coordonnées à jour.",
+        "name_label": "Nom / Pseudo",
+        "email_label": "Adresse e-mail (ne peut être modifiée)",
+        "certificate_name_label": "Nom pour la Certification",
+        "certificate_name_placeholder": "Ex: Jean Dupont",
+        "certificate_name_desc": "Ce nom sera utilisé sur vos certificats de réussite.",
+        "save_button": "Enregistrer les modifications",
+        "picture_title": "Photo de profil",
+        "picture_description": "Changez votre avatar.",
+        "change_picture_button": "Changer la photo"
+      },
+      "password": {
+        "title": "Changer le mot de passe",
+        "description": "Pour des raisons de sécurité, vous devrez saisir votre mot de passe actuel.",
+        "current_password_label": "Mot de passe actuel",
+        "new_password_label": "Nouveau mot de passe",
+        "save_button": "Mettre à jour le mot de passe"
+      },
+      "language": {
+        "title": "Langue",
+        "description": "Choisissez votre langue préférée pour l'application."
+      },
+      "billing": {
+        "title": "Adresse de Facturation",
+        "description": "Gérez votre adresse de facturation pour des paiements plus rapides.",
+        "street_label": "Rue",
+        "city_label": "Ville",
+        "postal_code_label": "Code Postal",
+        "country_label": "Pays",
+        "save_button": "Enregistrer l'adresse"
+      },
+      "profile_crop": {
+        "title": "Modifier la photo de profil",
+        "save_button": "Enregistrer"
+      },
+      "success": {
+        "profile_updated": "Profil mis à jour avec succès !",
+        "password_updated": "Mot de passe mis à jour avec succès !",
+        "avatar_updated": "Photo de profil mise à jour avec succès !",
+        "address_updated": "Adresse de facturation mise à jour avec succès !"
+      },
+      "errors": {
+        "update_failed": "Échec de la mise à jour",
+        "name_required": "Le nom est requis.",
+        "password_min_length": "Le mot de passe doit contenir au moins 6 caractères.",
+        "password_must_be_different": "Le nouveau mot de passe doit être différent de l'actuel.",
+        "wrong_current_password": "Le mot de passe actuel que vous avez saisi est incorrect."
+      }
+    },
+    "bookings_page": {
+      "title": "Mes Rendez-vous",
+      "subtitle": "Voici la liste de toutes vos séances réservées.",
+      "upcoming_title": "Séances à venir",
+      "past_title": "Séances passées",
+      "no_upcoming": "Vous n'avez aucun rendez-vous à venir.",
+      "no_past": "Vous n'avez aucun rendez-vous passé.",
+      "book_now": "Réserver une nouvelle séance",
+      "join_button": "Rejoindre la séance"
+    },
+    "grimoire_page": {
+      "title": "Mon Grimoire Personnel",
+      "subtitle": "Retrouvez ici tous les rapports de vos voyages Irisphère Harmonia.",
+      "voyage_title": "Voyage du",
+      "report_for": "Rapport pour la séance du {date}",
+      "open_button": "Télécharger mon Grimoire",
+      "no_reports_title": "Votre Grimoire est encore vide",
+      "no_reports_description": "Les rapports de vos séances 'Irisphère Harmonia' apparaîtront ici une fois qu'ils auront été préparés."
+    }
+  }

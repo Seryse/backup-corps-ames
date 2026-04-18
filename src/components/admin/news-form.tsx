@@ -1,0 +1,211 @@
+'use client';
+
+import { useForm, Path } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { useFirestore, useStorage } from '@/firebase';
+import { addDoc, collection, doc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { useToast } from '@/hooks/use-toast';
+import { Loader2, Languages } from 'lucide-react';
+import { useState } from 'react';
+import type { NewsArticle } from './news-manager';
+import { translateText } from '@/ai/flows/translate-text';
+
+interface NewsFormProps {
+  articleToEdit?: NewsArticle;
+  onClose: () => void;
+  dictionary: any;
+}
+
+const localizedStringSchema = z.object({
+  en: z.string().min(1, 'English version is required'),
+  fr: z.string().min(1, 'French version is required'),
+  es: z.string().min(1, 'Spanish version is required'),
+});
+
+const newsSchema = z.object({
+  title: localizedStringSchema,
+  content: localizedStringSchema,
+  imageFile: z.any().optional(),
+});
+
+type NewsFormData = z.infer<typeof newsSchema>;
+
+export default function NewsForm({ articleToEdit, onClose, dictionary }: NewsFormProps) {
+  const firestore = useFirestore();
+  const storage = useStorage();
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isTranslating, setIsTranslating] = useState<null | 'title' | 'content'>(null);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    getValues,
+    setValue,
+  } = useForm<NewsFormData>({
+    resolver: zodResolver(newsSchema),
+    defaultValues: articleToEdit
+      ? {
+          title: articleToEdit.title,
+          content: articleToEdit.content,
+        }
+      : {
+          title: { en: '', fr: '', es: '' },
+          content: { en: '', fr: '', es: '' },
+        },
+  });
+
+  const handleTranslate = async (fieldName: 'title' | 'content') => {
+    const pathFr = `${fieldName}.fr` as Path<NewsFormData>;
+    const frenchText = getValues(pathFr);
+
+    if (!frenchText) {
+        toast({
+            variant: "destructive",
+            title: dictionary?.form?.nothingToTranslateTitle || "Rien à traduire",
+            description: dictionary?.form?.nothingToTranslateDescription || "Remplissez le champ français d'abord.",
+        });
+        return;
+    }
+
+    setIsTranslating(fieldName);
+    try {
+        const result = await translateText({ text: frenchText });
+        
+        setValue(`${fieldName}.en`, result.en);
+        setValue(`${fieldName}.es`, result.es);
+        
+        toast({ title: dictionary?.success?.translationSuccess || "Traduction réussie" });
+    } catch (error) {
+        console.error("Translation failed:", error);
+        toast({ 
+            variant: "destructive", 
+            title: dictionary?.form?.translationError || "Erreur", 
+            description: (error as Error).message 
+        });
+    } finally {
+        setIsTranslating(null);
+    }
+  };
+
+  const onSubmit = (data: NewsFormData) => {
+    if (!firestore || !storage) return;
+    setIsLoading(true);
+
+    const processAndSubmit = async () => {
+        let imageUrl = articleToEdit?.imageUrl;
+        const file = data.imageFile?.[0];
+
+        if (file) {
+            const storageRef = ref(storage, `news/${Date.now()}_${file.name}`);
+            const uploadTask = await uploadBytes(storageRef, file);
+            imageUrl = await getDownloadURL(uploadTask.ref);
+        }
+
+        const articleData = {
+            title: data.title,
+            content: data.content,
+            imageUrl: imageUrl || 'https://placehold.co/600x400/E6E6FA/333333?text=Image',
+            createdAt: articleToEdit?.createdAt || serverTimestamp(),
+        };
+
+        if (articleToEdit?.id) {
+            await setDoc(doc(firestore, 'news', articleToEdit.id), articleData, { merge: true });
+        } else {
+            await addDoc(collection(firestore, 'news'), articleData);
+        }
+    };
+    
+    processAndSubmit().then(() => {
+        toast({ title: articleToEdit ? (dictionary?.success?.articleUpdated || "Mis à jour") : (dictionary?.success?.articleAdded || "Ajouté") });
+        onClose();
+    }).catch(e => {
+        console.error("Form submission error:", e);
+        toast({
+            variant: "destructive",
+            title: dictionary?.error?.generic || "Erreur",
+            description: e.message || "Une erreur inattendue est survenue.",
+        });
+    }).finally(() => {
+        setIsLoading(false);
+    });
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div>
+          <Label htmlFor="title.en">{dictionary.form.titleEn || 'Title (EN)'}</Label>
+          <Input id="title.en" {...register('title.en')} />
+          {errors.title?.en && <p className="text-sm text-destructive">{errors.title.en.message}</p>}
+        </div>
+        <div>
+          <div className="flex items-center justify-between">
+            <Label htmlFor="title.fr">{dictionary.form.titleFr || 'Titre (FR)'}</Label>
+            <Button variant="ghost" size="icon" type="button" onClick={() => handleTranslate('title')} disabled={isTranslating === 'title'} className="h-7 w-7">
+                {isTranslating === 'title' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Languages className="h-4 w-4" />}
+                <span className="sr-only">{dictionary.form.translate || 'Translate'}</span>
+            </Button>
+          </div>
+          <Input id="title.fr" {...register('title.fr')} />
+          {errors.title?.fr && <p className="text-sm text-destructive">{errors.title.fr.message}</p>}
+        </div>
+        <div>
+          <Label htmlFor="title.es">{dictionary.form.titleEs || 'Título (ES)'}</Label>
+          <Input id="title.es" {...register('title.es')} />
+          {errors.title?.es && <p className="text-sm text-destructive">{errors.title.es.message}</p>}
+        </div>
+      </div>
+
+      <div>
+        <div className="flex items-center justify-between">
+            <Label htmlFor="content.fr">{dictionary.form.contentFr || 'Contenu (FR)'}</Label>
+            <Button variant="ghost" size="icon" type="button" onClick={() => handleTranslate('content')} disabled={isTranslating === 'content'} className="h-7 w-7">
+                {isTranslating === 'content' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Languages className="h-4 w-4" />}
+                <span className="sr-only">{dictionary.form.translate || 'Translate'}</span>
+            </Button>
+        </div>
+        <Textarea id="content.fr" {...register('content.fr')} />
+        {errors.content?.fr && <p className="text-sm text-destructive">{errors.content.fr.message}</p>}
+      </div>
+       <div>
+        <Label htmlFor="content.en">{dictionary.form.contentEn || 'Content (EN)'}</Label>
+        <Textarea id="content.en" {...register('content.en')} />
+        {errors.content?.en && <p className="text-sm text-destructive">{errors.content.en.message}</p>}
+      </div>
+      <div>
+        <Label htmlFor="content.es">{dictionary.form.contentEs || 'Contenido (ES)'}</Label>
+        <Textarea id="content.es" {...register('content.es')} />
+        {errors.content?.es && <p className="text-sm text-destructive">{errors.content.es.message}</p>}
+      </div>
+      
+      <div>
+          <Label htmlFor="imageFile">{dictionary?.form?.image || "Image de couverture"}</Label>
+          <Input id="imageFile" type="file" accept="image/*" {...register('imageFile')} className="cursor-pointer" />
+          {articleToEdit?.imageUrl && (
+            <div className="mt-4 bg-slate-50 p-2 rounded border inline-block">
+                <p className="text-xs font-medium mb-1 text-muted-foreground">Image Actuelle:</p>
+                <img src={articleToEdit.imageUrl} alt="Current article" className="h-20 w-auto object-contain rounded-md" />
+            </div>
+          )}
+      </div>
+
+      <div className="flex justify-end gap-2 sticky bottom-0 bg-white pt-2 border-t mt-4">
+        <Button type="button" variant="outline" onClick={onClose} disabled={isLoading}>
+          {dictionary?.form?.cancel || "Annuler"}
+        </Button>
+        <Button type="submit" disabled={isLoading}>
+          {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {dictionary?.form?.save || "Enregistrer"}
+        </Button>
+      </div>
+    </form>
+  );
+}

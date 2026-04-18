@@ -1,0 +1,89 @@
+{
+  "landing": {
+    "title": "Body and Souls",
+    "subtitle": "Your sanctuary for wellness of body and soul.",
+    "cta": "Join a Session",
+    "description": "Experience unique sessions combining guided meditation, gentle music, and spiritual guidance for deep inner reconnection."
+  },
+  "home": {
+    "hero": {
+      "title": "Your Holistic Sanctuary,",
+      "highlight": "everywhere with you.",
+      "subtitle": "Corps & Âmes reinvents remote care. Join a Sacred Space where technology fades away to make room for energy, healing, and unity.",
+      "cta": "Enter the Space"
+    },
+    "title": "Welcome, {name}.",
+    "greeting_anonymous": "Hello Beautiful Soul",
+    "description": "Discover the latest news and updates from our community.",
+    "latestNews": "Latest News",
+    "moreNews": "More News",
+    "noNews": "No news yet",
+    "noNewsDescription": "Check back later for updates.",
+    "ourFormations": "Our Courses",
+    "discoverFormations": "Discover them",
+    "ourSessions": "Our Sessions",
+    "bookASession": "Book a session"
+  },
+  "about_page": {
+    "title": "Our History",
+    "subtitle": "A bridge between the visible and the invisible, a dance between body and soul.",
+    "story": {
+      "title": "The Tale of Corps et Âmes",
+      "p1": "Corps et Âmes was born from a vision: to create a sacred space where each individual can explore the depths of their being, a sanctuary where physical well-being and the flourishing of the soul converge. Founded by enthusiasts of spirituality, personal development, and holistic therapies, our center is more than just a platform; it is a vibrant community.",
+      "p2": "Our mission is to accompany you on your life path, offering tools, knowledge, and experiences that resonate with your essence. We believe in an integrated approach, where every practice, treatment, and training is an invitation to reconnect with your inner wisdom and activate your full potential."
+    },
+    "founder": {
+      "title": "The Founder",
+      "name": "Mickaël 'Micka' Réault",
+      "bio": "Creator of the Irisphère Harmonia method and founder of Corps et Âmes, Mickaël is an explorer of consciousness, a 'Body & Soul Developer'. His passion is to guide curious souls through inner journeys, using sound, energy, and intuition to unlock the doors of perception and catalyze profound transformations. His approach is a unique blend of ancestral techniques and contemporary practices, always within a benevolent and secure framework."
+    },
+    "values": {
+      "title": "Our Values",
+      "authenticity": {
+        "title": "Authenticity",
+        "description": "We present ourselves as we are, with open hearts and pure intentions."
+      },
+      "benevolence": {
+        "title": "Benevolence",
+        "description": "Every interaction is marked by respect, compassion, and sincere listening."
+      },
+      "community": {
+        "title": "Community",
+        "description": "We weave strong bonds, creating a support and sharing network where everyone feels welcome."
+      },
+      "exploration": {
+        "title": "Exploration",
+        "description": "We encourage curiosity, continuous learning, and the audacity to venture beyond the beaten path."
+      }
+    }
+  },
+  "soins_page": {
+    "title": "Our Treatments",
+    "intro": "Discover all our 100% online treatments. Enjoy the benefits of your Holistic Institute and the expertise of experienced practitioners directly from the comfort of your home.",
+    "categories": {
+      "irisphere-harmonia": {
+        "title": "Irisphere Harmonia (Signature Treatment)",
+        "intro": "Irisphere Harmonia is an exclusive Signature Treatment by Corps et Âmes, partly based on the methods of Innerdance - Kundalini Activation. The principle is simple: A series of scrupulously selected and energetically modified music tracks are played at high volume (headphones strongly recommended) to induce a state of light trance. They are programmed to take you on a safe journey through different phases and stages to cleanse and connect all parts of your Being. The protocol has been studied and refined to include dimensions of mediumship and defined intentions. Benefit from private or group sessions, supervised by the creator of the method in person, who will be assisted by other facilitators for large groups."
+      },
+      "guidances": {
+        "title": "Guidance Sessions",
+        "intro": "Book your 100% online guidance session: Choose between a card and oracle reading, a witch's rune casting, or a psycho-energetic session with a wellness professional specialized in these areas."
+      },
+      "energetic-treatments": {
+        "title": "Energetic Healings",
+        "intro": "Need a little boost, an alignment, a break from the daily hustle? Our practitioners will be delighted to welcome you from your home in a 100% online setting for an intuitive energetic healing session tailored to your current needs."
+      },
+      "dialogue-space": {
+        "title": "Dialogue Space",
+        "intro": "A privileged space for speaking and listening. Whether you have specific questions about our training programs, need advice on choosing the most suitable treatment for your needs, or simply want a live exchange before you commit, this space is yours. An open-hearted dialogue to enlighten your path."
+      },
+      "combined-treatments": {
+        "title": "Combined Treatments",
+        "intro": "Book your combined session, group our services into a single appointment to get up to 5 hours of continuous well-being in one day."
+      }
+    },
+    "loading": "Loading treatments...",
+    "no_soins": "No treatments available at the moment.",
+    "book_now": "Book Now"
+  }
+}

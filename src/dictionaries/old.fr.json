@@ -1,0 +1,567 @@
+
+{
+    "header": {
+        "home": "Accueil",
+        "about": "Qui sommes-nous ?",
+        "dashboard": "Mon Espace",
+        "session": "Session Live",
+        "bookings": "Mes RDV",
+        "admin": "Admin",
+        "login": "Connexion",
+        "logout": "Déconnexion",
+        "userMenu": "Ouvrir le menu utilisateur",
+        "viewProfile": "Voir le Profil",
+        "shop": "Boutique",
+        "agenda": "Agenda",
+        "trainings": "Formations",
+        "hub": "Hub",
+        "soins": "Les Soins",
+        "forum": "Forum",
+        "contact": "Contact",
+        "messages": "Mes Messages"
+    },
+    "landing": {
+        "title": "Corps et Âmes",
+        "subtitle": "Votre sanctuaire pour le bien-être du corps et de l'âme.",
+        "cta": "Rejoindre une Session",
+        "description": "Vivez des sessions uniques alliant méditation guidée, musique douce et guidance spirituelle pour une reconnexion intérieure profonde."
+    },
+    "auth": {
+        "loginTitle": "Bon retour parmi nous",
+        "loginSubtitle": "Entrez vos identifiants pour accéder à votre espace.",
+        "signupTitle": "Créez votre compte",
+        "signupSubtitle": "Rejoignez notre communauté et commencez votre voyage.",
+        "emailLabel": "Email",
+        "passwordLabel": "Mot de passe",
+        "loginButton": "Se connecter",
+        "signupButton": "S'inscrire",
+        "googleButton": "Continuer avec Google",
+        "or": "Ou",
+        "noAccount": "Vous n'avez pas de compte ?",
+        "hasAccount": "Vous avez déjà un compte ?",
+        "signupLink": "Inscrivez-vous",
+        "loginLink": "Connectez-vous",
+        "loginErrorTitle": "Erreur d'authentification",
+        "errors": {
+            "auth/invalid-credential": "Email ou mot de passe incorrect.",
+            "auth/email-already-in-use": "Un compte existe déjà avec cette adresse email.",
+            "auth/weak-password": "Le mot de passe doit contenir au moins 6 caractères.",
+            "auth/user-not-found": "Aucun compte trouvé avec cette adresse email.",
+            "auth/wrong-password": "Mot de passe incorrect.",
+            "auth/account-exists-with-different-credential": "Un compte avec cet email existe déjà via une autre méthode (ex: Email/Mot de passe). Veuillez utiliser cette méthode.",
+            "auth/popup-closed-by-user": "La fenêtre de connexion a été fermée. Veuillez réessayer.",
+            "auth/popup-blocked": "La fenêtre de connexion a été bloquée par le navigateur. Veuillez autoriser les popups pour ce site et réessayer.",
+            "auth/unauthorized-domain": "Ce site n'est pas autorisé pour l'authentification Google. Contactez l'administrateur.",
+            "auth/generic": "Une erreur d'authentification est survenue. Veuillez réessayer."
+        }
+    },
+    "home": {
+        "title": "Bienvenue, {name}.",
+        "greeting_anonymous": "Bonjour Belle Âme",
+        "description": "Découvrez les dernières actualités et mises à jour de notre communauté.",
+        "latestNews": "Dernières Actualités",
+        "moreNews": "Plus d'actualités",
+        "noNews": "Aucune actualité pour le moment",
+        "noNewsDescription": "Revenez plus tard pour les mises à jour.",
+        "ourFormations": "Nos Formations",
+        "discoverFormations": "Les découvrir",
+        "ourSessions": "Nos Séances",
+        "bookASession": "Réserver une séance"
+    },
+    "session": {
+        "title": "Session en Direct",
+        "loading": "Préparation de la session...",
+        "no_upcoming_title": "Aucune session à venir",
+        "no_upcoming_description": "Les sessions live achetées via l'agenda apparaîtront ici. Le lien de connexion sera activé 10 minutes avant l'heure du rendez-vous.",
+        "book_a_session": "Réserver une séance",
+        "starts_in_distance": "Commence dans {distance}",
+        "starts_in_minutes": "Commence dans {minutes} minutes",
+        "in_progress": "Session en cours",
+        "connect": "Se connecter",
+        "accessDenied": "Accès Refusé",
+        "accessDeniedMessage": "Vous n'avez pas la permission de voir cette session ou le lien est invalide.",
+        "backToDashboard": "Retour à l'Accueil",
+        "welcome_message": "Bienvenue à la session en direct !",
+        "forum_coming_soon": "La session va bientôt commencer.",
+        "subtitles": "Sous-titres & Traduction en direct",
+        "startRecognition": "Démarrer la diffusion",
+        "stopRecognition": "Arrêter la diffusion"
+    },
+    "about_page": {
+        "title": "Notre Histoire",
+        "subtitle": "Un pont entre le visible et l'invisible, une danse entre le corps et l'âme.",
+        "story": {
+            "title": "Le Récit de Corps et Âmes",
+            "p1": "Corps et Âmes est né d'une vision : celle de créer un espace sacré où chaque individu peut explorer les profondeurs de son être, un sanctuaire où le bien-être du corps et l'épanouissement de l'âme convergent. Fondé par des passionnés de spiritualité, de développement personnel et de thérapies holistiques, notre centre est plus qu'une simple plateforme, c'est une communauté vibrante.",
+            "p2": "Notre mission est de vous accompagner sur votre chemin de vie, en vous offrant des outils, des connaissances et des expériences qui résonnent avec votre essence. Nous croyons en une approche intégrée, où chaque pratique, chaque soin et chaque formation est une invitation à vous reconnecter à votre sagesse intérieure et à activer votre plein potentiel."
+        },
+        "founder": {
+            "title": "Le Fondateur",
+            "name": "Mickaël 'Micka' Réault",
+            "bio": "Créateur de la méthode Irisphère Harmonia et fondateur de Corps et Âmes, Mickaël est un explorateur de la conscience, un 'Body & Soul Developper'. Sa passion est de guider les âmes curieuses à travers les voyages intérieurs, en utilisant le son, l'énergie et l'intuition pour déverrouiller les portes de la perception et catalyser des transformations profondes. Son approche est un mélange unique de techniques ancestrales et de pratiques contemporaines, toujours dans un cadre bienveillant et sécurisé."
+        },
+        "values": {
+            "title": "Nos Valeurs",
+            "authenticity": {
+                "title": "Authenticité",
+                "description": "Nous nous présentons tels que nous sommes, avec nos cœurs ouverts et nos intentions pures."
+            },
+            "benevolence": {
+                "title": "Bienveillance",
+                "description": "Chaque interaction est empreinte de respect, de compassion et d'une écoute sincère."
+            },
+            "community": {
+                "title": "Communauté",
+                "description": "Nous tissons des liens forts, créant un réseau de soutien et de partage où chacun se sent accueilli."
+            },
+
+            "exploration": {
+                "title": "Exploration",
+                "description": "Nous encourageons la curiosité, l'apprentissage continu et l'audace de s'aventurer au-delà des sentiers battus."
+            }
+        }
+    },
+    "admin": {
+        "title": "Console d'Administration",
+        "dashboard": "Rendez-vous",
+        "stats": "Statistiques",
+        "news": "Actualités",
+        "formations": "Formations",
+        "sessionTypes": "Types de Séance",
+        "introFiles": "Fichiers d'introduction",
+        "playlistFiles": "Fichiers de playlist",
+        "manage_about_page": "Page Qui sommes-nous ?",
+        "noFiles": "Aucun fichier trouvé dans ce répertoire.",
+        "manageFormations": "Gérer les Formations",
+        "addFormation": "Ajouter une Formation",
+        "editFormation": "Modifier la Formation",
+        "deleteFormation": "Supprimer la Formation",
+        "deleteFormationConfirmTitle": "Êtes-vous sûr ?",
+        "deleteFormationConfirmDescription": "Cette action est irréversible. La formation sera supprimée définitivement.",
+        "manageNews": "Gérer les Actualités",
+        "addArticle": "Ajouter un Article",
+        "editArticle": "Modifier l'Article",
+        "deleteArticle": "Supprimer l'Article",
+        "deleteArticleConfirmTitle": "Êtes-vous sûr ?",
+        "deleteArticleConfirmDescription": "Cette action est irréversible. L'article sera supprimé définitivement.",
+        "manageSessionTypes": "Gérer les Types de Séance",
+        "addSessionType": "Ajouter un Type de Séance",
+        "editSessionType": "Modifier le Type de Séance",
+        "deleteSessionType": "Supprimer le Type de Séance",
+        "deleteSessionTypeConfirmTitle": "Êtes-vous sûr ?",
+        "deleteSessionTypeConfirmDescription": "Cela supprimera définitivement ce type de séance et tous ses créneaux associés. Cette action est irréversible.",
+        "manageSlots": "Gérer les créneaux",
+        "manageSlotsTitle": "Gérer les Créneaux",
+        "addSlot": "Ajouter un créneau",
+        "addSlotFor": "Ajouter un nouveau créneau pour la séance : {sessionName}",
+        "startTime": "Heure de début",
+        "endTime": "Heure de fin",
+        "addSlotButton": "Ajouter",
+        "addSlotsButton": "Ajouter créneau(x)",
+        "existingSlots": "Créneaux existants",
+        "existingSlotsFor": "Liste des créneaux programmés pour : {sessionName}",
+        "deleteSlotConfirmTitle": "Supprimer ce créneau ?",
+        "deleteSlotConfirmDescription": "Cette action est irréversible et supprimera le créneau.",
+        "noSlotsForSession": "Aucun créneau programmé pour cette séance.",
+        "delete": "Supprimer",
+        "recurrence": "Récurrence",
+        "recurrenceOptions": {
+            "none": "Aucune",
+            "daily": "Chaque jour",
+            "weekly": "Chaque semaine",
+            "biweekly": "Toutes les 2 semaines",
+            "monthly": "Chaque mois"
+        },
+        "repeatCount": "Nombre de répétitions",
+        "todaysSessions": "Séances du Jour",
+        "pastSessions": "Séances Passées",
+        "noPastSessions": "Aucune séance passée à afficher.",
+        "bookedBy": "Réservé par",
+        "joinCall": "Rejoindre l'Appel",
+        "noSessionsToday": "Aucune séance prévue aujourd'hui",
+        "noSessionsTodayDescription": "Les séances réservées pour aujourd'hui apparaîtront ici.",
+        "sessionCategoryOptions": {
+            "irisphere-harmonia": "Irisphère Harmonia (Soin Signature)",
+            "guidances": "Les Guidances",
+            "energetic-treatments": "Les Soins Énergétiques",
+            "dialogue-space": "L'Espace Dialogues",
+            "combined-treatments": "Les Soins Combinés"
+        },
+        "grimoire": {
+            "manage_button": "Gérer le Grimoire",
+            "edit_button": "Modifier le rapport",
+            "title": "Télécharger le rapport Grimoire",
+            "description": "Téléchargez le PDF du rapport pour l'utilisateur {userName}.",
+            "file_label": "Fichier PDF du rapport",
+            "thumbnail_label": "Image de couverture (Optionnel)",
+            "upload_button": "Télécharger",
+            "upload_success_title": "Rapport téléchargé !",
+            "upload_error_title": "Échec du téléchargement",
+            "report_sent": "Rapport envoyé",
+            "download_button": "Télécharger le rapport",
+            "current_thumbnail_label": "Couverture actuelle",
+            "pdf_required_error": "Un fichier PDF est requis pour le premier envoi.",
+            "nothing_to_update_title": "Rien à mettre à jour",
+            "nothing_to_update_desc": "Veuillez sélectionner un fichier PDF ou une image à mettre à jour."
+        },
+        "about_page_form": {
+    "title": "Gérer le contenu de la page 'Qui sommes-nous'",
+    "page_title_label": "Titre principal de la page",
+    "page_subtitle_label": "Sous-titre de la page",
+    "story_title_label": "Titre de la section 'Récit'",
+    "story_p1_label": "Paragraphe 1 du récit",
+    "story_p2_label": "Paragraphe 2 du récit",
+    "founder_title_label": "Titre de la section 'Fondateur'",
+    "founder_name_label": "Nom du fondateur",
+    "founder_bio_label": "Biographie du fondateur",
+    "values_title_label": "Titre de la section 'Valeurs'",
+    "value_authenticity_title_label": "Titre de la valeur 'Authenticité'",
+    "value_authenticity_desc_label": "Description de la valeur 'Authenticité'",
+    "value_benevolence_title_label": "Titre de la valeur 'Bienveillance'",
+    "value_benevolence_desc_label": "Description de la valeur 'Bienveillance'",
+    "value_community_title_label": "Titre de la valeur 'Communauté'",
+    "value_community_desc_label": "Description de la valeur 'Communauté'",
+    "value_exploration_title_label": "Titre de la valeur 'Exploration'",
+    "value_exploration_desc_label": "Description de la valeur 'Exploration'",
+    "save_success": "Contenu de la page mis à jour avec succès !",
+    "save_error": "Une erreur est survenue lors de la mise à jour."
+},
+"form": {
+            "nameEn": "Nom (EN)",
+            "nameFr": "Nom (FR)",
+            "nameEs": "Nom (ES)",
+            "descriptionEn": "Description (EN)",
+            "descriptionFr": "Description (FR)",
+            "descriptionEs": "Description (ES)",
+            "price": "Prix",
+            "currency": "Devise (ex: eur, usd)",
+            "image": "Image",
+            "tokenProductId": "ID du Produit Token",
+            "videoUrl": "URL de la Vidéo (YouTube, Vimeo)",
+            "pageContentTitle": "Contenu de la Page",
+            "pageContentFr": "Contenu (FR)",
+            "pageContentEn": "Contenu (EN)",
+            "pageContentEs": "Contenu (ES)",
+            "pageContentHelp": "Vous pouvez utiliser du HTML ici pour formater le texte, ajouter des images (`<img src='.../>`) ou des liens vers des PDF (`<a href='...'>Télécharger le PDF</a>`).",
+            "titleEn": "Titre (EN)",
+            "titleFr": "Titre (FR)",
+            "titleEs": "Titre (ES)",
+            "contentEn": "Contenu (EN)",
+            "contentFr": "Contenu (FR)",
+            "contentEs": "Contenu (ES)",
+            "cancel": "Annuler",
+            "save": "Enregistrer",
+            "sessionModel": "Modèle de séance",
+            "selectSessionModel": "Sélectionner un modèle",
+            "maxParticipants": "Participants Max",
+            "sessionModelOptions": {
+                "private": "Privée",
+                "small_group": "Petit Groupe",
+                "large_group": "Grand Groupe"
+            },
+            "translate": "Traduire depuis le français",
+            "translating": "Traduction en cours...",
+            "nothingToTranslateTitle": "Rien à traduire",
+            "nothingToTranslateDescription": "Veuillez d'abord remplir le champ en français.",
+            "translationError": "Erreur de traduction",
+            "category": "Catégorie",
+            "selectCategory": "Sélectionner une catégorie"
+        },
+        "success": {
+            "formationAdded": "Formation ajoutée avec succès !",
+            "formationUpdated": "Formation mise à jour avec succès !",
+            "formationDeleted": "Formation supprimée avec succès !",
+            "articleAdded": "Article ajouté avec succès !",
+            "articleUpdated": "Article mis à jour avec succès !",
+            "articleDeleted": "Article supprimé avec succès !",
+            "sessionTypeAdded": "Type de séance ajouté avec succès !",
+            "sessionTypeUpdated": "Type de séance mis à jour avec succès !",
+            "sessionTypeDeleted": "Type de séance supprimé avec succès !",
+            "translationSuccess": "Traduction terminée !",
+            "slotAdded": "Créneau ajouté avec succès !",
+            "slotsAdded": "Créneaux ajoutés avec succès !",
+            "slotDeleted": "Créneau supprimé avec succès !"
+        },
+        "error": {
+            "generic": "Une erreur est survenue. Veuillez réessayer.",
+            "storageUnauthorizedTitle": "Erreur de Permission de Stockage",
+            "storageUnauthorized": "Vous n'avez pas la permission d'envoyer des fichiers. Vérifiez les règles de sécurité de Firebase Storage."
+        }
+    },
+     "stats_page": {
+        "title": "Statistiques",
+        "loading": "Chargement des statistiques...",
+        "totalRevenue": "Revenu Total",
+        "totalUsers": "Utilisateurs Totaux",
+        "grimoireDownloads": "Rapports Grimoire",
+        "revenueBreakdown": "Répartition des revenus par produit"
+    },
+    "shop": {
+        "title": "Boutique",
+        "addToCart": "Ajouter au panier",
+        "finalCta": "S'inscrire à cette formation",
+        "formationAdded": "Formation Ajoutée",
+        "addedToCart": "a été ajouté à votre panier.",
+        "loading": "Chargement des formations...",
+        "noFormations": "Aucune formation n'est disponible pour le moment.",
+        "alreadyInCart": "Déjà dans le panier",
+        "alreadyInCartDescription": "est déjà dans votre panier.",
+        "inCart": "Dans le panier",
+        "presentationVideo": "Vidéo de Présentation"
+    },
+    "checkout": {
+        "title": "Paiement",
+        "yourCart": "Votre Panier",
+        "emptyCart": "Votre panier est vide.",
+        "browseFormations": "Découvrir les formations",
+        "summary": "Résumé de la commande",
+        "total": "Total",
+        "proceedToPayment": "Passer au paiement",
+        "processingPayment": "Traitement du paiement...",
+        "paymentSuccessTitle": "Paiement Réussi !",
+        "paymentSuccessDescription": "Vous avez maintenant accès à vos nouvelles formations. Redirection vers l'accueil...",
+        "paymentErrorTitle": "Échec du Paiement",
+        "paymentErrorDescription": "Un problème est survenu lors du traitement de votre paiement. Veuillez réessayer."
+    },
+    "agenda": {
+        "title": "Agenda",
+        "description": "Réservez votre séance",
+        "availableSlots": "Créneaux Disponibles",
+        "noSlots": "Aucun créneau disponible pour cette date.",
+        "selectDate": "Veuillez sélectionner une date sur le calendrier.",
+        "bookNow": "Réserver maintenant",
+        "sessionDetails": "Détails de la séance",
+        "bookThisSlot": "Réserver ce créneau",
+        "bookingInProgress": "Réservation en cours...",
+        "bookingSuccessTitle": "Réservation Confirmée !",
+        "bookingSuccessDescription": "Votre séance a bien été réservée. Vous pouvez la consulter dans 'Mes Réservations'.",
+        "bookingErrorTitle": "Échec de la réservation",
+        "bookingErrorFull": "Ce créneau est maintenant complet.",
+        "bookingErrorGeneric": "Une erreur est survenue lors de la réservation. Veuillez réessayer.",
+        "loginToBook": "Se connecter pour réserver",
+        "previousMonth": "Mois précédent",
+        "nextMonth": "Mois suivant"
+    },
+    "trainings": {
+        "title": "Mes Formations",
+        "description": "Accédez ici à toutes les formations que vous avez acquises.",
+        "no_formations_title": "Aucune formation acquise",
+        "no_formations_description": "Il semble que vous n'ayez pas encore de formation. Parcourez notre boutique pour commencer votre voyage.",
+        "browse_shop": "Visiter la boutique",
+        "access_token": "Votre Jeton d'Accès",
+        "token_info": "Utilisez ce jeton pour accéder au hub dédié à cette formation.",
+        "enrolled_on": "Inscrit le",
+        "token_copied": "Jeton copié dans le presse-papiers !",
+        "access_hub": "Accéder au Hub",
+        "access_formation": "Accéder à la formation"
+    },
+    "training_page": {
+        "title": "Ma Formation :",
+        "progress": "Votre Progression",
+        "chapters": "Chapitres",
+        "completed": "Complété",
+        "mark_as_complete": "Marquer comme terminé",
+        "mark_as_incomplete": "Marquer comme non terminé",
+        "all_chapters_completed": "Tous les chapitres sont terminés !",
+        "congratulations": "Félicitations ! Vous avez terminé la formation.",
+        "download_certificate": "Télécharger le certificat",
+        "certificate_almost_ready": "Votre certificat est presque prêt ! Veuillez indiquer le nom complet que vous souhaitez voir apparaître.",
+        "certificate_name_label": "Nom complet pour votre certificat",
+        "certificate_name_placeholder": "ex. Jeanne Dupont",
+        "save_name_and_generate": "Enregistrer le nom",
+        "name_saved_success": "Nom enregistré avec succès !",
+        "certificate_generation_info": "Votre certificat sera généré par l'administrateur et mis à disposition ici sous peu.",
+        "certificate_being_prepared": "Votre certificat au nom de '{name}' est en cours de préparation et sera bientôt disponible ici.",
+        "certificate_not_ready": "Votre certificat n'est pas encore disponible.",
+        "back_to_trainings": "Retour à toutes les formations",
+        "error_loading_title": "Erreur de chargement de la formation",
+        "error_loading_description": "Nous n'avons pas pu charger les détails de cette formation. Veuillez réessayer.",
+        "open_chapter": "Ouvrir le chapitre"
+    },
+    "dashboard_page": {
+        "title": "Mon Espace Personnel",
+        "subtitle": "Bonjour, {name}",
+        "account": {
+            "title": "Mon Compte",
+            "description": "Gérez votre profil, mot de passe et préférences de langue."
+        },
+        "trainings": {
+            "title": "Mes Formations",
+            "description": "Accédez à toutes les formations que vous avez achetées."
+        },
+        "bookings": {
+            "title": "Mes Rendez-vous",
+            "description": "Consultez vos séances à venir et passées."
+        },
+        "hub": {
+            "title": "Hub Communautaire",
+            "description": "Rejoignez les forums de discussion pour vos formations et séances."
+        },
+        "grimoire": {
+            "title": "Mon Grimoire Personnel",
+            "description": "Retrouvez ici les rapports symboliques de vos voyages."
+        },
+        "admin": {
+            "title": "Console d'Administration",
+            "description": "Gérer les formations, les actualités et les sessions."
+        }
+    },
+    "account_page": {
+        "title": "Mon Compte",
+        "subtitle": "Mettez à jour vos informations personnelles et paramètres de sécurité.",
+        "profile": {
+            "title": "Informations du Profil",
+            "description": "Maintenez vos coordonnées à jour.",
+            "name_label": "Nom / Pseudo",
+            "email_label": "Adresse e-mail (ne peut être modifiée)",
+            "certificate_name_label": "Nom pour la Certification",
+            "certificate_name_placeholder": "Ex: Jean Dupont",
+            "certificate_name_desc": "Ce nom sera utilisé sur vos certificats de réussite.",
+            "save_button": "Enregistrer les modifications",
+            "picture_title": "Photo de profil",
+            "picture_description": "Changez votre avatar.",
+            "change_picture_button": "Changer la photo"
+        },
+        "password": {
+            "title": "Changer le mot de passe",
+            "description": "Pour des raisons de sécurité, vous devrez saisir votre mot de passe actuel.",
+            "current_password_label": "Mot de passe actuel",
+            "new_password_label": "Nouveau mot de passe",
+            "save_button": "Mettre à jour le mot de passe"
+        },
+        "language": {
+            "title": "Langue",
+            "description": "Choisissez votre langue préférée pour l'application."
+        },
+        "billing": {
+            "title": "Adresse de Facturation",
+            "description": "Gérez votre adresse de facturation pour des paiements plus rapides.",
+            "street_label": "Rue",
+            "city_label": "Ville",
+            "postal_code_label": "Code Postal",
+            "country_label": "Pays",
+            "save_button": "Enregistrer l'adresse"
+        },
+        "profile_crop": {
+            "title": "Modifier la photo de profil",
+            "save_button": "Enregistrer"
+        },
+        "success": {
+            "profile_updated": "Profil mis à jour avec succès !",
+            "password_updated": "Mot de passe mis à jour avec succès !",
+            "avatar_updated": "Photo de profil mise à jour avec succès !",
+            "address_updated": "Adresse de facturation mise à jour avec succès !"
+        },
+        "errors": {
+            "update_failed": "Échec de la mise à jour",
+            "name_required": "Le nom est requis.",
+            "password_min_length": "Le mot de passe doit contenir au moins 6 caractères.",
+            "password_must_be_different": "Le nouveau mot de passe doit être différent de l'actuel.",
+            "wrong_current_password": "Le mot de passe actuel que vous avez saisi est incorrect."
+        }
+    },
+    "bookings_page": {
+        "title": "Mes Rendez-vous",
+        "subtitle": "Voici la liste de toutes vos séances réservées.",
+        "upcoming_title": "Séances à venir",
+        "past_title": "Séances passées",
+        "no_upcoming": "Vous n'avez aucun rendez-vous à venir.",
+        "no_past": "Vous n'avez aucun rendez-vous passé.",
+        "book_now": "Réserver une nouvelle séance",
+        "join_button": "Rejoindre la séance"
+    },
+    "soins_page": {
+        "title": "Les Soins",
+        "intro": "Découvrez tous nos soins 100% en ligne. Profitez des bienfaits de votre Institut Holistique et de l'expertise de praticiens expérimentés directement depuis le confort de votre maison.",
+        "categories": {
+            "irisphere-harmonia": {
+                "title": "Irisphère Harmonia (Soin Signature)",
+                "intro": "Irisphère Harmonia est un soin Signature exclusif Corps et Âmes, qui se base en partie sur les méthodes de l'Innerdance - Kundalini Activation. Le principe est simple : Une suite de musiques scrupuleusement sélectionnées et modifiées énergétiquement sont diffusées à haut volume (casque fortement recommandé) afin d'induire un état de transe légère. Elles sont programmées pour vous emmener dans un voyage sécurisé suivant différentes phases et étapes afin de nettoyer et connecter toutes les parties de votre Être. Le protocole a été étudié et affiné pour y inclure des dimensions de médiumnité et des intentions définies. Bénéficiez de séances privées ou en groupe, encadrées par le créateur de la méthode en personne, qui sera assisté d'autres facilitateurs pour les groupes importants."
+            },
+            "guidances": {
+                "title": "Les Guidances",
+                "intro": "Réservez votre guidance 100% en ligne : Choisissez entre une lecture de cartes et oracles, un tirage de runes de sorcières ou une séance de psycho-énergétique avec un professionnel du bien-être spécialisé dans ces domaines."
+            },
+            "energetic-treatments": {
+                "title": "Les Soins Énergétiques",
+                "intro": "Besoin d'un petit coup de boost, d'un alignement, d'une pause dans le tumulte du quotidien ? Nos praticiens seront ravis de vous recevoir depuis votre domicile dans un cadre 100% en ligne pour un soin énergétique intuitif adapté à votre demande du moment."
+            },
+            "dialogue-space": {
+                "title": "L'Espace Dialogues",
+                "intro": "Un espace de parole et d’écoute privilégié. Que vous ayez des questions précises sur nos formations, besoin d'un conseil pour choisir le soin le plus adapté à votre besoin, ou simplement l'envie d'un temps d'échange en direct avant de vous lancer, cet espace est le vôtre. Un dialogue à cœur ouvert pour éclairer votre chemin."
+            },
+            "combined-treatments": {
+                "title": "Les Soins Combinés",
+                "intro": "Réservez votre séance combinée, regroupez nos services en un seul rendez-vous pour obtenir jusqu'à 5h de bien-être d'affilée en une seule journée."
+            }
+        },
+        "loading": "Chargement des soins...",
+        "no_soins": "Aucun soin disponible pour le moment.",
+        "book_now": "Réserver"
+    },
+    "grimoire_page": {
+        "title": "Mon Grimoire Personnel",
+        "subtitle": "Retrouvez ici tous les rapports de vos voyages Irisphère Harmonia.",
+        "voyage_title": "Voyage du",
+        "report_for": "Rapport pour la séance du {date}",
+        "open_button": "Télécharger mon Grimoire",
+        "no_reports_title": "Votre Grimoire est encore vide",
+        "no_reports_description": "Les rapports de vos séances 'Irisphère Harmonia' apparaîtront ici une fois qu'ils auront été préparés."
+    },
+    "contact": {
+        "email": {
+            "confirmation_subject": "Votre message a bien été reçu",
+            "confirmation_body_intro": "Chère âme,",
+            "confirmation_body_line1": "Nous avons bien reçu votre message et nous vous remercions de nous avoir contactés. C'est un plaisir de vous lire.",
+            "confirmation_body_line2": "Chaque question, chaque pensée est une lumière sur le chemin. Nous allons prendre le temps nécessaire pour vous apporter une réponse emplie de clarté.",
+            "confirmation_body_outro": "Avec gratitude,",
+            "confirmation_body_signature": "L'équipe de Corps et Âmes",
+            "response_subject": "Une réponse vous attend",
+            "response_body_intro": "Chère âme,",
+            "response_body_line1": "Une réponse à votre message a été tissée avec soin et vous attend dans votre espace personnel.",
+            "response_body_line2": "Nous vous invitons à vous connecter pour la découvrir.",
+            "response_body_cta": "Lire votre réponse",
+            "response_body_outro": "Que votre journée soit lumineuse,",
+            "response_body_signature": "L'équipe de Corps et Âmes"
+        }
+    },
+    "messages": {
+        "admin_title": "Messagerie",
+        "admin_subtitle": "Boîte de réception des messages des utilisateurs.",
+        "user_title": "Mes Messages",
+        "user_subtitle": "Vos conversations avec l'équipe.",
+        "no_messages_title": "Aucun message pour le moment.",
+        "no_messages_description_admin": "Les messages envoyés via le formulaire de contact apparaîtront ici.",
+        "no_messages_description_user": "Vos conversations et les réponses de l'équipe apparaîtront ici.",
+        "from": "De",
+        "subject": "Sujet",
+        "date": "Date",
+        "status": "Statut",
+        "status_new": "Nouveau",        "status_read": "Lu",
+        "status_replied": "Répondu",
+        "back_to_inbox": "Retour à la boîte de réception",
+        "conversation_with": "Conversation avec {name}",
+        "your_message": "Votre message",
+        "admin_response": "Notre réponse",
+        "respond_title": "Répondre",
+        "response_placeholder": "Tissez votre réponse ici...",
+        "send_response": "Envoyer la réponse",
+        "response_sent_success": "Réponse envoyée avec succès.",
+        "coupons": {
+            "create_coupon_button": "Créer un Geste Commercial",
+            "dialog_title": "Créer un code promotionnel",
+            "dialog_description": "Générez un code de réduction unique pour cet utilisateur. Il sera inséré dans votre réponse.",
+            "discount_label": "Pourcentage de réduction (%)",
+            "product_label": "Appliquer sur un produit spécifique",
+            "product_placeholder": "Rechercher un soin ou une formation...",
+            "no_product_found": "Aucun produit trouvé.",
+            "generate_button": "Générer et Insérer",
+            "generating_button": "Génération en cours...",
+            "success_title": "Code promo généré !",
+            "success_description": "Le code a été inséré dans votre message.",
+            "error_title": "Erreur de génération",
+            "error_description": "Impossible de créer le code promo. Veuillez réessayer.",
+            "response_text": "Chère âme,\n\nEn signe de gratitude pour votre patience, voici un code promotionnel personnel qui vous offre une réduction de {discount}% sur votre prochain achat de \"{productName}\" :\n\n**{couponCode}**\n\nUtilisez-le simplement lors du paiement. Nous espérons qu'il apportera une touche de lumière à votre journée.\n\nAvec bienveillance,"
+        }
+    }
+}

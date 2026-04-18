@@ -1,0 +1,89 @@
+{
+  "landing": {
+    "title": "Cuerpo y Almas",
+    "subtitle": "Tu santuario para el bienestar del cuerpo y el alma.",
+    "cta": "Unirse a una Sesión",
+    "description": "Vive sesiones únicas que combinan meditación guiada, música suave y guía espiritual para una profunda reconexión interior."
+  },
+  "home": {
+    "hero": {
+      "title": "Tu Santuario Holístico,",
+      "highlight": "contigo en todas partes.",
+      "subtitle": "Cuerpo y Almas reinventa el cuidado a distancia. Únete a un Espacio Sagrado donde la tecnología se desvanece para dar paso a la energía, la sanación y la unidad.",
+      "cta": "Entrar en el Espacio"
+    },
+    "title": "Bienvenida, {name}.",
+    "greeting_anonymous": "Hola Alma Hermosa",
+    "description": "Descubre las últimas noticias y actualizaciones de nuestra comunidad.",
+    "latestNews": "Últimas Noticias",
+    "moreNews": "Más noticias",
+    "noNews": "Aún no hay noticias",
+    "noNewsDescription": "Vuelve más tarde para ver las actualizaciones.",
+    "ourFormations": "Nuestras Formaciones",
+    "discoverFormations": "Descúbrelas",
+    "ourSessions": "Nuestras Sesiones",
+    "bookASession": "Reservar una sesión"
+  },
+  "about_page": {
+    "title": "Nuestra Historia",
+    "subtitle": "Un puente entre lo visible y lo invisible, una danza entre el cuerpo y el alma.",
+    "story": {
+      "title": "El Relato de Cuerpo y Almas",
+      "p1": "Cuerpo y Almas nació de una visión: la de crear un espacio sagrado donde cada individuo pueda explorar las profundidades de su ser, un santuario donde el bienestar del cuerpo y el florecimiento del alma convergen. Fundado por apasionados de la espiritualidad, el desarrollo personal y las terapias holísticas, nuestro centro es más que una simple plataforma, es una comunidad vibrante.",
+      "p2": "Nuestra misión es acompañarte en tu camino de vida, ofreciéndote herramientas, conocimientos y experiencias que resuenen con tu esencia. Creemos en un enfoque integrado, donde cada práctica, cada cuidado y cada formación es una invitación a reconectarte con tu sabiduría interior y activar tu pleno potencial."
+    },
+    "founder": {
+      "title": "El Fundador",
+      "name": "Mickaël 'Micka' Réault",
+      "bio": "Creador del método Irisphère Harmonia y fundador de Cuerpo y Almas, Mickaël es un explorador de la conciencia, un 'Body & Soul Developer'. Su pasión es guiar a las almas curiosas a través de viajes interiores, utilizando el sonido, la energía y la intuición para desbloquear las puertas de la percepción y catalizar transformaciones profundas. Su enfoque es una mezcla única de técnicas ancestrales y prácticas contemporáneas, siempre dentro de un marco benévolo y seguro."
+    },
+    "values": {
+      "title": "Nuestros Valores",
+      "authenticity": {
+        "title": "Autenticidad",
+        "description": "Nos presentamos tal como somos, con el corazón abierto e intenciones puras."
+      },
+      "benevolence": {
+        "title": "Benevolencia",
+        "description": "Cada interacción está marcada por el respeto, la compasión y una escucha sincera."
+      },
+      "community": {
+        "title": "Comunidad",
+        "description": "Tejemos vínculos fuertes, creando una red de apoyo y de intercambio donde cada uno se siente bienvenido."
+      },
+      "exploration": {
+        "title": "Exploración",
+        "description": "Fomentamos la curiosidad, el aprendizaje continuo y el valor de aventurarse más allá de los caminos trillados."
+      }
+    }
+  },
+  "soins_page": {
+    "title": "Tratamientos",
+    "intro": "Descubre todos nuestros tratamientos 100% online desde la comodidad de tu hogar.",
+    "categories": {
+      "irisphere-harmonia": {
+        "title": "Irisfera Armonía (Tratamiento Firma)",
+        "intro": "Tratamiento Signature exclusivo de Cuerpo y Almas, basado en métodos de Innerdance - Activación de Kundalini. El principio es simple: Una serie de músicas escrupulosamente seleccionadas y modificadas energéticamente se reproducen a alto volumen para inducir un estado de trance ligero. Están programadas para llevarte en un viaje seguro a través de diferentes fases para limpiar y conectar todas las partes de tu Ser."
+      },
+      "guidances": {
+        "title": "Las Guías",
+        "intro": "Reserva tu guía 100% online: elige entre lecturas de cartas y oráculos, tiradas de runas de brujas o sesiones psicoenergéticas con un profesional del bienestar especializado en estas áreas."
+      },
+      "energetic-treatments": {
+        "title": "Sanaciones Energéticas",
+        "intro": "¿Necesitas un pequeño impulso, un alineamiento, un descanso del ajetreo diario? Nuestros practicantes estarán encantados de recibirte desde tu hogar en un entorno 100% online para una sanación energética intuitiva adaptada a tu demanda actual."
+      },
+      "dialogue-space": {
+        "title": "Espacio de Diálogo",
+        "intro": "Un espacio privilegiado para hablar y escuchar. Ya sea que tengas preguntas específicas sobre nuestros programas de formación, necesites consejo para elegir el tratamiento más adecuado, o simplemente quieras un intercambio en vivo antes de comprometerte, este espacio es tuyo."
+      },
+      "combined-treatments": {
+        "title": "Tratamientos Combinados",
+        "intro": "Reserva tu sesión combinada, agrupa nuestros servicios en una sola cita para obtener hasta 5 horas de bienestar continuo en un solo día."
+      }
+    },
+    "loading": "Cargando tratamientos...",
+    "no_soins": "No hay tratamientos disponibles.",
+    "book_now": "Reservar"
+  }
+}

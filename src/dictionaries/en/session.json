@@ -1,0 +1,21 @@
+{
+    "session": {
+      "title": "Live Session",
+      "loading": "Preparing the session...",
+      "no_upcoming_title": "No upcoming sessions",
+      "no_upcoming_description": "Live sessions purchased via the agenda will appear here. The connection link will be activated 10 minutes before the appointment time.",
+      "book_a_session": "Book a session",
+      "starts_in_distance": "Starts {distance}",
+      "starts_in_minutes": "Starts in {minutes} minutes",
+      "in_progress": "Session in progress",
+      "connect": "Connect",
+      "accessDenied": "Access Denied",
+      "accessDeniedMessage": "You don't have permission to view this session or the link is invalid.",
+      "backToDashboard": "Back to Home",
+      "welcome_message": "Welcome to the Live Session!",
+      "forum_coming_soon": "The session will begin shortly.",
+      "subtitles": "Live Subtitles & Translation",
+      "startRecognition": "Start Broadcasting",
+      "stopRecognition": "Stop Broadcasting"
+    }
+  }

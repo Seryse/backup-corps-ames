@@ -1,0 +1,29 @@
+{
+    "shop": {
+      "title": "Tienda",
+      "addToCart": "Añadir al carrito",
+      "finalCta": "Inscribirse en esta formación",
+      "formationAdded": "Formación Añadida",
+      "addedToCart": "ha sido añadido a tu cesta.",
+      "loading": "Cargando formaciones...",
+      "noFormations": "No hay formaciones disponibles por el momento.",
+      "alreadyInCart": "Ya en el carrito",
+      "alreadyInCartDescription": "ya está en tu cesta.",
+      "inCart": "En el carrito",
+      "presentationVideo": "Vídeo de Presentación"
+    },
+    "checkout": {
+      "title": "Pago",
+      "yourCart": "Tu Cesta",
+      "emptyCart": "Tu cesta está vacía.",
+      "browseFormations": "Explorar formaciones",
+      "summary": "Resumen del pedido",
+      "total": "Total",
+      "proceedToPayment": "Proceder al pago",
+      "processingPayment": "Procesando pago...",
+      "paymentSuccessTitle": "¡Pago Exitoso!",
+      "paymentSuccessDescription": "Ahora tienes acceso a tus nuevas formaciones. Redirigiendo...",
+      "paymentErrorTitle": "Pago Fallido",
+      "paymentErrorDescription": "Hubo un problema al procesar tu pago. Por favor, inténtalo de nuevo."
+    }
+  }

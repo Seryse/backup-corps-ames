@@ -1,0 +1,21 @@
+{
+    "agenda": {
+      "title": "Agenda",
+      "description": "Reserva tu sesión",
+      "availableSlots": "Horarios Disponibles",
+      "noSlots": "No hay horarios disponibles para esta fecha.",
+      "selectDate": "Por favor, selecciona una fecha en el calendario.",
+      "bookNow": "Reservar ahora",
+      "sessionDetails": "Detalles de la sesión",
+      "bookThisSlot": "Reservar este horario",
+      "bookingInProgress": "Reservando...",
+      "bookingSuccessTitle": "¡Reserva Confirmada!",
+      "bookingSuccessDescription": "Tu sesión ha sido reservada. Puedes verla en 'Mis Reservas'.",
+      "bookingErrorTitle": "Fallo en la reserva",
+      "bookingErrorFull": "Este horario ya está completo.",
+      "bookingErrorGeneric": "Ocurrió un error durante la reserva. Por favor, inténtalo de nuevo.",
+      "loginToBook": "Iniciar sesión para reservar",
+      "previousMonth": "Mes anterior",
+      "nextMonth": "Mes siguiente"
+    }
+  }

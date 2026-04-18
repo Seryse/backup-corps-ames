@@ -1,0 +1,29 @@
+{
+    "shop": {
+      "title": "Shop",
+      "addToCart": "Add to Cart",
+      "finalCta": "Enroll in this training",
+      "formationAdded": "Formation Added",
+      "addedToCart": "has been added to your cart.",
+      "loading": "Loading formations...",
+      "noFormations": "No formations available at the moment.",
+      "alreadyInCart": "Already in Cart",
+      "alreadyInCartDescription": "is already in your cart.",
+      "inCart": "In Cart",
+      "presentationVideo": "Presentation Video"
+    },
+    "checkout": {
+      "title": "Checkout",
+      "yourCart": "Your Cart",
+      "emptyCart": "Your cart is empty.",
+      "browseFormations": "Browse Formations",
+      "summary": "Order Summary",
+      "total": "Total",
+      "proceedToPayment": "Proceed to Payment",
+      "processingPayment": "Processing payment...",
+      "paymentSuccessTitle": "Payment Successful!",
+      "paymentSuccessDescription": "You now have access to your new formations. Redirecting to home...",
+      "paymentErrorTitle": "Payment Failed",
+      "paymentErrorDescription": "There was an issue processing your payment. Please try again."
+    }
+  }

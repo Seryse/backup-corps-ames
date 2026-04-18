@@ -1,0 +1,115 @@
+{
+    "dashboard_page": {
+      "title": "My Personal Space",
+      "subtitle": "Hello, {name}",
+      "account": {
+        "title": "My Account",
+        "description": "Manage your profile, password, and language settings."
+      },
+      "trainings": {
+        "title": "My Trainings",
+        "description": "Access all your purchased training courses."
+      },
+      "bookings": {
+        "title": "My Appointments",
+        "description": "View your upcoming and past sessions."
+      },
+      "hub": {
+        "title": "Community Hub",
+        "description": "Join discussion forums for your trainings and sessions."
+      },
+      "grimoire": {
+        "title": "My Personal Grimoire",
+        "description": "Find the symbolic reports of your journeys here."
+      },
+      "admin": {
+        "title": "Admin Console",
+        "description": "Manage formations, news, and sessions."
+      }
+    },
+    "gratitude_wallet_reward": {
+      "title": "Gratitude Harvest",
+      "description": "Your Tree of Life is fully blooming!",
+      "offer": "Transform your tree's energy into a €40 reward.",
+      "cta": "Harvest the fruits (€40)",
+      "success_title": "Congratulations!",
+      "success_description": "Your gratitude has paid off. €40 have been added to your account.",
+      "progression_label": "Tree Progression",
+      "growing_label": "Tree growing...",
+      "error_not_full": "The tree is not yet fully bloomed.",
+      "error_generic": "An error occurred during harvest."
+    },
+    "account_page": {
+      "title": "My Account",
+      "subtitle": "Update your personal information and security settings.",
+      "profile": {
+        "title": "Profile Information",
+        "description": "Keep your personal details up to date.",
+        "name_label": "Name / Nickname",
+        "email_label": "Email Address (cannot be changed)",
+        "certificate_name_label": "Name for Certification",
+        "certificate_name_placeholder": "E.g., John Doe",
+        "certificate_name_desc": "This name will be used on your completion certificates.",
+        "save_button": "Save Changes",
+        "picture_title": "Profile Picture",
+        "picture_description": "Change your avatar.",
+        "change_picture_button": "Change Picture"
+      },
+      "password": {
+        "title": "Change Password",
+        "description": "For security, you will need to enter your current password.",
+        "current_password_label": "Current Password",
+        "new_password_label": "New Password",
+        "save_button": "Update Password"
+      },
+      "language": {
+        "title": "Language",
+        "description": "Choose your preferred language for the application."
+      },
+      "billing": {
+        "title": "Billing Address",
+        "description": "Manage your billing address for faster checkouts.",
+        "street_label": "Street",
+        "city_label": "City",
+        "postal_code_label": "Postal Code",
+        "country_label": "Country",
+        "save_button": "Save Address"
+      },
+      "profile_crop": {
+        "title": "Edit Profile Picture",
+        "save_button": "Save"
+      },
+      "success": {
+        "profile_updated": "Profile updated successfully!",
+        "password_updated": "Password updated successfully!",
+        "avatar_updated": "Profile picture updated successfully!",
+        "address_updated": "Billing address updated successfully!"
+      },
+      "errors": {
+        "update_failed": "Update Failed",
+        "name_required": "Name is required.",
+        "password_min_length": "Password must be at least 6 characters.",
+        "password_must_be_different": "New password must be different from the current one.",
+        "wrong_current_password": "The current password you entered is incorrect."
+      }
+    },
+    "bookings_page": {
+      "title": "My Appointments",
+      "subtitle": "Here is the list of all your booked sessions.",
+      "upcoming_title": "Upcoming Sessions",
+      "past_title": "Past Sessions",
+      "no_upcoming": "You have no upcoming appointments.",
+      "no_past": "You have no past appointments.",
+      "book_now": "Book a new session",
+      "join_button": "Join Session"
+    },
+    "grimoire_page": {
+      "title": "My Personal Grimoire",
+      "subtitle": "Find all the reports from your Irisphère Harmonia journeys here.",
+      "voyage_title": "Journey of",
+      "report_for": "Report for the session of {date}",
+      "open_button": "Download my Grimoire",
+      "no_reports_title": "Your Grimoire is still empty",
+      "no_reports_description": "The reports from your 'Irisphère Harmonia' sessions will appear here once they have been prepared."
+    }
+  }

@@ -1,0 +1,42 @@
+{
+    "messages": {
+      "admin_title": "Messaging",
+      "admin_subtitle": "Inboxes for user messages.",
+      "user_title": "My Messages",
+      "user_subtitle": "Your conversations with the team.",
+      "no_messages_title": "No messages for now.",
+      "no_messages_description_admin": "Messages sent via the contact form will appear here.",
+      "no_messages_description_user": "Your conversations and the team's replies will appear here.",
+      "from": "From",
+      "subject": "Subject",
+      "date": "Date",
+      "status": "Status",
+      "status_new": "New",
+      "status_read": "Read",
+      "status_replied": "Replied",
+      "back_to_inbox": "Back to inbox",
+      "conversation_with": "Conversation with {name}",
+      "your_message": "Your message",
+      "admin_response": "Our reply",
+      "respond_title": "Reply",
+      "response_placeholder": "Weave your reply here...",
+      "send_response": "Send Reply",
+      "response_sent_success": "Reply sent successfully.",
+      "coupons": {
+        "create_coupon_button": "Create a Commercial Gesture",
+        "dialog_title": "Create a promo code",
+        "dialog_description": "Generate a unique discount code for this user. It will be inserted into your reply.",
+        "discount_label": "Discount percentage (%)",
+        "product_label": "Apply to a specific product",
+        "product_placeholder": "Search for a treatment or formation...",
+        "no_product_found": "No product found.",
+        "generate_button": "Generate and Insert",
+        "generating_button": "Generating...",
+        "success_title": "Promo code generated!",
+        "success_description": "The code has been inserted into your message.",
+        "error_title": "Generation error",
+        "error_description": "Could not create the promo code. Please try again.",
+        "response_text": "Dear soul,\n\nAs a token of gratitude for your patience, here is a personal promo code offering a {discount}% discount on your next purchase of \"{productName}\":\n\n**{couponCode}**\n\nSimply use it during checkout. We hope it brings a touch of light to your day.\n\nWith kindness,"
+      }
+    }
+  }

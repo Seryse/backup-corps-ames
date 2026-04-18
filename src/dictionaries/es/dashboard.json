@@ -1,0 +1,115 @@
+{
+    "dashboard_page": {
+      "title": "Mi Espacio Personal",
+      "subtitle": "Hola, {name}",
+      "account": {
+        "title": "Mi Cuenta",
+        "description": "Gestiona tu perfil, contraseña y preferencias de idioma."
+      },
+      "trainings": {
+        "title": "Mis Formaciones",
+        "description": "Accede a todas las formaciones que has comprado."
+      },
+      "bookings": {
+        "title": "Mis Citas",
+        "description": "Consulta tus sesiones futuras y pasadas."
+      },
+      "hub": {
+        "title": "Hub Comunitario",
+        "description": "Únete a los foros de discusión de tus formaciones y sesiones."
+      },
+      "grimoire": {
+        "title": "Mi Grimorio Personal",
+        "description": "Encuentra aquí los informes simbólicos de tus viajes."
+      },
+      "admin": {
+        "title": "Consola de Administración",
+        "description": "Gestionar formaciones, noticias y sesiones."
+      }
+    },
+    "gratitude_wallet_reward": {
+      "title": "Cosecha de Gratitud",
+      "description": "¡Tu Árbol de la Vida está en pleno apogeo!",
+      "offer": "Transforma la energía de tu árbol en una recompensa de 40€.",
+      "cta": "Cosechar los frutos (40€)",
+      "success_title": "¡Felicidades!",
+      "success_description": "Tu gratitud ha dado sus frutos. Se han añadido 40€ a tu cuenta.",
+      "progression_label": "Progresión del Árbol",
+      "growing_label": "Árbol en crecimiento...",
+      "error_not_full": "El árbol aún no ha florecido por completo.",
+      "error_generic": "Se produjo un error durante la cosecha."
+    },
+    "account_page": {
+      "title": "Mi Cuenta",
+      "subtitle": "Actualiza tu información personal y configuración de seguridad.",
+      "profile": {
+        "title": "Información del Perfil",
+        "description": "Mantén tus datos personales actualizados.",
+        "name_label": "Nombre / Apodo",
+        "email_label": "Dirección de correo electrónico (no se puede cambiar)",
+        "certificate_name_label": "Nombre para la Certificación",
+        "certificate_name_placeholder": "Ej: Juan Pérez",
+        "certificate_name_desc": "Este nombre se usará en tus certificados de éxito.",
+        "save_button": "Guardar los cambios",
+        "picture_title": "Foto de perfil",
+        "picture_description": "Cambia tu avatar.",
+        "change_picture_button": "Cambiar la foto"
+      },
+      "password": {
+        "title": "Cambiar la contraseña",
+        "description": "Por razones de seguridad, deberás introducir tu contraseña actual.",
+        "current_password_label": "Contraseña actual",
+        "new_password_label": "Nueva contraseña",
+        "save_button": "Actualizar contraseña"
+      },
+      "language": {
+        "title": "Idioma",
+        "description": "Elige tu idioma preferido para la aplicación."
+      },
+      "billing": {
+        "title": "Dirección de Facturación",
+        "description": "Gestiona tu dirección para pagos más rápidos.",
+        "street_label": "Calle",
+        "city_label": "Ciudad",
+        "postal_code_label": "Código Postal",
+        "country_label": "País",
+        "save_button": "Guardar la dirección"
+      },
+      "profile_crop": {
+        "title": "Editar la foto de perfil",
+        "save_button": "Guardar"
+      },
+      "success": {
+        "profile_updated": "¡Perfil actualizado con éxito!",
+        "password_updated": "¡Contraseña actualizada con éxito!",
+        "avatar_updated": "¡Foto de perfil actualizada con éxito!",
+        "address_updated": "¡Dirección de facturación actualizada con éxito!"
+      },
+      "errors": {
+        "update_failed": "Fallo en la actualización",
+        "name_required": "El nombre es obligatorio.",
+        "password_min_length": "La contraseña debe tener al menos 6 caracteres.",
+        "password_must_be_different": "La nueva contraseña debe ser diferente de la actual.",
+        "wrong_current_password": "La contraseña actual es incorrecta."
+      }
+    },
+    "bookings_page": {
+      "title": "Mis Citas",
+      "subtitle": "Lista de todas tus sesiones reservadas.",
+      "upcoming_title": "Próximas Sesiones",
+      "past_title": "Sesiones Pasadas",
+      "no_upcoming": "No tienes ninguna cita próxima.",
+      "no_past": "No tienes ninguna cita pasada.",
+      "book_now": "Reservar una nueva sesión",
+      "join_button": "Unirse a la sesión"
+    },
+    "grimoire_page": {
+      "title": "Mi Grimorio Personal",
+      "subtitle": "Encuentra aquí todos los informes de tus viajes Irisphère Harmonia.",
+      "voyage_title": "Viaje del",
+      "report_for": "Informe para la sesión del {date}",
+      "open_button": "Descargar mi Grimorio",
+      "no_reports_title": "Tu Grimorio está todavía vacío",
+      "no_reports_description": "Los informes aparecerán aquí una vez preparados."
+    }
+  }

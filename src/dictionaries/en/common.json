@@ -1,0 +1,39 @@
+{
+    "header": {
+      "home": "Home",
+      "about": "About Us",
+      "dashboard": "My Space",
+      "session": "Live Session",
+      "bookings": "My Bookings",
+      "admin": "Admin",
+      "login": "Login",
+      "logout": "Logout",
+      "userMenu": "Open user menu",
+      "viewProfile": "View Profile",
+      "shop": "Courses",
+      "agenda": "Agenda",
+      "trainings": "Trainings",
+      "hub": "Hub",
+      "soins": "Treatments",
+      "forum": "Forum",
+      "contact": "Contact",
+      "messages": "My Messages"
+    },
+    "contact": {
+      "email": {
+        "confirmation_subject": "Your message has been received",
+        "confirmation_body_intro": "Dear Soul,",
+        "confirmation_body_line1": "We have received your message and thank you for contacting us. It is a pleasure to read you.",
+        "confirmation_body_line2": "Every question, every thought is a light on the path. We will take the necessary time to bring you a response filled with clarity.",
+        "confirmation_body_outro": "With gratitude,",
+        "confirmation_body_signature": "The Corps et Âmes Team",
+        "response_subject": "A response is waiting for you",
+        "response_body_intro": "Dear soul,",
+        "response_body_line1": "A response to your message has been carefully woven and is waiting for you in your personal space.",
+        "response_body_line2": "We invite you to log in to discover it.",
+        "response_body_cta": "Read your response",
+        "response_body_outro": "May your day be bright,",
+        "response_body_signature": "The Corps et Âmes Team"
+      }
+    }
+  }

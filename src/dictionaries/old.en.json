@@ -1,0 +1,572 @@
+{
+    "header": {
+        "home": "Home",
+        "about": "About Us",
+        "dashboard": "My Space",
+        "session": "Live Session",
+        "bookings": "My Bookings",
+        "admin": "Admin",
+        "login": "Login",
+        "logout": "Logout",
+        "userMenu": "Open user menu",
+        "viewProfile": "View Profile",
+        "shop": "Shop",
+        "agenda": "Agenda",
+        "trainings": "Trainings",
+        "hub": "Hub",
+        "soins": "Treatments",
+        "forum": "Forum",
+        "contact": "Contact",
+        "messages": "My Messages"
+    },
+    "landing": {
+        "title": "Body and Souls",
+        "subtitle": "Your sanctuary for wellness of body and soul.",
+        "cta": "Join a Session",
+        "description": "Experience unique sessions combining guided meditation, gentle music, and spiritual guidance for deep inner reconnection."
+    },
+    "auth": {
+        "loginTitle": "Welcome back",
+        "loginSubtitle": "Enter your credentials to access your space.",
+        "signupTitle": "Create your account",
+        "signupSubtitle": "Join our community and start your journey.",
+        "emailLabel": "Email",
+        "passwordLabel": "Password",
+        "loginButton": "Login",
+        "signupButton": "Sign Up",
+        "googleButton": "Continue with Google",
+        "or": "Or",
+        "noAccount": "Don't have an account?",
+        "hasAccount": "Already have an account?",
+        "signupLink": "Sign Up",
+        "loginLink": "Login",
+        "loginErrorTitle": "Authentication Error",
+        "errors": {
+            "auth/invalid-credential": "Incorrect email or password.",
+            "auth/email-already-in-use": "An account already exists with this email address.",
+            "auth/weak-password": "Password should be at least 6 characters.",
+            "auth/user-not-found": "No account found with this email address.",
+            "auth/wrong-password": "Incorrect password.",
+            "auth/account-exists-with-different-credential": "An account with this email already exists via another method (e.g. Email/Password). Please use that method.",
+            "auth/popup-closed-by-user": "The sign-in window was closed. Please try again.",
+            "auth/popup-blocked": "The sign-in window was blocked by the browser. Please allow popups for this site and try again.",
+            "auth/unauthorized-domain": "This site is not authorized for Google authentication. Please contact the administrator.",
+            "auth/generic": "An authentication error occurred. Please try again."
+        }
+    },
+    "home": {
+        "title": "Welcome, {name}.",
+        "greeting_anonymous": "Hello Beautiful Soul",
+        "description": "Discover the latest news and updates from our community.",
+        "latestNews": "Latest News",
+        "moreNews": "More News",
+        "noNews": "No news yet",
+        "noNewsDescription": "Check back later for updates.",
+        "ourFormations": "Our Formations",
+        "discoverFormations": "Discover them",
+        "ourSessions": "Our Sessions",
+        "bookASession": "Book a session"
+    },
+    "session": {
+        "title": "Live Session",
+        "loading": "Preparing the session...",
+        "no_upcoming_title": "No upcoming sessions",
+        "no_upcoming_description": "Live sessions purchased via the agenda will appear here. The connection link will be activated 10 minutes before the appointment time.",
+        "book_a_session": "Book a session",
+        "starts_in_distance": "Starts {distance}",
+        "starts_in_minutes": "Starts in {minutes} minutes",
+        "in_progress": "Session in progress",
+        "connect": "Connect",
+        "accessDenied": "Access Denied",
+        "accessDeniedMessage": "You don't have permission to view this session or the link is invalid.",
+        "backToDashboard": "Back to Home",
+        "welcome_message": "Welcome to the Live Session!",
+        "forum_coming_soon": "The session will begin shortly.",
+        "subtitles": "Live Subtitles & Translation",
+        "startRecognition": "Start Broadcasting",
+        "stopRecognition": "Stop Broadcasting"
+    },
+    "admin": {
+        "title": "Admin Console",
+        "dashboard": "Appointments",
+        "stats": "Statistics",
+        "news": "News",
+        "formations": "Formations",
+        "sessionTypes": "Session Types",
+        "introFiles": "Intro Files",
+        "playlistFiles": "Playlist Files",
+        "noFiles": "No files found in this directory.",
+        "manage_about_page": "Manage About Page",
+        "manageFormations": "Manage Formations",
+        "addFormation": "Add Formation",
+        "editFormation": "Edit Formation",
+        "deleteFormation": "Delete Formation",
+        "deleteFormationConfirmTitle": "Are you sure?",
+        "deleteFormationConfirmDescription": "This action cannot be undone. This will permanently delete the formation.",
+        "manageNews": "Manage News",
+        "addArticle": "Add Article",
+        "editArticle": "Edit Article",
+        "deleteArticle": "Delete Article",
+        "deleteArticleConfirmTitle": "Are you sure?",
+        "deleteArticleConfirmDescription": "This action cannot be undone. This will permanently delete the article.",
+        "manageSessionTypes": "Manage Session Types",
+        "addSessionType": "Add Session Type",
+        "editSessionType": "Edit Session Type",
+        "deleteSessionType": "Delete Session Type",
+        "deleteSessionTypeConfirmTitle": "Are you sure?",
+        "deleteSessionTypeConfirmDescription": "This will permanently delete this session type and all its associated slots. This action cannot be undone.",
+        "manageSlots": "Manage Slots",
+        "manageSlotsTitle": "Manage Time Slots",
+        "addSlot": "Add Time Slot",
+        "addSlotFor": "Add a new time slot for session: {sessionName}",
+        "startTime": "Start Time",
+        "endTime": "End Time",
+        "addSlotButton": "Add",
+        "addSlotsButton": "Add slot(s)",
+        "existingSlots": "Existing Slots",
+        "existingSlotsFor": "List of scheduled slots for: {sessionName}",
+        "deleteSlotConfirmTitle": "Delete this time slot?",
+        "deleteSlotConfirmDescription": "This action is irreversible and will delete the time slot.",
+        "noSlotsForSession": "No slots scheduled for this session yet.",
+        "delete": "Delete",
+        "recurrence": "Recurrence",
+        "recurrenceOptions": {
+            "none": "None",
+            "daily": "Daily",
+            "weekly": "Weekly",
+            "biweekly": "Every 2 weeks",
+            "monthly": "Monthly"
+        },
+        "repeatCount": "Number of repetitions",
+        "todaysSessions": "Today's Sessions",
+        "pastSessions": "Past Sessions",
+        "noPastSessions": "No past sessions to display.",
+        "bookedBy": "Booked by",
+        "joinCall": "Join Call",
+        "noSessionsToday": "No Sessions Scheduled for Today",
+        "noSessionsTodayDescription": "Any sessions booked for today will appear here.",
+        "sessionCategoryOptions": {
+            "irisphere-harmonia": "Irisphere Harmonia (Signature Treatment)",
+            "guidances": "Guidance Sessions",
+            "energetic-treatments": "Energetic Healings",
+            "dialogue-space": "Dialogue Space",
+            "combined-treatments": "Combined Treatments"
+        },
+        "grimoire": {
+            "manage_button": "Manage Grimoire",
+            "edit_button": "Edit Report",
+            "title": "Upload Grimoire Report",
+            "description": "Upload the report PDF for user {userName}.",
+            "file_label": "Report PDF file",
+            "thumbnail_label": "Cover Image (Optional)",
+            "upload_button": "Upload",
+            "upload_success_title": "Report uploaded!",
+            "upload_error_title": "Upload Failed",
+            "report_sent": "Report sent",
+            "download_button": "Download Report",
+            "current_thumbnail_label": "Current Cover",
+            "pdf_required_error": "A PDF file is required for the initial upload.",
+            "nothing_to_update_title": "Nothing to Update",
+            "nothing_to_update_desc": "Please select a PDF or an image file to update."
+        },
+        "form": {
+            "nameEn": "Name (EN)",
+            "nameFr": "Name (FR)",
+            "nameEs": "Name (ES)",
+            "descriptionEn": "Description (EN)",
+            "descriptionFr": "Description (FR)",
+            "descriptionEs": "Description (ES)",
+            "price": "Price",
+            "currency": "Currency (e.g., eur, usd)",
+            "image": "Image",
+            "tokenProductId": "Token Product ID",
+            "videoUrl": "Video URL (YouTube, Vimeo)",
+            "pageContentTitle": "Page Content",
+            "pageContentFr": "Content (FR)",
+            "pageContentEn": "Content (EN)",
+            "pageContentEs": "Content (ES)",
+            "pageContentHelp": "You can use HTML here to format text, add images (`<img src='.../>`), or link to PDFs (`<a href='...'>Download PDF</a>`).",
+            "titleEn": "Title (EN)",
+            "titleFr": "Title (FR)",
+            "titleEs": "Title (ES)",
+            "contentEn": "Content (EN)",
+            "contentFr": "Content (FR)",
+            "contentEs": "Content (ES)",
+            "cancel": "Cancel",
+            "save": "Save",
+            "sessionModel": "Session Model",
+            "selectSessionModel": "Select a model",
+            "maxParticipants": "Max Participants",
+            "sessionModelOptions": {
+                "private": "Private",
+                "small_group": "Small Group",
+                "large_group": "Large Group"
+            },
+            "translate": "Translate from French",
+            "translating": "Translating...",
+            "nothingToTranslateTitle": "Nothing to translate",
+            "nothingToTranslateDescription": "Please fill in the French field first.",
+            "translationError": "Translation Error",
+            "category": "Category",
+            "selectCategory": "Select a category"
+        },
+        "success": {
+            "formationAdded": "Formation added successfully!",
+            "formationUpdated": "Formation updated successfully!",
+            "formationDeleted": "Formation deleted successfully!",
+            "articleAdded": "Article added successfully!",
+            "articleUpdated": "Article updated successfully!",
+            "articleDeleted": "Article deleted successfully!",
+            "sessionTypeAdded": "Session type added successfully!",
+            "sessionTypeUpdated": "Session type updated successfully!",
+            "sessionTypeDeleted": "Session type deleted successfully!",
+            "translationSuccess": "Translation complete!",
+            "slotAdded": "Time slot added successfully!",
+            "slotsAdded": "Time slots added successfully!",
+            "slotDeleted": "Time slot deleted successfully!"
+        },
+        "error": {
+            "generic": "An error occurred. Please try again.",
+            "storageUnauthorizedTitle": "Storage Permission Error",
+            "storageUnauthorized": "You do not have permission to upload files. Please check your Firebase Storage security rules."
+        },
+        "about_page_form": {
+            "title": "Manage 'About Us' page content",
+            "page_title_label": "Main page title",
+            "page_subtitle_label": "Page subtitle",
+            "story_title_label": "Story section title",
+            "story_p1_label": "Story paragraph 1",
+            "story_p2_label": "Story paragraph 2",
+            "founder_title_label": "Founder section title",
+            "founder_name_label": "Founder's name",
+            "founder_bio_label": "Founder's biography",
+            "values_title_label": "Values section title",
+            "value_authenticity_title_label": "Authenticity title",
+            "value_authenticity_desc_label": "Authenticity description",
+            "value_benevolence_title_label": "Benevolence title",
+            "value_benevolence_desc_label": "Benevolence description",
+            "value_community_title_label": "Community title",
+            "value_community_desc_label": "Community description",
+            "value_exploration_title_label": "Exploration title",
+            "value_exploration_desc_label": "Exploration description",
+            "save_success": "Page content updated successfully!",
+            "save_error": "An error occurred during update."
+        }
+    },
+    "stats_page": {
+        "title": "Statistics",
+        "loading": "Loading statistics...",
+        "totalRevenue": "Total Revenue",
+        "totalUsers": "Total Users",
+        "grimoireDownloads": "Grimoire Reports",
+        "revenueBreakdown": "Revenue Breakdown by Product"
+    },
+    "shop": {
+        "title": "Shop",
+        "addToCart": "Add to Cart",
+        "finalCta": "Enroll in this training",
+        "formationAdded": "Formation Added",
+        "addedToCart": "has been added to your cart.",
+        "loading": "Loading formations...",
+        "noFormations": "No formations available at the moment.",
+        "alreadyInCart": "Already in Cart",
+        "alreadyInCartDescription": "is already in your cart.",
+        "inCart": "In Cart",
+        "presentationVideo": "Presentation Video"
+    },
+    "checkout": {
+        "title": "Checkout",
+        "yourCart": "Your Cart",
+        "emptyCart": "Your cart is empty.",
+        "browseFormations": "Browse Formations",
+        "summary": "Order Summary",
+        "total": "Total",
+        "proceedToPayment": "Proceed to Payment",
+        "processingPayment": "Processing payment...",
+        "paymentSuccessTitle": "Payment Successful!",
+        "paymentSuccessDescription": "You now have access to your new formations. Redirecting to home...",
+        "paymentErrorTitle": "Payment Failed",
+        "paymentErrorDescription": "There was an issue processing your payment. Please try again."
+    },
+    "agenda": {
+        "title": "Agenda",
+        "description": "Book your session",
+        "availableSlots": "Available Slots",
+        "noSlots": "No slots available for this date.",
+        "selectDate": "Please select a date from the calendar.",
+        "bookNow": "Book Now",
+        "sessionDetails": "Session Details",
+        "bookThisSlot": "Book this slot",
+        "bookingInProgress": "Booking in progress...",
+        "bookingSuccessTitle": "Booking Confirmed!",
+        "bookingSuccessDescription": "Your session has been booked. You can view it in 'My Bookings'.",
+        "bookingErrorTitle": "Booking Failed",
+        "bookingErrorFull": "This time slot is now full.",
+        "bookingErrorGeneric": "An error occurred during booking. Please try again.",
+        "loginToBook": "Log in to book",
+        "previousMonth": "Previous month",
+        "nextMonth": "Next month"
+    },
+    "trainings": {
+        "title": "My Trainings",
+        "description": "Access all your purchased trainings here.",
+        "no_formations_title": "No Purchased Trainings",
+        "no_formations_description": "It looks like you haven't purchased any trainings yet. Browse our shop to start your journey.",
+        "browse_shop": "Browse Shop",
+        "access_token": "Your Access Token",
+        "token_info": "Use this token to access the dedicated hub for this training.",
+        "enrolled_on": "Enrolled on",
+        "token_copied": "Token copied to clipboard!",
+        "access_hub": "Access Hub",
+        "access_formation": "Access Training"
+    },
+    "training_page": {
+        "title": "My Training:",
+        "progress": "Your Progress",
+        "chapters": "Chapters",
+        "completed": "Completed",
+        "mark_as_complete": "Mark as complete",
+        "mark_as_incomplete": "Mark as incomplete",
+        "all_chapters_completed": "All chapters completed!",
+        "congratulations": "Congratulations! You have completed the training.",
+        "download_certificate": "Download Certificate",
+        "certificate_almost_ready": "Your certificate is almost ready! Please provide the full name you want to appear on it.",
+        "certificate_name_label": "Full name for your certificate",
+        "certificate_name_placeholder": "e.g. Jane Doe",
+        "save_name_and_generate": "Save Name",
+        "name_saved_success": "Name saved successfully!",
+        "certificate_generation_info": "Your certificate will be generated by the administrator and made available here shortly.",
+        "certificate_being_prepared": "Your certificate for '{name}' is being prepared and will be available here soon.",
+        "certificate_not_ready": "Your certificate is not yet available.",
+        "back_to_trainings": "Back to all trainings",
+        "error_loading_title": "Error loading training",
+        "error_loading_description": "We could not load the details for this training. Please try again.",
+        "open_chapter": "Open Chapter"
+    },
+    "dashboard_page": {
+        "title": "My Personal Space",
+        "subtitle": "Hello, {name}",
+        "account": {
+            "title": "My Account",
+            "description": "Manage your profile, password, and language settings."
+        },
+        "trainings": {
+            "title": "My Trainings",
+            "description": "Access all your purchased training courses."
+        },
+        "bookings": {
+            "title": "My Appointments",
+            "description": "View your upcoming and past sessions."
+        },
+        "hub": {
+            "title": "Community Hub",
+            "description": "Join discussion forums for your trainings and sessions."
+        },
+        "grimoire": {
+            "title": "My Personal Grimoire",
+            "description": "Find the symbolic reports of your journeys here."
+        },
+        "admin": {
+            "title": "Admin Console",
+            "description": "Manage formations, news, and sessions."
+        }
+    },
+    "account_page": {
+        "title": "My Account",
+        "subtitle": "Update your personal information and security settings.",
+        "profile": {
+            "title": "Profile Information",
+            "description": "Keep your personal details up to date.",
+            "name_label": "Name / Nickname",
+            "email_label": "Email Address (cannot be changed)",
+            "certificate_name_label": "Name for Certification",
+            "certificate_name_placeholder": "E.g., John Doe",
+            "certificate_name_desc": "This name will be used on your completion certificates.",
+            "save_button": "Save Changes",
+            "picture_title": "Profile Picture",
+            "picture_description": "Change your avatar.",
+            "change_picture_button": "Change Picture"
+        },
+        "password": {
+            "title": "Change Password",
+            "description": "For security, you will need to enter your current password.",
+            "current_password_label": "Current Password",
+            "new_password_label": "New Password",
+            "save_button": "Update Password"
+        },
+        "language": {
+            "title": "Language",
+            "description": "Choose your preferred language for the application."
+        },
+        "billing": {
+            "title": "Billing Address",
+            "description": "Manage your billing address for faster checkouts.",
+            "street_label": "Street",
+            "city_label": "City",
+            "postal_code_label": "Postal Code",
+            "country_label": "Country",
+            "save_button": "Save Address"
+        },
+        "profile_crop": {
+            "title": "Edit Profile Picture",
+            "save_button": "Save"
+        },
+        "success": {
+            "profile_updated": "Profile updated successfully!",
+            "password_updated": "Password updated successfully!",
+            "avatar_updated": "Profile picture updated successfully!",
+            "address_updated": "Billing address updated successfully!"
+        },
+        "errors": {
+            "update_failed": "Update Failed",
+            "name_required": "Name is required.",
+            "password_min_length": "Password must be at least 6 characters.",
+            "password_must_be_different": "New password must be different from the current one.",
+            "wrong_current_password": "The current password you entered is incorrect."
+        }
+    },
+    "bookings_page": {
+        "title": "My Appointments",
+        "subtitle": "Here is the list of all your booked sessions.",
+        "upcoming_title": "Upcoming Sessions",
+        "past_title": "Past Sessions",
+        "no_upcoming": "You have no upcoming appointments.",
+        "no_past": "You have no past appointments.",
+        "book_now": "Book a new session",
+        "join_button": "Join Session"
+    },
+    "soins_page": {
+        "title": "Our Treatments",
+        "intro": "Discover all our 100% online treatments. Enjoy the benefits of your Holistic Institute and the expertise of experienced practitioners directly from the comfort of your home.",
+        "categories": {
+            "irisphere-harmonia": {
+                "title": "Irisphere Harmonia (Signature Treatment)",
+                "intro": "Irisphere Harmonia is an exclusive Signature Treatment by Corps et Âmes, partly based on the methods of Innerdance - Kundalini Activation. The principle is simple: A series of scrupulously selected and energetically modified music tracks are played at high volume (headphones strongly recommended) to induce a state of light trance. They are programmed to take you on a safe journey through different phases and stages to cleanse and connect all parts of your Being. The protocol has been studied and refined to include dimensions of mediumship and defined intentions. Benefit from private or group sessions, supervised by the creator of the method in person, who will be assisted by other facilitators for large groups."
+            },
+            "guidances": {
+                "title": "Guidance Sessions",
+                "intro": "Book your 100% online guidance session: Choose between a card and oracle reading, a witch's rune casting, or a psycho-energetic session with a wellness professional specialized in these areas."
+            },
+            "energetic-treatments": {
+                "title": "Energetic Healings",
+                "intro": "Need a little boost, an alignment, a break from the daily hustle? Our practitioners will be delighted to welcome you from your home in a 100% online setting for an intuitive energetic healing session tailored to your current needs."
+            },
+            "dialogue-space": {
+                "title": "Dialogue Space",
+                "intro": "A privileged space for speaking and listening. Whether you have specific questions about our training programs, need advice on choosing the most suitable treatment for your needs, or simply want a live exchange before you commit, this space is yours. An open-hearted dialogue to enlighten your path."
+            },
+            "combined-treatments": {
+                "title": "Combined Treatments",
+                "intro": "Book your combined session, group our services into a single appointment to get up to 5 hours of continuous well-being in one day."
+            }
+        },
+        "loading": "Loading treatments...",
+        "no_soins": "No treatments available at the moment.",
+        "book_now": "Book Now"
+    },
+    "grimoire_page": {
+        "title": "My Personal Grimoire",
+        "subtitle": "Find all the reports from your Irisphère Harmonia journeys here.",
+        "voyage_title": "Journey of",
+        "report_for": "Report for the session of {date}",
+        "open_button": "Download my Grimoire",
+        "no_reports_title": "Your Grimoire is still empty",
+        "no_reports_description": "The reports from your 'Irisphère Harmonia' sessions will appear here once they have been prepared."
+    }
+    ,
+    "about_page": {
+        "title": "Our History",
+        "subtitle": "A bridge between the visible and the invisible, a dance between body and soul.",
+        "story": {
+            "title": "The Tale of Corps et Âmes",
+            "p1": "Corps et Âmes was born from a vision: to create a sacred space where each individual can explore the depths of their being, a sanctuary where physical well-being and the flourishing of the soul converge. Founded by enthusiasts of spirituality, personal development, and holistic therapies, our center is more than just a platform; it is a vibrant community.",
+            "p2": "Our mission is to accompany you on your life path, offering tools, knowledge, and experiences that resonate with your essence. We believe in an integrated approach, where every practice, treatment, and training is an invitation to reconnect with your inner wisdom and activate your full potential."
+        },
+        "founder": {
+            "title": "The Founder",
+            "name": "Mickaël 'Micka' Réault",
+            "bio": "Creator of the Irisphère Harmonia method and founder of Corps et Âmes, Mickaël is an explorer of consciousness, a 'Body & Soul Developer'. His passion is to guide curious souls through inner journeys, using sound, energy, and intuition to unlock the doors of perception and catalyze profound transformations. His approach is a unique blend of ancestral techniques and contemporary practices, always within a benevolent and secure framework."       
+            },
+            "values": {
+            "title": "Our Values",
+            "authenticity": {
+                "title": "Authenticity",
+                "description": "We present ourselves as we are, with open hearts and pure intentions."
+            },
+            "benevolence": {
+                "title": "Benevolence",
+                "description": "Every interaction is marked by respect, compassion, and sincere listening."
+            },
+            "community": {
+                "title": "Community",
+                "description": "We weave strong bonds, creating a support and sharing network where everyone feels welcome."
+            },
+            "exploration": {
+                "title": "Exploration",
+                "description": "We encourage curiosity, continuous learning, and the audacity to venture beyond the beaten path."
+            }
+        }
+    },
+    "about_page_form": {
+        "title": "Manage 'About Us' Page Content",
+        "save_success": "Page content updated successfully!",
+        "save_error": "An error occurred during the update."
+    },
+    "contact": {
+        "email": {
+    "confirmation_subject": "Your message has been received",
+    "confirmation_body_intro": "Dear Soul,",
+    "confirmation_body_line1": "We have received your message and thank you for contacting us. It is a pleasure to read you.",
+    "confirmation_body_line2": "Every question, every thought is a light on the path. We will take the necessary time to bring you a response filled with clarity.",
+    "confirmation_body_outro": "With gratitude,",
+    "confirmation_body_signature": "The Corps et Âmes Team",
+    "response_subject": "A response is waiting for you",
+    "response_body_intro": "Dear soul,",
+    "response_body_line1": "A response to your message has been carefully woven and is waiting for you in your personal space.",
+    "response_body_line2": "We invite you to log in to discover it.",
+    "response_body_cta": "Read your response",
+    "response_body_outro": "May your day be bright,",
+    "response_body_signature": "The Corps et Âmes Team"
+        }
+    },
+    "messages": {
+    "admin_title": "Messaging",
+    "admin_subtitle": "Inboxes for user messages.",
+    "user_title": "My Messages",
+    "user_subtitle": "Your conversations with the team.",
+    "no_messages_title": "No messages for now.",
+    "no_messages_description_admin": "Messages sent via the contact form will appear here.",
+    "no_messages_description_user": "Your conversations and the team's replies will appear here.",
+    "from": "From",
+    "subject": "Subject",
+    "date": "Date",
+    "status": "Status",
+    "status_new": "New",
+    "status_read": "Read",
+    "status_replied": "Replied",
+    "back_to_inbox": "Back to inbox",
+    "conversation_with": "Conversation with {name}",
+    "your_message": "Your message",
+    "admin_response": "Our reply",
+    "respond_title": "Reply",
+    "response_placeholder": "Weave your reply here...",
+    "send_response": "Send Reply",
+    "response_sent_success": "Reply sent successfully.",
+    "coupons": {
+        "create_coupon_button": "Create a Commercial Gesture",
+        "dialog_title": "Create a promo code",
+        "dialog_description": "Generate a unique discount code for this user. It will be inserted into your reply.",
+        "discount_label": "Discount percentage (%)",
+        "product_label": "Apply to a specific product",
+        "product_placeholder": "Search for a treatment or formation...",
+        "no_product_found": "No product found.",
+        "generate_button": "Generate and Insert",
+        "generating_button": "Generating...",
+        "success_title": "Promo code generated!",
+        "success_description": "The code has been inserted into your message.",
+        "error_title": "Generation error",
+        "error_description": "Could not create the promo code. Please try again.",
+        "response_text": "Dear soul,\n\nAs a token of gratitude for your patience, here is a personal promo code offering a {discount}% discount on your next purchase of \"{productName}\":\n\n**{couponCode}**\n\nSimply use it during checkout. We hope it brings a touch of light to your day.\n\nWith kindness,"
+        }
+    }   
+}

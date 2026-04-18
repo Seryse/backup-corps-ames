@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: var(--font-pt-sans), sans-serif;
+}
+
+@layer base {
+  :root {
+    --background: 345 30% 94%;
+    --foreground: 240 10% 3.9%;
+    --card: 345 30% 91%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 345 30% 91%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 40 85% 55%;
+    --primary-foreground: 40 50% 15%;
+    --secondary: 345 15% 96%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 345 15% 96%;
+    --muted-foreground: 240 5% 65%;
+    --accent: 40 85% 55%;
+    --accent-foreground: 40 50% 15%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 345 20% 88%;
+    --input: 345 20% 88%;
+    --ring: 40 85% 55%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+  .dark {
+    --background: 240 10% 10%;
+    --foreground: 60 30% 96%;
+    --card: 240 10% 12%;
+    --card-foreground: 60 30% 96%;
+    --popover: 240 10% 10%;
+    --popover-foreground: 60 30% 96%;
+    --primary: 40 85% 55%;
+    --primary-foreground: 40 50% 15%;
+    --secondary: 240 5% 20%;
+    --secondary-foreground: 60 30% 96%;
+    --muted: 240 5% 20%;
+    --muted-foreground: 240 5% 65%;
+    --accent: 40 85% 55%;
+    --accent-foreground: 40 50% 15%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5% 20%;
+    --input: 240 5% 20%;
+    --ring: 40 85% 55%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Styles for react-calendar */
+.react-calendar {
+  @apply w-full max-w-md border border-border rounded-lg bg-card p-4;
+}
+
+.react-calendar__navigation button {
+  @apply text-foreground font-bold text-lg hover:bg-muted/50 rounded-md;
+}
+
+.react-calendar__navigation button:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+.react-calendar__month-view__weekdays__weekday {
+  @apply text-center text-sm font-semibold text-muted-foreground pb-2;
+}
+
+.react-calendar__tile {
+  @apply text-center text-sm p-2 rounded-md hover:bg-accent hover:text-accent-foreground;
+  flex-direction: column;
+}
+
+.react-calendar__tile:disabled {
+  @apply bg-transparent text-muted-foreground opacity-50 line-through cursor-not-allowed;
+}
+
+.react-calendar__tile--now {
+  @apply bg-muted/50 text-foreground font-bold;
+}
+
+.react-calendar__tile--active {
+  @apply bg-primary text-primary-foreground;
+}
+
+.react-calendar__tile--active:hover {
+    @apply bg-primary/90;
+}

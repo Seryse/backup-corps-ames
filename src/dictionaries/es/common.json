@@ -1,0 +1,39 @@
+{
+    "header": {
+      "home": "Inicio",
+      "about": "¿Quiénes somos?",
+      "dashboard": "Mi Espacio",
+      "session": "Sesión en Vivo",
+      "bookings": "Mis Citas",
+      "admin": "Admin",
+      "login": "Iniciar Sesión",
+      "logout": "Cerrar Sesión",
+      "userMenu": "Abrir menú de usuario",
+      "viewProfile": "Ver Perfil",
+      "shop": "Cursos",
+      "agenda": "Agenda",
+      "trainings": "Formaciones",
+      "hub": "Hub",
+      "soins": "Tratamientos",
+      "forum": "Foro",
+      "contact": "Contacto",
+      "messages": "Mis Mensajes"
+    },
+    "contact": {
+      "email": {
+        "confirmation_subject": "Hemos recibido su mensaje",
+        "confirmation_body_intro": "Querida alma,",
+        "confirmation_body_line1": "Hemos recibido su mensaje y le agradecemos que se haya puesto en contacto con nosotros. Es un placer leerle.",
+        "confirmation_body_line2": "Cada pregunta, cada pensamiento es una luz en el camino. Nos tomaremos el tiempo necesario para darle una respuesta llena de claridad.",
+        "confirmation_body_outro": "Con gratitud,",
+        "confirmation_body_signature": "El equipo de Cuerpo y Almas",
+        "response_subject": "Una respuesta le espera",
+        "response_body_intro": "Querida alma,",
+        "response_body_line1": "Una respuesta a su mensaje ha sido tejida con cuidado y le espera en su espacio personal.",
+        "response_body_line2": "Le invitamos a conectarse para descubrirla.",
+        "response_body_cta": "Leer su respuesta",
+        "response_body_outro": "Que su día sea luminoso,",
+        "response_body_signature": "El equipo de Cuerpo y Almas"
+      }
+    }
+  }

@@ -1,0 +1,38 @@
+{
+    "trainings": {
+      "title": "Mis Formaciones",
+      "description": "Accede a todas tus formaciones compradas aquí.",
+      "no_formations_title": "Ninguna formación adquirida",
+      "no_formations_description": "Parece que aún no tienes formaciones. Explora nuestra tienda para comenzar tu viaje.",
+      "browse_shop": "Visitar la tienda",
+      "access_token": "Tu Token de Acceso",
+      "token_info": "Usa este token para acceder al hub dedicado de esta formación.",
+      "enrolled_on": "Inscrito el",
+      "token_copied": "¡Token copiado al portapapeles!",
+      "access_hub": "Acceder al Hub",
+      "access_formation": "Acceder a la formación"
+    },
+    "training_page": {
+      "title": "Mi Formación:",
+      "progress": "Tu Progreso",
+      "chapters": "Capítulos",
+      "completed": "Completado",
+      "mark_as_complete": "Marcar como completado",
+      "mark_as_incomplete": "Marcar como no completado",
+      "all_chapters_completed": "¡Todos los capítulos completados!",
+      "congratulations": "¡Felicidades! Has completado la formación.",
+      "download_certificate": "Descargar certificado",
+      "certificate_almost_ready": "¡Tu certificado está casi listo! Indica el nombre completo que deseas que aparezca.",
+      "certificate_name_label": "Nombre completo para tu certificado",
+      "certificate_name_placeholder": "ej. Juana Pérez",
+      "save_name_and_generate": "Guardar el nombre",
+      "name_saved_success": "¡Nombre guardado con éxito!",
+      "certificate_generation_info": "Tu certificado será generado por el administrador y estará disponible pronto.",
+      "certificate_being_prepared": "Tu certificado a nombre de '{name}' se está preparando y estará disponible pronto.",
+      "certificate_not_ready": "Tu certificado aún no está disponible.",
+      "back_to_trainings": "Volver a todas las formaciones",
+      "error_loading_title": "Error al cargar la formación",
+      "error_loading_description": "No pudimos cargar los detalles. Por favor, inténtalo de nuevo.",
+      "open_chapter": "Abrir el capítulo"
+    }
+  }

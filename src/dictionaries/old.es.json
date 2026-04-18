@@ -1,0 +1,566 @@
+{
+    "header": {
+        "home": "Inicio",
+        "about": "¿Quiénes somos?",
+        "dashboard": "Mi Espacio",
+        "session": "Sesión en Vivo",
+        "bookings": "Mis Citas",
+        "admin": "Admin",
+        "login": "Iniciar Sesión",
+        "logout": "Cerrar Sesión",
+        "userMenu": "Abrir menú de usuario",
+        "viewProfile": "Ver Perfil",
+        "shop": "Tienda",
+        "agenda": "Agenda",
+        "trainings": "Formaciones",
+        "hub": "Hub",
+        "soins": "Tratamientos",
+        "forum": "Foro",
+        "contact": "Contacto",
+        "messages": "Mis Mensajes"
+    },
+    "landing": {
+        "title": "Cuerpo y Almas",
+        "subtitle": "Tu santuario para el bienestar del cuerpo y el alma.",
+        "cta": "Unirse a una Sesión",
+        "description": "Vive sesiones únicas que combinan meditación guidada, música suave y guía espiritual para una profunda reconexión interior."
+    },
+    "auth": {
+        "loginTitle": "Bienvenido de nuevo",
+        "loginSubtitle": "Introduce tus credenciales para acceder a tu espacio.",
+        "signupTitle": "Crea tu cuenta",
+        "signupSubtitle": "Únete a nuestra comunidad y comienza tu viaje.",
+        "emailLabel": "Correo electrónico",
+        "passwordLabel": "Contraseña",
+        "loginButton": "Iniciar Sesión",
+        "signupButton": "Registrarse",
+        "googleButton": "Continuar con Google",
+        "or": "O",
+        "noAccount": "¿No tienes una cuenta?",
+        "hasAccount": "¿Ya tienes una cuenta?",
+        "signupLink": "Regístrate",
+        "loginLink": "Inicia Sesión",
+        "loginErrorTitle": "Error de autenticación",
+        "errors": {
+            "auth/invalid-credential": "Correo electrónico o contraseña incorrectos.",
+            "auth/email-already-in-use": "Ya existe una cuenta con esta dirección de correo electrónico.",
+            "auth/weak-password": "La contraseña debe tener al menos 6 caracteres.",
+            "auth/user-not-found": "No se encontró ninguna cuenta con esta dirección de correo electrónico.",
+            "auth/wrong-password": "Contraseña incorrecta.",
+            "auth/account-exists-with-different-credential": "Ya existe una cuenta con este correo electrónico a través de otro método. Utilice ese método.",
+            "auth/popup-closed-by-user": "La ventana de inicio de sesión ha sido cerrada. Por favor, inténtelo de nuevo.",
+            "auth/popup-blocked": "La ventana de inicio de sesión ha sido bloqueada. Por favor, permita las ventanas emergentes.",
+            "auth/unauthorized-domain": "Este sitio no está autorizado para la autenticación de Google.",
+            "auth/generic": "Se produjo un error de autenticación. Por favor, inténtelo de nuevo."
+        }
+    },
+    "home": {
+        "title": "Bienvenida, {name}.",
+        "greeting_anonymous": "Hola Alma Hermosa",
+        "description": "Descubre las últimas noticias y actualizaciones de nuestra comunidad.",
+        "latestNews": "Últimas Noticias",
+        "moreNews": "Más noticias",
+        "noNews": "Aún no hay noticias",
+        "noNewsDescription": "Vuelve más tarde para ver las actualizaciones.",
+        "ourFormations": "Nuestras Formaciones",
+        "discoverFormations": "Descúbrelas",
+        "ourSessions": "Nuestras Sesiones",
+        "bookASession": "Reservar una sesión"
+    },
+    "session": {
+        "title": "Sesión en Vivo",
+        "loading": "Preparando la sesión...",
+        "no_upcoming_title": "No hay sesiones próximas",
+        "no_upcoming_description": "Las sesiones en vivo aparecerán aquí. El enlace se activará 10 minutos antes de la hora.",
+        "book_a_session": "Reservar una sesión",
+        "starts_in_distance": "Comienza en {distance}",
+        "starts_in_minutes": "Comienza en {minutes} minutos",
+        "in_progress": "Sesión en curso",
+        "connect": "Conectar",
+        "accessDenied": "Acceso Denegado",
+        "accessDeniedMessage": "No tienes permiso para ver esta sesión o el enlace no es válido.",
+        "backToDashboard": "Volver a Inicio",
+        "welcome_message": "¡Bienvenido a la Sesión en Vivo!",
+        "forum_coming_soon": "La sesión comenzará en breve.",
+        "subtitles": "Subtítulos y Traducción en Vivo",
+        "startRecognition": "Iniciar Transmisión",
+        "stopRecognition": "Detener Transmisión"
+    },
+    "about_page": {
+        "title": "Nuestra Historia",
+        "subtitle": "Un puente entre lo visible y lo invisible, una danza entre el cuerpo y el alma.",
+        "story": {
+            "title": "El Relato de Cuerpo y Almas",
+            "p1": "Cuerpo y Almas nació de una visión: la de crear un espacio sagrado donde cada individuo pueda explorar las profundidades de su ser, un santuario donde el bienestar del cuerpo y el florecimiento del alma convergen. Fundado por apasionados de la espiritualidad, el desarrollo personal y las terapias holísticas, nuestro centro es más que una simple plataforma, es una comunidad vibrante.",
+            "p2": "Nuestra misión es acompañarte en tu camino de vida, ofreciéndote herramientas, conocimientos y experiencias que resuenen con tu esencia. Creemos en un enfoque integrado, donde cada práctica, cada cuidado y cada formación es una invitación a reconectarte con tu sabiduría interior y activar tu pleno potencial."
+        },
+        "founder": {
+            "title": "El Fondador",
+            "name": "Mickaël 'Micka' Réault",
+            "bio": "Creador del método Irisphère Harmonia y fundador de Cuerpo y Almas, Mickaël es un explorador de la conciencia, un 'Body & Soul Developer'. Su pasión es guiar a las almas curiosas a través de viajes interiores, utilizando el sonido, la energía y la intuición para desbloquear las puertas de la percepción y catalizar transformaciones profundas. Su enfoque es una mezcla única de técnicas ancestrales y prácticas contemporáneas, siempre dentro de un marco benévolo y seguro."
+        },
+        "values": {
+            "title": "Nuestros Valores",
+            "authenticity": {
+                "title": "Autenticidad",
+                "description": "Nos presentamos tal como somos, con el corazón abierto e intenciones puras."
+            },
+            "benevolence": {
+                "title": "Benevolencia",
+                "description": "Cada interacción está marcada por el respeto, la compasión y una escucha sincera."
+            },
+            "community": {
+                "title": "Comunidad",
+                "description": "Tejemos vínculos fuertes, creando una red de apoyo y de intercambio donde cada uno se siente bienvenido."
+            },
+            "exploration": {
+                "title": "Exploración",
+                "description": "Fomentamos la curiosidad, el aprendizaje continuo y el valor de aventurarse más allá de los caminos trillados."
+            }
+        }
+    },
+    "admin": {
+        "title": "Consola de Administración",
+        "dashboard": "Citas",
+        "stats": "Estadísticas",
+        "news": "Noticias",
+        "formations": "Formaciones",
+        "sessionTypes": "Tipos de Sesión",
+        "introFiles": "Archivos de Intro",
+        "playlistFiles": "Archivos de Playlist",
+        "manage_about_page": "Gestionar página Quiénes somos",
+        "noFiles": "No se encontraron archivos en este directorio.",
+        "manageFormations": "Gestionar Formaciones",
+        "addFormation": "Añadir Formación",
+        "editFormation": "Editar Formación",
+        "deleteFormation": "Eliminar Formación",
+        "deleteFormationConfirmTitle": "¿Estás seguro?",
+        "deleteFormationConfirmDescription": "Esta acción es irreversible. La formación será eliminada permanentemente.",
+        "manageNews": "Gestionar Noticias",
+        "addArticle": "Añadir Artículo",
+        "editArticle": "Editar Artículo",
+        "deleteArticle": "Eliminar Artículo",
+        "deleteArticleConfirmTitle": "¿Estás seguro?",
+        "deleteArticleConfirmDescription": "Esta acción es irreversible. El artículo será eliminado permanentemente.",
+        "manageSessionTypes": "Gestionar Tipos de Sesión",
+        "addSessionType": "Añadir Tipo de Sesión",
+        "editSessionType": "Editar Tipo de Sesión",
+        "deleteSessionType": "Eliminar Tipo de Sesión",
+        "deleteSessionTypeConfirmTitle": "¿Estás seguro?",
+        "deleteSessionTypeConfirmDescription": "Esto eliminará permanentemente este tipo de sesión y todos sus horarios asociados. Esta acción es irreversible.",
+        "manageSlots": "Gestionar Horarios",
+        "manageSlotsTitle": "Gestionar Horarios",
+        "addSlot": "Añadir horario",
+        "addSlotFor": "Añadir un nuevo horario para la sesión: {sessionName}",
+        "startTime": "Hora de Inicio",
+        "endTime": "Hora de Finalización",
+        "addSlotButton": "Añadir",
+        "addSlotsButton": "Añadir horario(s)",
+        "existingSlots": "Horarios existentes",
+        "existingSlotsFor": "Lista de horarios programados para: {sessionName}",
+        "deleteSlotConfirmTitle": "¿Eliminar este horario?",
+        "deleteSlotConfirmDescription": "Esta acción es irreversible y eliminará el horario.",
+        "noSlotsForSession": "No hay horarios programados para esta sesión.",
+        "delete": "Eliminar",
+        "recurrence": "Recurrencia",
+        "recurrenceOptions": {
+            "none": "Ninguna",
+            "daily": "Diariamente",
+            "weekly": "Semanalmente",
+            "biweekly": "Cada 2 semanas",
+            "monthly": "Mensualmente"
+        },
+        "repeatCount": "Número de repeticiones",
+        "todaysSessions": "Sesiones de Hoy",
+        "pastSessions": "Sesiones Pasadas",
+        "noPastSessions": "No hay sesiones pasadas para mostrar.",
+        "bookedBy": "Reservado por",
+        "joinCall": "Unirse a la Llamada",
+        "noSessionsToday": "No hay sesiones programadas para hoy",
+        "noSessionsTodayDescription": "Las sesiones reservadas para hoy aparecerán aquí.",
+        "sessionCategoryOptions": {
+            "irisphere-harmonia": "Irisfera Armonía (Tratamiento Firma)",
+            "guidances": "Las Guías",
+            "energetic-treatments": "Sanaciones Energéticas",
+            "dialogue-space": "Espacio de Diálogo",
+            "combined-treatments": "Tratamientos Combinados"
+        },
+        "grimoire": {
+            "manage_button": "Gestionar Grimorio",
+            "edit_button": "Editar Informe",
+            "title": "Subir informe del Grimorio",
+            "description": "Subir el informe en PDF para el usuario {userName}.",
+            "file_label": "Archivo PDF del informe",
+            "thumbnail_label": "Imagen de portada (Opcional)",
+            "upload_button": "Subir",
+            "upload_success_title": "¡Informe subido!",
+            "upload_error_title": "Error al subir",
+            "report_sent": "Informe enviado",
+            "download_button": "Descargar Informe",
+            "current_thumbnail_label": "Portada Actual",
+            "pdf_required_error": "Se requiere un archivo PDF para la carga inicial.",
+            "nothing_to_update_title": "Nada que actualizar",
+            "nothing_to_update_desc": "Por favor, seleccione un archivo PDF o una imagen para actualizar."
+        },
+        "about_page_form": {
+            "title": "Gestionar contenido de la página 'Quiénes somos'",
+            "page_title_label": "Título principal de la página",
+            "page_subtitle_label": "Subtítulo de la página",
+            "story_title_label": "Título de la sección 'Relato'",
+            "story_p1_label": "Párrafo 1 del relato",
+            "story_p2_label": "Párrafo 2 del relato",
+            "founder_title_label": "Título de la sección 'Fundador'",
+            "founder_name_label": "Nombre del fundador",
+            "founder_bio_label": "Biografía del fundador",
+            "values_title_label": "Título de la sección 'Valores'",
+            "value_authenticity_title_label": "Título del valor 'Autenticidad'",
+            "value_authenticity_desc_label": "Descripción del valor 'Autenticidad'",
+            "value_benevolence_title_label": "Título del valor 'Benevolencia'",
+            "value_benevolence_desc_label": "Descripción del valor 'Benevolencia'",
+            "value_community_title_label": "Título del valor 'Comunidad'",
+            "value_community_desc_label": "Descripción del valor 'Comunidad'",
+            "value_exploration_title_label": "Título del valor 'Exploración'",
+            "value_exploration_desc_label": "Descripción del valor 'Exploration'",
+            "save_success": "¡Contenido de la página actualizado con éxito!",
+            "save_error": "Ocurrió un error durante la actualización."
+        },
+        "form": {
+            "nameEn": "Nombre (EN)",
+            "nameFr": "Nombre (FR)",
+            "nameEs": "Nombre (ES)",
+            "descriptionEn": "Descripción (EN)",
+            "descriptionFr": "Descripción (FR)",
+            "descriptionEs": "Descripción (ES)",
+            "price": "Precio",
+            "currency": "Moneda (e.g., eur, usd)",
+            "image": "Imagen",
+            "tokenProductId": "ID de Producto Token",
+            "videoUrl": "URL del Video (YouTube, Vimeo)",
+            "pageContentTitle": "Contenido de la Página",
+            "pageContentFr": "Contenido (FR)",
+            "pageContentEn": "Contenido (EN)",
+            "pageContentEs": "Contenido (ES)",
+            "pageContentHelp": "Puede usar HTML aquí para formatear texto, añadir imágenes o enlaces a PDFs.",
+            "titleEn": "Título (EN)",
+            "titleFr": "Título (FR)",
+            "titleEs": "Título (ES)",
+            "contentEn": "Contenido (EN)",
+            "contentFr": "Contenido (FR)",
+            "contentEs": "Contenido (ES)",
+            "cancel": "Cancelar",
+            "save": "Guardar",
+            "sessionModel": "Modelo de sesión",
+            "selectSessionModel": "Seleccionar un modelo",
+            "maxParticipants": "Participantes Máx",
+            "sessionModelOptions": {
+                "private": "Privada",
+                "small_group": "Grupo Pequeño",
+                "large_group": "Grupo Grande"
+            },
+            "translate": "Traducir del francés",
+            "translating": "Traduciendo...",
+            "nothingToTranslateTitle": "Nada que traducir",
+            "nothingToTranslateDescription": "Por favor, rellene primero el campo en francés.",
+            "translationError": "Error de Traducción",
+            "category": "Categoría",
+            "selectCategory": "Seleccionar una categoría"
+        },
+        "success": {
+            "formationAdded": "¡Formación añadida con éxito!",
+            "formationUpdated": "¡Formación actualizada con éxito!",
+            "formationDeleted": "¡Formación eliminada con éxito!",
+            "articleAdded": "¡Artículo añadido con éxito!",
+            "articleUpdated": "¡Artículo actualizado con éxito!",
+            "articleDeleted": "¡Artículo eliminado con éxito!",
+            "sessionTypeAdded": "¡Tipo de sesión añadido con éxito!",
+            "sessionTypeUpdated": "¡Tipo de sesión actualizado con éxito!",
+            "sessionTypeDeleted": "¡Tipo de sesión eliminado con éxito!",
+            "translationSuccess": "¡Traducción completa!",
+            "slotAdded": "¡Horario añadido con éxito!",
+            "slotsAdded": "¡Horarios añadidos con éxito!",
+            "slotDeleted": "¡Horario eliminado con éxito!"
+        },
+        "error": {
+            "generic": "Ocurrió un error. Por favor, inténtalo de nuevo.",
+            "storageUnauthorizedTitle": "Error de Permiso de Almacenamiento",
+            "storageUnauthorized": "No tienes permiso para subir archivos. Comprueba las reglas de Firebase Storage."
+        }
+    },
+    "stats_page": {
+        "title": "Estadísticas",
+        "loading": "Cargando estadísticas...",
+        "totalRevenue": "Ingresos Totales",
+        "totalUsers": "Usuarios Totales",
+        "grimoireDownloads": "Informes de Grimorio",
+        "revenueBreakdown": "Desglose de ingresos por producto"
+    },
+    "shop": {
+        "title": "Tienda",
+        "addToCart": "Añadir al carrito",
+        "finalCta": "Inscribirse en esta formación",
+        "formationAdded": "Formación Añadida",
+        "addedToCart": "ha sido añadido a tu cesta.",
+        "loading": "Cargando formaciones...",
+        "noFormations": "No hay formaciones disponibles por el momento.",
+        "alreadyInCart": "Ya en el carrito",
+        "alreadyInCartDescription": "ya está en tu cesta.",
+        "inCart": "En el carrito",
+        "presentationVideo": "Vídeo de Presentación"
+    },
+    "checkout": {
+        "title": "Pago",
+        "yourCart": "Tu Cesta",
+        "emptyCart": "Tu cesta está vacía.",
+        "browseFormations": "Explorar formaciones",
+        "summary": "Resumen del pedido",
+        "total": "Total",
+        "proceedToPayment": "Proceder al pago",
+        "processingPayment": "Procesando pago...",
+        "paymentSuccessTitle": "¡Pago Exitoso!",
+        "paymentSuccessDescription": "Ahora tienes acceso a tus nuevas formaciones. Redirigiendo...",
+        "paymentErrorTitle": "Pago Fallido",
+        "paymentErrorDescription": "Hubo un problema al procesar tu pago. Por favor, inténtalo de nuevo."
+    },
+    "agenda": {
+        "title": "Agenda",
+        "description": "Reserva tu sesión",
+        "availableSlots": "Horarios Disponibles",
+        "noSlots": "No hay horarios disponibles para esta fecha.",
+        "selectDate": "Por favor, selecciona una fecha en el calendario.",
+        "bookNow": "Reservar ahora",
+        "sessionDetails": "Detalles de la sesión",
+        "bookThisSlot": "Reservar este horario",
+        "bookingInProgress": "Reservando...",
+        "bookingSuccessTitle": "¡Reserva Confirmada!",
+        "bookingSuccessDescription": "Tu sesión ha sido reservada. Puedes verla en 'Mis Reservas'.",
+        "bookingErrorTitle": "Fallo en la reserva",
+        "bookingErrorFull": "Este horario ya está completo.",
+        "bookingErrorGeneric": "Ocurrió un error durante la reserva. Por favor, inténtalo de nuevo.",
+        "loginToBook": "Iniciar sesión para reservar",
+        "previousMonth": "Mes anterior",
+        "nextMonth": "Mes siguiente"
+    },
+    "trainings": {
+        "title": "Mis Formaciones",
+        "description": "Accede a todas tus formaciones compradas aquí.",
+        "no_formations_title": "Ninguna formación adquirida",
+        "no_formations_description": "Parece que aún no tienes formaciones. Explora nuestra tienda para comenzar tu viaje.",
+        "browse_shop": "Visitar la tienda",
+        "access_token": "Tu Token de Acceso",
+        "token_info": "Usa este token para acceder al hub dedicado de esta formación.",
+        "enrolled_on": "Inscrito el",
+        "token_copied": "¡Token copiado al portapapeles!",
+        "access_hub": "Acceder al Hub",
+        "access_formation": "Acceder a la formación"
+    },
+    "training_page": {
+        "title": "Mi Formación:",
+        "progress": "Tu Progreso",
+        "chapters": "Capítulos",
+        "completed": "Completado",
+        "mark_as_complete": "Marcar como completado",
+        "mark_as_incomplete": "Marcar como no completado",
+        "all_chapters_completed": "¡Todos los capítulos completados!",
+        "congratulations": "¡Felicidades! Has completado la formación.",
+        "download_certificate": "Descargar certificado",
+        "certificate_almost_ready": "¡Tu certificado está casi listo! Indica el nombre completo que deseas que aparezca.",
+        "certificate_name_label": "Nombre completo para tu certificado",
+        "certificate_name_placeholder": "ej. Juana Pérez",
+        "save_name_and_generate": "Guardar el nombre",
+        "name_saved_success": "¡Nombre guardado con éxito!",
+        "certificate_generation_info": "Tu certificado será generado por el administrador y estará disponible pronto.",
+        "certificate_being_prepared": "Tu certificado a nombre de '{name}' se está preparando y estará disponible pronto.",
+        "certificate_not_ready": "Tu certificado aún no está disponible.",
+        "back_to_trainings": "Volver a todas las formaciones",
+        "error_loading_title": "Error al cargar la formación",
+        "error_loading_description": "No pudimos cargar los detalles. Por favor, inténtalo de nuevo.",
+        "open_chapter": "Abrir el capítulo"
+    },
+    "dashboard_page": {
+        "title": "Mi Espacio Personal",
+        "subtitle": "Hola, {name}",
+        "account": {
+            "title": "Mi Cuenta",
+            "description": "Gestiona tu perfil, contraseña y preferencias de idioma."
+        },
+        "trainings": {
+            "title": "Mis Formaciones",
+            "description": "Accede a todas las formaciones que has comprado."
+        },
+        "bookings": {
+            "title": "Mis Citas",
+            "description": "Consulta tus sesiones futuras y pasadas."
+        },
+        "hub": {
+            "title": "Hub Comunitario",
+            "description": "Únete a los foros de discusión de tus formaciones y sesiones."
+        },
+        "grimoire": {
+            "title": "Mi Grimorio Personal",
+            "description": "Encuentra aquí los informes simbólicos de tus viajes."
+        },
+        "admin": {
+            "title": "Consola de Administración",
+            "description": "Gestionar formaciones, noticias y sesiones."
+        }
+    },
+    "account_page": {
+        "title": "Mi Cuenta",
+        "subtitle": "Actualiza tu información personal y configuración de seguridad.",
+        "profile": {
+            "title": "Información del Perfil",
+            "description": "Mantén tus datos personales actualizados.",
+            "name_label": "Nombre / Apodo",
+            "email_label": "Dirección de correo electrónico (no se puede cambiar)",
+            "certificate_name_label": "Nombre para la Certificación",
+            "certificate_name_placeholder": "Ej: Juan Pérez",
+            "certificate_name_desc": "Este nombre se usará en tus certificados de éxito.",
+            "save_button": "Guardar los cambios",
+            "picture_title": "Foto de perfil",
+            "picture_description": "Cambia tu avatar.",
+            "change_picture_button": "Cambiar la foto"
+        },
+        "password": {
+            "title": "Cambiar la contraseña",
+            "description": "Por razones de seguridad, deberás introducir tu contraseña actual.",
+            "current_password_label": "Contraseña actual",
+            "new_password_label": "Nueva contraseña",
+            "save_button": "Actualizar contraseña"
+        },
+        "language": {
+            "title": "Idioma",
+            "description": "Elige tu idioma preferido para la aplicación."
+        },
+        "billing": {
+            "title": "Dirección de Facturación",
+            "description": "Gestiona tu dirección para pagos más rápidos.",
+            "street_label": "Calle",
+            "city_label": "Ciudad",
+            "postal_code_label": "Código Postal",
+            "country_label": "País",
+            "save_button": "Guardar la dirección"
+        },
+        "profile_crop": {
+            "title": "Editar la foto de perfil",
+            "save_button": "Guardar"
+        },
+        "success": {
+            "profile_updated": "¡Perfil actualizado con éxito!",
+            "password_updated": "¡Contraseña actualizada con éxito!",
+            "avatar_updated": "¡Foto de perfil actualizada con éxito!",
+            "address_updated": "¡Dirección de facturación actualizada con éxito!"
+        },
+        "errors": {
+            "update_failed": "Fallo en la actualización",
+            "name_required": "El nombre es obligatorio.",
+            "password_min_length": "La contraseña debe tener al menos 6 caracteres.",
+            "password_must_be_different": "La nueva contraseña debe ser diferente de la actual.",
+            "wrong_current_password": "La contraseña actual es incorrecta."
+        }
+    },
+    "bookings_page": {
+        "title": "Mis Citas",
+        "subtitle": "Lista de todas tus sesiones reservadas.",
+        "upcoming_title": "Próximas Sesiones",
+        "past_title": "Sesiones Pasadas",
+        "no_upcoming": "No tienes ninguna cita próxima.",
+        "no_past": "No tienes ninguna cita pasada.",
+        "book_now": "Reservar una nueva sesión",
+        "join_button": "Unirse a la sesión"
+    },
+    "soins_page": {
+        "title": "Tratamientos",
+        "intro": "Descubre todos nuestros tratamientos 100% online desde la comodidad de tu hogar.",
+        "categories": {
+            "irisphere-harmonia": {
+                "title": "Irisfera Armonía (Tratamiento Firma)",
+                "intro": "Tratamiento Signature exclusivo de Cuerpo y Almas, basado en métodos de Innerdance - Activación de Kundalini."
+            },
+            "guidances": {
+                "title": "Las Guías",
+                "intro": "Reserva tu guía 100% online: lecturas de cartas, runas o sesiones psicoenergéticas."
+            },
+            "energetic-treatments": {
+                "title": "Sanaciones Energéticas",
+                "intro": "¿Necesitas un pequeño impulso o un alineamiento? Nuestros practicantes te recibirán online."
+            },
+            "dialogue-space": {
+                "title": "Espacio de Diálogo",
+                "intro": "Un espacio de palabra y escucha privilegiado para iluminar tu camino."
+            },
+            "combined-treatments": {
+                "title": "Tratamientos Combinados",
+                "intro": "Reserva tu sesión combinada para obtener hasta 5h de bienestar continuo."
+            }
+        },
+        "loading": "Cargando tratamientos...",
+        "no_soins": "No hay tratamientos disponibles.",
+        "book_now": "Reservar"
+    },
+    "grimoire_page": {
+        "title": "Mi Grimorio Personal",
+        "subtitle": "Encuentra aquí todos los informes de tus viajes Irisphère Harmonia.",
+        "voyage_title": "Viaje del",
+        "report_for": "Informe para la sesión del {date}",
+        "open_button": "Descargar mi Grimorio",
+        "no_reports_title": "Tu Grimorio está todavía vacío",
+        "no_reports_description": "Los informes aparecerán aquí una vez preparados."
+    },
+    "contact": {
+        "email": {
+            "confirmation_subject": "Hemos recibido su mensaje",
+            "confirmation_body_intro": "Querida alma,",
+            "confirmation_body_line1": "Hemos recibido su mensaje y le agradecemos que se haya puesto en contacto con nosotros. Es un placer leerle.",
+            "confirmation_body_line2": "Cada pregunta, cada pensamiento es una luz en el camino. Nos tomaremos el tiempo necesario para darle una respuesta llena de claridad.",
+            "confirmation_body_outro": "Con gratitud,",
+            "confirmation_body_signature": "El equipo de Cuerpo y Almas",
+            "response_subject": "Una respuesta le espera",
+            "response_body_intro": "Querida alma,",
+            "response_body_line1": "Una respuesta a su mensaje ha sido tejida con cuidado y le espera en su espacio personal.",
+            "response_body_line2": "Le invitamos a conectarse para descubrirla.",
+            "response_body_cta": "Leer su respuesta",
+            "response_body_outro": "Que su día sea luminoso,",
+            "response_body_signature": "El equipo de Cuerpo y Almas"
+        }
+    },
+    "messages": {
+        "admin_title": "Mensajería",
+        "admin_subtitle": "Bandeja de entrada de mensajes de usuarios.",
+        "user_title": "Mis Mensajes",
+        "user_subtitle": "Tus conversaciones con el equipo.",
+        "no_messages_title": "No hay mensajes por el momento.",
+        "no_messages_description_admin": "Los mensajes enviados vía formulario aparecerán aquí.",
+        "no_messages_description_user": "Tus conversaciones y las respuestas del equipo aparecerán aquí.",
+        "from": "De",
+        "subject": "Asunto",
+        "date": "Fecha",
+        "status": "Estado",
+        "status_new": "Nuevo",
+        "status_read": "Leído",
+        "status_replied": "Respondido",
+        "back_to_inbox": "Volver a la bandeja",
+        "conversation_with": "Conversación con {name}",
+        "your_message": "Tu mensaje",
+        "admin_response": "Nuestra respuesta",
+        "respond_title": "Responder",
+        "response_placeholder": "Teje tu respuesta aquí...",
+        "send_response": "Enviar la respuesta",
+        "response_sent_success": "Respuesta enviada con éxito.",
+        "coupons": {
+            "create_coupon_button": "Crear un Geste Comercial",
+            "dialog_title": "Crear un código promocional",
+            "dialog_description": "Genera un código de descuento único para este usuario.",
+            "discount_label": "Porcentaje de descuento (%)",
+            "product_label": "Aplicar a un producto específico",
+            "product_placeholder": "Buscar un tratamiento o formación...",
+            "no_product_found": "No se encontró producto.",
+            "generate_button": "Generar e Insertar",
+            "generating_button": "Generando...",
+            "success_title": "¡Código generado!",
+            "success_description": "El código ha sido insertado en tu mensaje.",
+            "error_title": "Error de generación",
+            "error_description": "Imposible crear el código. Por favor, inténtalo de nuevo.",
+            "response_text": "Querida alma,\n\nEn señal de gratitud, aquí tienes un código promocional personal del {discount}% de descuento para tu próxima compra de \"{productName}\":\n\n**{couponCode}**\n\nÚsalo al pagar. Esperamos que aporte luz a tu día.\n\nCon bienvenidanza,"
+        }
+    }
+}

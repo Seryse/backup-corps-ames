@@ -1,0 +1,143 @@
+'use client';
+
+import React, { useMemo, useState, useEffect, use } from 'react';
+import { getDictionary, Dictionary } from '@/lib/dictionaries';
+import { Locale } from '@/i18n-config';
+import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { collection, query, where, Query } from 'firebase/firestore'; // Pas de orderBy ici
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Loader2, BookHeart, Download } from 'lucide-react';
+import Image from 'next/image';
+import { format } from 'date-fns';
+import { enUS, fr, es } from 'date-fns/locale';
+import type { SessionType } from '@/components/admin/session-type-manager';
+import type { LiveSession, TimeSlot, MergedSession } from '@/lib/types';
+
+type GrimoireEntry = MergedSession & {
+    pdfUrl: string;
+    pdfThumbnail?: string | null;
+};
+
+export default function GrimoirePage({ params }: { params: Promise<{ lang: Locale }> }) {
+  const { lang } = use(params);
+  const [dict, setDict] = useState<Dictionary['grimoire_page'] | null>(null);
+  const { user, isUserLoading } = useUser();
+  const firestore = useFirestore();
+
+  useEffect(() => {
+    getDictionary(lang).then(d => setDict(d.grimoire_page));
+  }, [lang]);
+
+  const localesDateFns: { [key: string]: any } = { en: enUS, fr, es };
+  const dateFnsLocale = localesDateFns[lang] || enUS;
+
+  // --- Data Fetching SÉCURISÉ ---
+  const sessionsQuery = useMemoFirebase(() => {
+    // Si pas de user, on retourne null pour ne pas crasher
+    if (!firestore || !user?.uid) return null;
+    
+    // On demande juste les sessions de l'utilisateur qui ont un rapport.
+    // PAS de 'orderBy' ici pour éviter l'erreur d'index composite manquant.
+    return query(
+        collection(firestore, 'sessions'), 
+        where('userId', '==', user.uid),
+        where('reportStatus', '==', 'available')
+    ) as Query<LiveSession>;
+  }, [firestore, user]);
+
+  const sessionTypesQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return collection(firestore, 'sessionTypes') as Query<SessionType>;
+  }, [firestore]);
+
+  const timeSlotsQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return collection(firestore, 'timeSlots') as Query<TimeSlot>;
+  }, [firestore]);
+
+  const { data: sessions, isLoading: isLoadingSessions } = useCollection<LiveSession>(sessionsQuery);
+  const { data: sessionTypes, isLoading: isLoadingSessionTypes } = useCollection<SessionType>(sessionTypesQuery);
+  const { data: timeSlots, isLoading: isLoadingTimeSlots } = useCollection<TimeSlot>(timeSlotsQuery);
+
+  const grimoireEntries = useMemo((): GrimoireEntry[] => {
+    if (!sessions || !sessionTypes || !timeSlots) return [];
+
+    const sessionTypeMap = new Map(sessionTypes.map(st => [st.id, st]));
+    const timeSlotMap = new Map(timeSlots.map(ts => [ts.id, ts]));
+
+    return sessions
+      .map(session => {
+        const sessionType = sessionTypeMap.get(session.sessionTypeId);
+        const timeSlot = timeSlotMap.get(session.timeSlotId);
+        
+        if (!sessionType || !timeSlot || sessionType.category !== 'irisphere-harmonia' || !session.pdfUrl) {
+            return null;
+        }
+        return { ...session, sessionType, timeSlot } as GrimoireEntry;
+      })
+      .filter((s): s is GrimoireEntry => s !== null)
+      // LE TRI SE FAIT ICI (Côté Client = Zéro risque d'erreur)
+      .sort((a,b) => b.timeSlot.startTime.toMillis() - a.timeSlot.startTime.toMillis());
+
+  }, [sessions, sessionTypes, timeSlots]);
+
+
+  const isLoading = isUserLoading || isLoadingSessions || isLoadingSessionTypes || isLoadingTimeSlots || !dict;
+
+  if (isLoading || !dict) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loader2 className="h-12 w-12 animate-spin text-accent" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="container mx-auto p-4 sm:p-8">
+        <div className="mb-8">
+            <h1 className="text-4xl font-headline flex items-center gap-4"><BookHeart className="h-10 w-10 text-accent"/>{dict.title}</h1>
+            <p className="text-lg text-muted-foreground mt-2">{dict.subtitle}</p>
+        </div>
+
+        {grimoireEntries.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                {grimoireEntries.map(entry => {
+                    const sessionDate = entry.timeSlot.startTime.toDate();
+                    return (
+                        <Card key={entry.id} className="flex flex-col group overflow-hidden">
+                            <CardHeader className="p-0">
+                                <div className="relative aspect-[3/4] bg-muted flex items-center justify-center">
+                                    {entry.pdfThumbnail ? (
+                                        <Image src={entry.pdfThumbnail} alt={`${dict.voyage_title} ${format(sessionDate, 'PPP', { locale: dateFnsLocale })}`} fill className="object-cover transition-transform duration-300 group-hover:scale-105" />
+                                    ) : (
+                                         <BookHeart className="h-16 w-16 text-muted-foreground" />
+                                    )}
+                                </div>
+                            </CardHeader>
+                             <CardContent className="p-4 flex-grow">
+                                <CardTitle className="text-lg">{dict.voyage_title}</CardTitle>
+                                <CardDescription>{format(sessionDate, 'PPP', { locale: dateFnsLocale })}</CardDescription>
+                            </CardContent>
+                            <div className="p-4 pt-0">
+                                <Button asChild className="w-full">
+                                   <a href={entry.pdfUrl!} download target="_blank" rel="noopener noreferrer">
+                                     <Download className="mr-2 h-4 w-4" />
+                                     {dict.open_button}
+                                   </a>
+                                </Button>
+                            </div>
+                        </Card>
+                    )
+                })}
+            </div>
+        ) : (
+             <div className="text-center py-16 border-2 border-dashed rounded-lg">
+                <BookHeart className="mx-auto h-16 w-16 text-muted-foreground" />
+                <h2 className="mt-6 text-2xl font-headline">{dict.no_reports_title}</h2>
+                <p className="text-muted-foreground mt-2">{dict.no_reports_description}</p>
+            </div>
+        )}
+    </div>
+  );
+}

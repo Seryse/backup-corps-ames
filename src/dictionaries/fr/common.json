@@ -1,0 +1,39 @@
+{
+    "header": {
+      "home": "Accueil",
+      "about": "Qui sommes-nous ?",
+      "dashboard": "Mon Espace",
+      "session": "Session Live",
+      "bookings": "Mes RDV",
+      "admin": "Admin",
+      "login": "Connexion",
+      "logout": "Déconnexion",
+      "userMenu": "Ouvrir le menu utilisateur",
+      "viewProfile": "Voir le Profil",
+      "shop": "Formations",
+      "agenda": "Agenda",
+      "trainings": "Mes Formations",
+      "hub": "Hub",
+      "soins": "Les Soins",
+      "forum": "Forum",
+      "contact": "Contact",
+      "messages": "Mes Messages"
+    },
+    "contact": {
+      "email": {
+        "confirmation_subject": "Votre message a bien été reçu",
+        "confirmation_body_intro": "Chère âme,",
+        "confirmation_body_line1": "Nous avons bien reçu votre message et nous vous remercions de nous avoir contactés. C'est un plaisir de vous lire.",
+        "confirmation_body_line2": "Chaque question, chaque pensée est une lumière sur le chemin. Nous allons prendre le temps nécessaire pour vous apporter une réponse emplie de clarté.",
+        "confirmation_body_outro": "Avec gratitude,",
+        "confirmation_body_signature": "L'équipe de Corps et Âmes",
+        "response_subject": "Une réponse vous attend",
+        "response_body_intro": "Chère âme,",
+        "response_body_line1": "Une réponse à votre message a été tissée avec soin et vous attend dans votre espace personnel.",
+        "response_body_line2": "Nous vous invitons à vous connecter pour la découvrir.",
+        "response_body_cta": "Lire votre réponse",
+        "response_body_outro": "Que votre journée soit lumineuse,",
+        "response_body_signature": "L'équipe de Corps et Âmes"
+      }
+    }
+  }

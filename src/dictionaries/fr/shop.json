@@ -1,0 +1,29 @@
+{
+    "shop": {
+      "title": "Boutique",
+      "addToCart": "Ajouter au panier",
+      "finalCta": "S'inscrire à cette formation",
+      "formationAdded": "Formation Ajoutée",
+      "addedToCart": "a été ajouté à votre panier.",
+      "loading": "Chargement des formations...",
+      "noFormations": "Aucune formation n'est disponible pour le moment.",
+      "alreadyInCart": "Déjà dans le panier",
+      "alreadyInCartDescription": "est déjà dans votre panier.",
+      "inCart": "Dans le panier",
+      "presentationVideo": "Vidéo de Présentation"
+    },
+    "checkout": {
+      "title": "Paiement",
+      "yourCart": "Votre Panier",
+      "emptyCart": "Votre panier est vide.",
+      "browseFormations": "Découvrir les formations",
+      "summary": "Résumé de la commande",
+      "total": "Total",
+      "proceedToPayment": "Passer au paiement",
+      "processingPayment": "Traitement du paiement...",
+      "paymentSuccessTitle": "Paiement Réussi !",
+      "paymentSuccessDescription": "Vous avez maintenant accès à vos nouvelles formations. Redirection vers l'accueil...",
+      "paymentErrorTitle": "Échec du Paiement",
+      "paymentErrorDescription": "Un problème est survenu lors du traitement de votre paiement. Veuillez réessayer."
+    }
+  }

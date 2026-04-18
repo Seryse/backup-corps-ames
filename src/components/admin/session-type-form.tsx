@@ -1,0 +1,337 @@
+'use client';
+
+import { useForm, Controller, Path } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { useFirestore, useStorage } from '@/firebase';
+import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import type { SessionType } from './session-type-manager';
+import { useToast } from '@/hooks/use-toast';
+import { Loader2, Languages } from 'lucide-react';
+import { useState } from 'react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { translateText } from '@/ai/flows/translate-text';
+
+interface SessionTypeFormProps {
+  sessionTypeToEdit?: SessionType;
+  onClose: () => void;
+  dictionary: any;
+}
+
+const localizedStringSchema = z.object({
+  en: z.string().min(1, 'English name is required'),
+  fr: z.string().min(1, 'French name is required'),
+  es: z.string().min(1, 'Spanish name is required'),
+});
+
+const optionalLocalizedStringSchema = z.object({
+  en: z.string().optional(),
+  fr: z.string().optional(),
+  es: z.string().optional(),
+}).optional();
+
+const sessionTypeSchema = z.object({
+  name: localizedStringSchema,
+  description: localizedStringSchema,
+  pageContent: optionalLocalizedStringSchema,
+  price: z.coerce.number().min(0, 'Price must be non-negative'),
+  currency: z.string().min(2, 'Currency is required'),
+  tokenProductId: z.string().min(1, 'Token Product ID is required'),
+  sessionModel: z.enum(['private', 'small_group', 'large_group']),
+  maxParticipants: z.coerce.number().int().min(1, 'Must have at least 1 participant'),
+  category: z.enum(['irisphere-harmonia', 'guidances', 'energetic-treatments', 'dialogue-space', 'combined-treatments']),
+  videoUrl: z.string().url().optional().or(z.literal('')),
+  imageFile: z.any().optional(),
+}).refine(data => {
+    if (data.sessionModel === 'private') {
+        return data.maxParticipants === 1;
+    }
+    return true;
+}, {
+    message: "Private sessions must have exactly 1 participant.",
+    path: ['maxParticipants']
+});
+
+type SessionTypeFormData = z.infer<typeof sessionTypeSchema>;
+
+export default function SessionTypeForm({ sessionTypeToEdit, onClose, dictionary }: SessionTypeFormProps) {
+  const firestore = useFirestore();
+  const storage = useStorage();
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isTranslating, setIsTranslating] = useState<null | 'name' | 'description' | 'pageContent'>(null);
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+    watch,
+    setValue,
+    getValues,
+  } = useForm<SessionTypeFormData>({
+    resolver: zodResolver(sessionTypeSchema),
+    defaultValues: sessionTypeToEdit
+      ? {
+          ...sessionTypeToEdit,
+          price: sessionTypeToEdit.price / 100,
+          pageContent: sessionTypeToEdit.pageContent || { en: '', fr: '', es: '' },
+          videoUrl: sessionTypeToEdit.videoUrl || '',
+        }
+      : {
+          name: { en: '', fr: '', es: '' },
+          description: { en: '', fr: '', es: '' },
+          pageContent: { en: '', fr: '', es: '' },
+          price: 0,
+          currency: 'eur',
+          tokenProductId: '',
+          sessionModel: 'private',
+          maxParticipants: 1,
+          videoUrl: '',
+          category: 'energetic-treatments',
+        },
+  });
+
+  const sessionModel = watch('sessionModel');
+
+  const handleTranslate = async (fieldName: 'name' | 'description' | 'pageContent') => {
+    const pathFr = `${fieldName}.fr` as Path<SessionTypeFormData>;
+    const frenchText = getValues(pathFr);
+
+    if (!frenchText) {
+        toast({ variant: "destructive", title: "Rien à traduire" });
+        return;
+    }
+
+    setIsTranslating(fieldName);
+    try {
+        const result = await translateText({ text: frenchText });
+        setValue(`${fieldName}.en`, result.en);
+        setValue(`${fieldName}.es`, result.es);
+        
+        toast({ title: "Traduction réussie" });
+    } catch (error) {
+        console.error("Translation failed:", error);
+        toast({ variant: "destructive", title: "Erreur de traduction", description: (error as Error).message });
+    } finally {
+        setIsTranslating(null);
+    }
+  };
+
+  const onSubmit = (data: SessionTypeFormData) => {
+    if (!firestore || !storage) return;
+    setIsLoading(true);
+
+    const processAndSubmit = async () => {
+        let imageUrl = sessionTypeToEdit?.imageUrl;
+        const file = data.imageFile?.[0];
+
+        if (file) {
+            const storageRef = ref(storage, `sessionTypes/${Date.now()}_${file.name}`);
+            const uploadTask = await uploadBytes(storageRef, file);
+            imageUrl = await getDownloadURL(uploadTask.ref);
+        }
+
+        // --- CORRECTION ICI ---
+        // On retire 'imageFile' (l'objet FileList) des données avant l'envoi
+        // Firestore ne peut pas stocker d'objet FileList, seulement l'URL (string)
+        const { imageFile, ...cleanData } = data;
+
+        const sessionTypeData = {
+          ...cleanData,
+          price: Math.round(data.price * 100),
+          imageUrl: imageUrl || sessionTypeToEdit?.imageUrl || 'https://placehold.co/600x400/E6E6FA/333333?text=Image',
+        };
+
+        if (sessionTypeToEdit?.id) {
+            await setDoc(doc(firestore, 'sessionTypes', sessionTypeToEdit.id), sessionTypeData);
+        } else {
+            await addDoc(collection(firestore, 'sessionTypes'), sessionTypeData);
+        }
+    };
+
+    processAndSubmit().then(() => {
+        toast({ title: sessionTypeToEdit ? "Type de séance mis à jour" : "Type de séance ajouté" });
+        onClose();
+    }).catch(e => {
+        console.error("Form submission error:", e);
+        toast({ variant: "destructive", title: "Erreur", description: e.message });
+    }).finally(() => {
+        setIsLoading(false);
+    });
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div>
+          <Label htmlFor="name.en">{dictionary.form.nameEn || 'Name (EN)'}</Label>
+          <Input id="name.en" {...register('name.en')} />
+          {errors.name?.en && <p className="text-sm text-destructive">{errors.name.en.message}</p>}
+        </div>
+        <div>
+          <div className="flex items-center justify-between">
+            <Label htmlFor="name.fr">{dictionary.form.nameFr || 'Nom (FR)'}</Label>
+            <Button variant="ghost" size="icon" type="button" onClick={() => handleTranslate('name')} disabled={isTranslating === 'name'} className="h-7 w-7">
+                {isTranslating === 'name' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Languages className="h-4 w-4" />}
+                <span className="sr-only">{dictionary.form.translate || 'Translate'}</span>
+            </Button>
+          </div>
+          <Input id="name.fr" {...register('name.fr')} />
+          {errors.name?.fr && <p className="text-sm text-destructive">{errors.name.fr.message}</p>}
+        </div>
+        <div>
+          <Label htmlFor="name.es">{dictionary.form.nameEs || 'Nombre (ES)'}</Label>
+          <Input id="name.es" {...register('name.es')} />
+          {errors.name?.es && <p className="text-sm text-destructive">{errors.name.es.message}</p>}
+        </div>
+      </div>
+
+      <div>
+        <div className="flex items-center justify-between">
+            <Label htmlFor="description.fr">{dictionary.form.descriptionFr || 'Description (FR)'}</Label>
+            <Button variant="ghost" size="icon" type="button" onClick={() => handleTranslate('description')} disabled={isTranslating === 'description'} className="h-7 w-7">
+                {isTranslating === 'description' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Languages className="h-4 w-4" />}
+                <span className="sr-only">{dictionary.form.translate || 'Translate'}</span>
+            </Button>
+        </div>
+        <Textarea id="description.fr" {...register('description.fr')} />
+        {errors.description?.fr && <p className="text-sm text-destructive">{errors.description.fr.message}</p>}
+      </div>
+       <div>
+        <Label htmlFor="description.en">{dictionary.form.descriptionEn || 'Description (EN)'}</Label>
+        <Textarea id="description.en" {...register('description.en')} />
+        {errors.description?.en && <p className="text-sm text-destructive">{errors.description.en.message}</p>}
+      </div>
+      <div>
+        <Label htmlFor="description.es">{dictionary.form.descriptionEs || 'Descripción (ES)'}</Label>
+        <Textarea id="description.es" {...register('description.es')} />
+        {errors.description?.es && <p className="text-sm text-destructive">{errors.description.es.message}</p>}
+      </div>
+
+      <div className="space-y-2 border-t pt-4">
+        <h3 className="text-lg font-medium">{dictionary.form.pageContentTitle || 'Page Content'}</h3>
+        <div>
+            <div className="flex items-center justify-between">
+                <Label htmlFor="pageContent.fr">{dictionary.form.pageContentFr || 'Content (FR)'}</Label>
+                <Button variant="ghost" size="icon" type="button" onClick={() => handleTranslate('pageContent')} disabled={isTranslating === 'pageContent'} className="h-7 w-7">
+                    {isTranslating === 'pageContent' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Languages className="h-4 w-4" />}
+                    <span className="sr-only">{dictionary.form.translate || 'Translate'}</span>
+                </Button>
+            </div>
+            <Textarea id="pageContent.fr" {...register('pageContent.fr')} rows={5} />
+        </div>
+        <div>
+            <Label htmlFor="pageContent.en">{dictionary.form.pageContentEn || 'Content (EN)'}</Label>
+            <Textarea id="pageContent.en" {...register('pageContent.en')} rows={5} />
+        </div>
+        <div>
+            <Label htmlFor="pageContent.es">{dictionary.form.pageContentEs || 'Content (ES)'}</Label>
+            <Textarea id="pageContent.es" {...register('pageContent.es')} rows={5} />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="price">{dictionary.form.price}</Label>
+          <Input id="price" type="number" step="0.01" {...register('price')} />
+          {errors.price && <p className="text-sm text-destructive">{errors.price.message}</p>}
+        </div>
+        <div>
+          <Label htmlFor="currency">{dictionary.form.currency}</Label>
+          <Input id="currency" {...register('currency')} />
+          {errors.currency && <p className="text-sm text-destructive">{errors.currency.message}</p>}
+        </div>
+      </div>
+      
+      <div>
+        <Label htmlFor="tokenProductId">{dictionary.form.tokenProductId}</Label>
+        <Input id="tokenProductId" {...register('tokenProductId')} />
+        {errors.tokenProductId && <p className="text-sm text-destructive">{errors.tokenProductId.message}</p>}
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+            <Label htmlFor="sessionModel">{dictionary.form.sessionModel}</Label>
+            <Select 
+                onValueChange={(value) => {
+                    setValue('sessionModel', value as 'private' | 'small_group' | 'large_group');
+                    if (value === 'private') {
+                        setValue('maxParticipants', 1);
+                    }
+                }}
+                defaultValue={sessionModel}
+            >
+                <SelectTrigger>
+                    <SelectValue placeholder={dictionary.form.selectSessionModel} />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="private">{dictionary.form.sessionModelOptions.private}</SelectItem>
+                    <SelectItem value="small_group">{dictionary.form.sessionModelOptions.small_group}</SelectItem>
+                    <SelectItem value="large_group">{dictionary.form.sessionModelOptions.large_group}</SelectItem>
+                </SelectContent>
+            </Select>
+            {errors.sessionModel && <p className="text-sm text-destructive">{errors.sessionModel.message}</p>}
+        </div>
+        <div>
+            <Label htmlFor="maxParticipants">{dictionary.form.maxParticipants}</Label>
+            <Input id="maxParticipants" type="number" {...register('maxParticipants')} readOnly={sessionModel === 'private'} />
+            {errors.maxParticipants && <p className="text-sm text-destructive">{errors.maxParticipants.message}</p>}
+        </div>
+      </div>
+      
+      <div>
+            <Label htmlFor="category">{dictionary.form.category}</Label>
+            <Controller
+                control={control}
+                name="category"
+                render={({ field }) => (
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <SelectTrigger>
+                            <SelectValue placeholder={dictionary.form.selectCategory} />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {Object.entries(dictionary.sessionCategoryOptions).map(([key, value]) => (
+                                <SelectItem key={key} value={key}>{value as string}</SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                )}
+            />
+            {errors.category && <p className="text-sm text-destructive">{errors.category.message}</p>}
+        </div>
+
+      <div>
+        <Label htmlFor="videoUrl">{dictionary.form.videoUrl}</Label>
+        <Input id="videoUrl" {...register('videoUrl')} placeholder="https://www.youtube.com/watch?v=..." />
+        {errors.videoUrl && <p className="text-sm text-destructive">{errors.videoUrl.message}</p>}
+      </div>
+
+      <div>
+          <Label htmlFor="imageFile">{dictionary.form.image}</Label>
+          <Input id="imageFile" type="file" accept="image/*" {...register('imageFile')} />
+          {sessionTypeToEdit?.imageUrl && (
+            <div className="mt-4">
+                <p className="text-sm font-medium">Image Actuelle:</p>
+                <img src={sessionTypeToEdit.imageUrl} alt="Current session type" className="mt-2 h-20 w-20 object-cover rounded-md" />
+            </div>
+          )}
+      </div>
+
+      <div className="flex justify-end gap-2 sticky bottom-0 bg-white pt-2 border-t mt-4">
+        <Button type="button" variant="outline" onClick={onClose} disabled={isLoading}>
+          {dictionary.form.cancel}
+        </Button>
+        <Button type="submit" disabled={isLoading}>
+          {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {dictionary.form.save}
+        </Button>
+      </div>
+    </form>
+  );
+}

@@ -1,0 +1,115 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // =========================================================
+    // 1. FONCTIONS SIMPLIFIÉES (POUR ÉVITER LES CRASHS)
+    // =========================================================
+
+    function isAuth() { 
+      return request.auth != null; 
+    }
+
+    // On garde la fonction pour les autres règles, mais on la simplifie
+    function isAdmin() {
+      return request.auth != null && (
+        request.auth.uid == 'HvsOFzrOwFTHWTBVBextpZtV5I53' || 
+        request.auth.uid == 'trMKG30BCebCJigxeWJqdX4EHdT2' 
+        // J'ai retiré le get() DB temporairement car c'est souvent lui qui fait planter les règles
+      );
+    }
+    
+    function isOwner(userId) { 
+      return isAuth() && request.auth.uid == userId; 
+    }
+
+    // =========================================================
+    // 2. PLAYLISTS (LA CORRECTION EST ICI)
+    // =========================================================
+    
+    // JE L'AI MIS TOUT EN HAUT.
+    // On bypass la fonction isAdmin() pour l'écriture, on met les ID en dur.
+    // IMPOSSIBLE QUE ÇA PLANTE.
+    match /playlists/{docId} { 
+      allow read: if true; 
+      allow write: if request.auth.uid == 'trMKG30BCebCJigxeWJqdX4EHdT2' || request.auth.uid == 'HvsOFzrOwFTHWTBVBextpZtV5I53';
+    }
+
+    // =========================================================
+    // 3. UTILISATEURS
+    // =========================================================
+
+    match /users/{userId} {
+      allow get: if isOwner(userId) || isAdmin();
+      allow list: if isAdmin(); 
+      allow create: if isOwner(userId);
+      allow update: if isAdmin() || isOwner(userId);
+      allow delete: if isAdmin();
+    }
+    match /users/{userId}/formations/{userFormationId} { allow read, write: if isOwner(userId) || isAdmin(); }
+
+    // =========================================================
+    // 4. CONTENU DU SITE
+    // =========================================================
+    match /formations/{docId} { allow read: if true; allow write: if isAdmin(); }
+    match /sessionTypes/{docId} { allow read: if true; allow write: if isAdmin(); }
+    match /content/{docId} { allow read: if true; allow write: if isAdmin(); }
+    match /news/{docId} { allow read: if true; allow write: if isAdmin(); }
+    match /pages/{docId} { allow read: if true; allow write: if isAdmin(); }
+    
+    // =========================================================
+    // 5. AGENDA & RÉSERVATION
+    // =========================================================
+
+    match /timeSlots/{docId} { 
+      allow read: if true; 
+      allow write: if isAdmin(); 
+      
+      allow update: if isAuth() 
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['bookedParticipantsCount'])
+        && request.resource.data.bookedParticipantsCount == resource.data.bookedParticipantsCount + 1;
+    }
+
+    // =========================================================
+    // 6. SESSIONS & BOOKINGS
+    // =========================================================
+
+    // On remet Bookings pour être sûr
+    match /bookings/{bookingId} {
+      allow read, write: if isAdmin();
+      allow read: if isAuth() && resource.data.userId == request.auth.uid;
+    }
+
+    match /sessions/{sessionId} {
+      allow create: if isAuth();
+      // ✅ list — pour chercher une session existante par timeSlotId
+      allow list: if isAuth();
+      allow read, update, delete: if isAdmin() 
+       || (isAuth() && resource.data.userId == request.auth.uid)
+       || (isAuth() && request.auth.uid in resource.data.get('participants', []));
+
+     match /transcripts/{transcriptId} {
+      allow read, write: if isAdmin() 
+       || (isAuth() && get(/databases/$(database)/documents/sessions/$(sessionId)).data.userId == request.auth.uid);
+  }
+
+  match /participants/{userId} {
+    allow read: if isAdmin() || isAuth();
+    allow write: if isAuth() && request.auth.uid == userId;
+    allow delete: if isAuth() && request.auth.uid == userId;
+  }
+}
+    // =========================================================
+    // 7. AUTRES
+    // =========================================================
+    match /contact_messages/{messageId} { allow create: if true; allow read, update, delete: if isAdmin(); }
+    match /testimonials/{testimonialId} { allow create: if isAuth(); allow read: if true; allow update, delete: if isAdmin(); }
+    match /coupons/{couponId} { allow read: if isAuth() && resource.data.userId == request.auth.uid; allow write: if isAdmin(); }
+    match /forum_categories/{categoryId} { allow read: if isAuth(); allow write: if isAdmin(); }
+    match /forum_threads/{threadId} { 
+        allow read, write: if isAuth(); 
+        match /messages/{messageId} { allow read, write: if isAuth(); }
+    }
+  }
+}

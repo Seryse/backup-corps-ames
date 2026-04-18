@@ -1,0 +1,4 @@
+{
+    "git.ignoreLimitWarning": true,
+    "IDX.aI.actionsInChatMaxOutputTokens": 32000
+}

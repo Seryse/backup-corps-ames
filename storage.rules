@@ -1,0 +1,32 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // NOUVELLE FONCTION ADMIN : vérifie l'UID hardcodé OU le rôle en BDD Firestore
+    function isAdmin() {
+      return request.auth != null &&
+             (request.auth.uid == 'HvsOFzrOwFTHWTBVBextpZtV5I53' ||
+              get(/databases/$(database)/documents/users/$(request.auth.uid)).data.roles.admin == true);
+    }
+
+    // Fonction pour vérifier si l'UID de l'utilisateur correspond à celui stocké dans le document du message
+    function isMessageOwner(messageId) {
+      let messageDoc = get(/databases/$(database)/documents/contact_messages/$(messageId));
+      return request.auth != null && request.auth.uid == messageDoc.data.userId;
+    }
+
+    // Règle pour l'admin : accès total partout
+    match /{allPaths=**} {
+        allow read, write: if isAdmin();
+    }
+
+    // Règles pour les pièces jointes des messages de contact
+    match /contact_attachments/{messageId}/{fileName} {
+      // Autoriser l'écriture si l'utilisateur est le propriétaire du message OU l'admin
+      allow write: if isMessageOwner(messageId) || isAdmin();
+      // Laisser la lecture ouverte, car les URL sont signées et à usage unique de toute façon
+      allow read: if true;
+    }
+  }
+}

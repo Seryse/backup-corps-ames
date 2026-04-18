@@ -1,0 +1,123 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // =========================================================
+    // 1. FONCTIONS DE SÉCURITÉ
+    // =========================================================
+
+    function isAuth() { 
+      return request.auth != null; 
+    }
+
+    function isAdmin() {
+      return request.auth != null && (
+        // 1. SÉCURITÉ ABSOLUE (Toi + Ton Mari en dur)
+        request.auth.uid == 'HvsOFzrOwFTHWTBVBextpZtV5I53' || 
+        request.auth.uid == 'trMKG30BCebCJigxeWJqdX4EHdT2' || 
+        
+        // 2. SÉCURITÉ BDD (Pour l'avenir) - Avec protection anti-crash (.get)
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('roles', {}).get('admin', false) == true
+      );
+    }
+    
+    function isOwner(userId) { 
+      return isAuth() && request.auth.uid == userId; 
+    }
+
+    function isValidUserUpdate(requestData, existingData) {
+      return requestData.gamification.walletBalance == existingData.gamification.walletBalance
+          && requestData.gamification.seeds == existingData.gamification.seeds
+          && requestData.gamification.totalAccumulated == existingData.gamification.totalAccumulated;
+    }
+
+    // =========================================================
+    // 2. PLAYLISTS (C'est ça qui manquait !)
+    // =========================================================
+    match /playlists/{docId} { 
+      allow read: if true; 
+      allow write: if isAdmin(); 
+    }
+
+    // =========================================================
+    // 3. UTILISATEURS
+    // =========================================================
+    match /users/{userId} {
+      allow get: if isOwner(userId) || isAdmin();
+      allow list: if isAdmin(); // Indispensable pour ton tableau Admin
+      
+      allow create: if isOwner(userId) && (request.resource.data.get('roles', {}).get('admin', false) == false);
+      
+      allow update: if isAdmin() || (isOwner(userId) 
+        && isValidUserUpdate(request.resource.data, resource.data) 
+        && request.resource.data.roles == resource.data.roles);
+        
+      allow delete: if isAdmin();
+    }
+
+    match /users/{userId}/formations/{userFormationId} { 
+      allow read, write: if isOwner(userId) || isAdmin(); 
+    }
+
+    // =========================================================
+    // 4. CONTENU DU SITE
+    // =========================================================
+    match /formations/{docId} { allow read: if true; allow write: if isAdmin(); }
+    match /sessionTypes/{docId} { allow read: if true; allow write: if isAdmin(); }
+    match /content/{docId} { allow read: if true; allow write: if isAdmin(); }
+    match /news/{docId} { allow read: if true; allow write: if isAdmin(); }
+
+    // =========================================================
+    // 5. AGENDA & RÉSERVATION (Correction Critique Client)
+    // =========================================================
+    match /timeSlots/{docId} { 
+      allow read: if true; 
+      allow write: if isAdmin(); 
+      
+      // Permet au client de réserver (incrémenter le compteur uniquement)
+      allow update: if isAuth() 
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['bookedParticipantsCount'])
+        && request.resource.data.bookedParticipantsCount == resource.data.bookedParticipantsCount + 1;
+    }
+
+    // Pour compatibilité si l'admin cherche encore "bookings"
+    match /bookings/{bookingId} {
+      allow read, write: if isAdmin();
+      allow read: if isAuth() && resource.data.userId == request.auth.uid;
+    }
+
+    // =========================================================
+    // 6. SESSIONS (Avec Sous-titres)
+    // =========================================================
+    match /sessions/{sessionId} {
+      allow create: if isAuth(); 
+      // Sécurité : On ne voit que SES sessions (pas celles des autres)
+      allow read, update, delete: if isAdmin() || (isAuth() && resource.data.userId == request.auth.uid);
+
+      // INDISPENSABLE POUR LES SOUS-TITRES
+      match /transcripts/{transcriptId} {
+         allow read, write: if isAdmin() || (isAuth() && get(/databases/$(database)/documents/sessions/$(sessionId)).data.userId == request.auth.uid);
+      }
+      // PARTICIPANTS (Mosaïque caméras)
+      match /participants/{userId} {
+        allow read: if isAdmin() || (isAuth() && get(/databases/$(database)/documents/sessions/$(sessionId)).data.userId == request.auth.uid);
+        allow write: if isAuth() && request.auth.uid == userId;
+        allow delete: if isAuth() && request.auth.uid == userId;
+      }
+    }
+
+    // =========================================================
+    // 7. AUTRES
+    // =========================================================
+    match /contact_messages/{messageId} { allow create: if true; allow read, update, delete: if isAdmin(); }
+    match /testimonials/{testimonialId} { allow create: if isAuth(); allow read: if true; allow update, delete: if isAdmin(); }
+    match /coupons/{couponId} { allow read: if isAuth() && resource.data.userId == request.auth.uid; allow write: if isAdmin(); }
+    
+    match /forum_categories/{categoryId} { allow read: if isAuth(); allow write: if isAdmin(); }
+    match /forum_threads/{threadId} { 
+        allow read, write: if isAuth(); 
+        match /messages/{messageId} { allow read, write: if isAuth(); }
+    }
+  }
+}

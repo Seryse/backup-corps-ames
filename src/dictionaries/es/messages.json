@@ -1,0 +1,42 @@
+{
+    "messages": {
+      "admin_title": "Mensajería",
+      "admin_subtitle": "Bandeja de entrada de mensajes de usuarios.",
+      "user_title": "Mis Mensajes",
+      "user_subtitle": "Tus conversaciones con el equipo.",
+      "no_messages_title": "No hay mensajes por el momento.",
+      "no_messages_description_admin": "Los mensajes enviados vía formulario aparecerán aquí.",
+      "no_messages_description_user": "Tus conversaciones y las respuestas del equipo aparecerán aquí.",
+      "from": "De",
+      "subject": "Asunto",
+      "date": "Fecha",
+      "status": "Estado",
+      "status_new": "Nuevo",
+      "status_read": "Leído",
+      "status_replied": "Respondido",
+      "back_to_inbox": "Volver a la bandeja",
+      "conversation_with": "Conversación con {name}",
+      "your_message": "Tu mensaje",
+      "admin_response": "Nuestra respuesta",
+      "respond_title": "Responder",
+      "response_placeholder": "Teje tu respuesta aquí...",
+      "send_response": "Enviar la respuesta",
+      "response_sent_success": "Respuesta enviada con éxito.",
+      "coupons": {
+        "create_coupon_button": "Crear un Geste Comercial",
+        "dialog_title": "Crear un código promocional",
+        "dialog_description": "Genera un código de descuento único para este usuario. Il sera inséré dans votre réponse.",
+        "discount_label": "Porcentaje de descuento (%)",
+        "product_label": "Aplicar a un producto específico",
+        "product_placeholder": "Buscar un tratamiento o formación...",
+        "no_product_found": "No se encontró producto.",
+        "generate_button": "Generar e Insertar",
+        "generating_button": "Generando...",
+        "success_title": "¡Código generado!",
+        "success_description": "El código ha sido insertado en tu mensaje.",
+        "error_title": "Error de generación",
+        "error_description": "Imposible crear el código. Por favor, inténtalo de nuevo.",
+        "response_text": "Querida alma,\n\nEn señal de gratitud, aquí tienes un código promocional personal del {discount}% de descuento para tu próxima compra de \"{productName}\":\n\n**{couponCode}**\n\nÚsalo al pagar. Esperamos que aporte luz a tu día.\n\nCon bienvenidanza,"
+      }
+    }
+  }

@@ -1,0 +1,21 @@
+# RÈGLES DE DÉVELOPPEMENT (AI INSTRUCTIONS)
+
+Tu es un expert Next.js / Firebase travaillant sur le projet "Corps & Âmes".
+
+## 1. ARCHITECTURE OBLIGATOIRE : CLIENT-SIDE
+- Ce projet privilégie le rendu côté client (`'use client'`).
+- **INTERDICTION** d'utiliser des Server Actions (`actions.ts`) pour la logique UI ou les formulaires.
+- Les Server Actions causent des problèmes d'authentification Firebase et de sérialisation. Ne les propose JAMAIS.
+- Pour l'IA (Genkit) ou les appels backend : Utilise toujours `fetch('/api/...')` vers une Route API standard, ou importe directement la fonction serveur si compatible.
+
+## 2. GESTION DES FORMULAIRES
+- Utilise `react-hook-form` + `zod`.
+- Validation côté client avant envoi.
+
+## 3. FICHIERS SENSIBLES
+- Ne modifie JAMAIS `src/ai/flows/translate-text.ts` sans permission explicite.
+- Ne touche pas à la configuration Firebase (`src/firebase.ts`).
+
+## 4. COMPORTEMENT
+- Si une solution marchait hier en Client-Side, ne la migre pas en Server-Side.
+- Reste simple. Pas de sur-ingénierie.

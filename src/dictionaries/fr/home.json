@@ -1,0 +1,89 @@
+{
+  "landing": {
+    "title": "Corps et Âmes",
+    "subtitle": "Votre sanctuaire pour le bien-être du corps et de l'âme.",
+    "cta": "Rejoindre une Session",
+    "description": "Vivez des sessions uniques alliant méditation guidée, musique douce et guidance spirituelle pour une reconnexion intérieure profonde."
+  },
+  "home": {
+    "hero": {
+      "title": "Votre Sanctuaire Holistique,",
+      "highlight": "partout avec vous.",
+      "subtitle": "Corps & Âmes réinvente le soin à distance. Rejoignez un Espace Sacré où la technologie s'efface pour laisser place à l'énergie, la guérison et l'unité.",
+      "cta": "Entrer dans l'Espace"
+    },
+    "title": "Bienvenue, {name}.",
+    "greeting_anonymous": "Bonjour Belle Âme",
+    "description": "Découvrez les dernières actualités et mises à jour de notre communauté.",
+    "latestNews": "Dernières Actualités",
+    "moreNews": "Plus d'actualités",
+    "noNews": "Aucune actualité pour le moment",
+    "noNewsDescription": "Revenez plus tard pour les mises à jour.",
+    "ourFormations": "Nos Formations",
+    "discoverFormations": "Les découvrir",
+    "ourSessions": "Nos Séances",
+    "bookASession": "Réserver une séance"
+  },
+  "about_page": {
+    "title": "Notre Histoire",
+    "subtitle": "Un pont entre le visible et l'invisible, une danse entre le corps et l'âme.",
+    "story": {
+      "title": "Le Récit de Corps et Âmes",
+      "p1": "Corps et Âmes est né d'une vision : celle de créer un espace sacré où chaque individu peut explorer les profondeurs de son être, un sanctuaire où le bien-être du corps et l'épanouissement de l'âme convergent. Fondé par des passionnés de spiritualité, de développement personnel et de thérapies holistiques, notre centre est plus qu'une simple plateforme, c'est une communauté vibrante.",
+      "p2": "Notre mission est de vous accompagner sur votre chemin de vie, en vous offrant des outils, des connaissances et des expériences qui résonnent avec votre essence. Nous croyons en une approche intégrée, où chaque pratique, chaque soin et chaque formation est une invitation à vous reconnecter à votre sagesse intérieure et à activer votre plein potentiel."
+    },
+    "founder": {
+      "title": "Le Fondateur",
+      "name": "Mickaël 'Micka' Réault",
+      "bio": "Créateur de la méthode Irisphère Harmonia et fondateur de Corps et Âmes, Mickaël est un explorateur de la conscience, un 'Body & Soul Developper'. Sa passion est de guider les âmes curieuses à travers les voyages intérieurs, en utilisant le son, l'énergie et l'intuition pour déverrouiller les portes de la perception et catalyser des transformations profondes. Son approche est un mélange unique de techniques ancestrales et de pratiques contemporaines, toujours dans un cadre bienveillant et sécurisé."
+    },
+    "values": {
+      "title": "Nos Valeurs",
+      "authenticity": {
+        "title": "Authenticité",
+        "description": "Nous nous présentons tels que nous sommes, avec nos cœurs ouverts et nos intentions pures."
+      },
+      "benevolence": {
+        "title": "Bienveillance",
+        "description": "Chaque interaction est empreinte de respect, de compassion et d'une écoute sincère."
+      },
+      "community": {
+        "title": "Communauté",
+        "description": "Nous tissons des liens forts, créant un réseau de soutien et de partage où chacun se sent accueilli."
+      },
+      "exploration": {
+        "title": "Exploration",
+        "description": "Nous encourageons la curiosité, l'apprentissage continu et l'audace de s'aventurer au-delà des sentiers battus."
+      }
+    }
+  },
+  "soins_page": {
+    "title": "Les Soins",
+    "intro": "Découvrez tous nos soins 100% en ligne. Profitez des bienfaits de votre Institut Holistique et de l'expertise de praticiens expérimentés directement depuis le confort de votre maison.",
+    "categories": {
+      "irisphere-harmonia": {
+        "title": "Irisphère Harmonia (Soin Signature)",
+        "intro": "Irisphère Harmonia est un soin Signature exclusif Corps et Âmes, qui se base en partie sur les méthodes de l'Innerdance - Kundalini Activation. Le principe est simple : Une suite de musiques scrupuleusement sélectionnées et modifiées énergétiquement sont diffusées à haut volume (casque fortement recommandé) afin d'induire un état de transe légère. Elles sont programmées pour vous emmener dans un voyage sécurisé suivant différentes phases et étapes afin de nettoyer et connecter toutes les parties de votre Être. Le protocole a été étudié et affiné pour y inclure des dimensions de médiumnité et des intentions définies. Bénéficiez de séances privées ou en groupe, encadrées par le créateur de la méthode en personne, qui sera assisté d'autres facilitateurs pour les groupes importants."
+      },
+      "guidances": {
+        "title": "Les Guidances",
+        "intro": "Réservez votre guidance 100% en ligne : Choisissez entre une lecture de cartes et oracles, un tirage de runes de sorcières ou une séance de psycho-énergétique avec un professionnel du bien-être spécialisé dans ces domaines."
+      },
+      "energetic-treatments": {
+        "title": "Les Soins Énergétiques",
+        "intro": "Besoin d'un petit coup de boost, d'un alignement, d'une pause dans le tumulte du quotidien ? Nos praticiens seront ravis de vous recevoir depuis votre domicile dans un cadre 100% en ligne pour un soin énergétique intuitif adapté à votre demande du moment."
+      },
+      "dialogue-space": {
+        "title": "L'Espace Dialogues",
+        "intro": "Un espace de parole et d’écoute privilégié. Que vous ayez des questions précises sur nos formations, besoin d'un conseil pour choisir le soin le plus adapté à votre besoin, ou simplement l'envie d'un temps d'échange en direct avant de vous lancer, cet espace est le vôtre. Un dialogue à cœur ouvert pour éclairer votre chemin."
+      },
+      "combined-treatments": {
+        "title": "Les Soins Combinés",
+        "intro": "Réservez votre séance combinée, regroupez nos services en un seul rendez-vous pour obtenir jusqu'à 5h de bien-être d'affilée en une seule journée."
+      }
+    },
+    "loading": "Chargement des soins...",
+    "no_soins": "Aucun soin disponible pour le moment.",
+    "book_now": "Réserver"
+  }
+}

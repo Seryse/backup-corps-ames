@@ -1,0 +1,42 @@
+{
+    "messages": {
+      "admin_title": "Messagerie",
+      "admin_subtitle": "Boîte de réception des messages des utilisateurs.",
+      "user_title": "Mes Messages",
+      "user_subtitle": "Vos conversations avec l'équipe.",
+      "no_messages_title": "Aucun message pour le moment.",
+      "no_messages_description_admin": "Les messages envoyés via le formulaire de contact apparaîtront ici.",
+      "no_messages_description_user": "Vos conversations et les réponses de l'équipe apparaîtront ici.",
+      "from": "De",
+      "subject": "Sujet",
+      "date": "Date",
+      "status": "Statut",
+      "status_new": "Nouveau",
+      "status_read": "Lu",
+      "status_replied": "Répondu",
+      "back_to_inbox": "Retour à la boîte de réception",
+      "conversation_with": "Conversation avec {name}",
+      "your_message": "Votre message",
+      "admin_response": "Notre réponse",
+      "respond_title": "Répondre",
+      "response_placeholder": "Tissez votre réponse ici...",
+      "send_response": "Envoyer la réponse",
+      "response_sent_success": "Réponse envoyée avec succès.",
+      "coupons": {
+        "create_coupon_button": "Créer un Geste Commercial",
+        "dialog_title": "Créer un code promotionnel",
+        "dialog_description": "Générez un code de réduction unique pour cet utilisateur. Il sera inséré dans votre réponse.",
+        "discount_label": "Pourcentage de réduction (%)",
+        "product_label": "Appliquer sur un produit spécifique",
+        "product_placeholder": "Rechercher un soin ou une formation...",
+        "no_product_found": "Aucun produit trouvé.",
+        "generate_button": "Générer et Insérer",
+        "generating_button": "Génération en cours...",
+        "success_title": "Code promo généré !",
+        "success_description": "Le code a été inséré dans votre message.",
+        "error_title": "Erreur de génération",
+        "error_description": "Impossible de créer le code promo. Veuillez réessayer.",
+        "response_text": "Chère âme,\n\nEn signe de gratitude pour votre patience, voici un code promotionnel personnel qui vous offre une réduction de {discount}% sur votre prochain achat de \"{productName}\" :\n\n**{couponCode}**\n\nUtilisez-le simplement lors du paiement. Nous espérons qu'il apportera une touche de lumière à votre journée.\n\nAvec bienveillance,"
+      }
+    }
+  }
